@@ -93,6 +93,10 @@ Once this is done, everything should be ready to go.
 
 == TEST AND USAGE EXAMPLE:
 
+The gem includes a command-line tool called 'buby' but it doesn't do much right
+now. You can, however use this as a minimal test to confirm whether Burp can be 
+launched from ruby and whether Buby and Burp are connected.
+
 Here are some really simple test examples using Buby through IRB:
 
   $ jruby -S irb
