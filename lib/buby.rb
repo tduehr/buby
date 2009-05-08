@@ -388,25 +388,48 @@ class Buby
     h_class.new(*init_args).start_burp(args)
   end
 
-  # Loads the burp library and confirms it includes the required burp
-  # namespace
-  def self.load_burp(jar_path)
+  # Attempts to load burp with require and confirm it provides the required 
+  # class in the Java namespace.
+  #
+  # Returns: true/false depending on whether the required jar provides us
+  # the required class
+  #
+  # Raises: may raise the usual require exceptions if jar_path is bad.
+  def self.has_burp?(jar_path)
     require jar_path
-    include_class 'burp.StartBurp'
-    return true
+    return burp_loaded?
+  end
+
+  # Checks the Java namespace to see if Burp has been loaded.
+  def self.burp_loaded?
+    begin 
+      include_class 'burp.StartBurp'
+      return true
+    rescue
+      return false
+    end
+  end
+end
+
+# Try requiring 'burp.jar' from the Ruby lib-path
+unless Buby.burp_loaded?
+  begin require "burp.jar" 
+  rescue LoadError 
   end
 end
 
 
 if __FILE__ == $0
-  begin
-    raise "you must specify the path to your burp.jar" unless jar = ARGV.shift
-    Buby.load_burp(jar)
-  rescue
-    STDERR.puts $!
-    exit 1
+  unless Buby.burp_loaded?
+    begin
+      raise "You must specify the path to your burp.jar" unless jar=ARGV.shift
+      raise "#{jar} did not provide burp.StartBurp" unless Buby.has_burp?(jar)
+    rescue
+      STDERR.puts "Error: #{$!}"
+      exit 1
+    end
   end
-  $burp = Buby.start_burp(nil, nil, ARGV)
+  $burp = Buby.start_burp()
   IRB.start if $DEBUG
 end
 
