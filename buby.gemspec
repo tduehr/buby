@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.email = %q{emonti@matasano.com}
   s.executables = ["buby"]
   s.extra_rdoc_files = ["History.txt", "README.rdoc", "bin/buby"]
-  s.files = ["History.txt", "README.rdoc", "Rakefile", "bin/buby", "buby.gemspec", "java/buby.jar", "java/src/BurpExtender.class", "java/src/BurpExtender.java", "java/src/burp/IBurpExtender.class", "java/src/burp/IBurpExtender.java", "java/src/burp/IBurpExtenderCallbacks.class", "java/src/burp/IBurpExtenderCallbacks.java", "lib/buby.rb", "samples/basic.rb", "spec/buby_spec.rb", "spec/spec_helper.rb", "tasks/ann.rake", "tasks/bones.rake", "tasks/gem.rake", "tasks/git.rake", "tasks/notes.rake", "tasks/post_load.rake", "tasks/rdoc.rake", "tasks/rubyforge.rake", "tasks/setup.rb", "tasks/spec.rake", "tasks/svn.rake", "tasks/test.rake", "tasks/zentest.rake", "test/test_buby.rb"]
+  s.files = ["History.txt", "README.rdoc", "Rakefile", "bin/buby", "buby.gemspec", "java/buby.jar", "java/src/BurpExtender.java", "java/src/burp/IBurpExtender.java", "java/src/burp/IBurpExtenderCallbacks.java", "lib/buby.rb", "samples/basic.rb", "spec/buby_spec.rb", "spec/spec_helper.rb", "tasks/ann.rake", "tasks/bones.rake", "tasks/gem.rake", "tasks/git.rake", "tasks/notes.rake", "tasks/post_load.rake", "tasks/rdoc.rake", "tasks/rubyforge.rake", "tasks/setup.rb", "tasks/spec.rake", "tasks/svn.rake", "tasks/test.rake", "tasks/zentest.rake", "test/test_buby.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/emonti/buby}
   s.rdoc_options = ["--main", "README.rdoc"]
