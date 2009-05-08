@@ -33,23 +33,19 @@ commercial product of PortSwigger Ltd.
 
 See http://portswigger.net/
 
-=== INSTALLATION:
+=== BUILD/INSTALLATION:
 
 It is recommended to create a copy of burp specifically for use through JRuby.
 The buby.rb library is configured to require('buby.jar'), however you can muck around
 with paths and names if you prefer configure the Java stuff some other way.
 
-1. Create local a copy of your burp.jar and rename it to 'buby.jar'
-
-  > cp (/path/to/your/burp.jar) ./buby.jar
-
-2. Compile BurpExtender.java:
+1. Compile BurpExtender.java:
 
   > javac -classpath (/path/to/jruby/root)/lib/jruby.jar:buby.jar BurpExtender.java
 
-3. Add BurpExtender.class to the jar:
+2. Create a buby.jar
 
-  > jar uvf buby.jar BurpExtender.class
+  > jar cvf buby.jar BurpExtender.class burp
 
 4. Copy buby to your JRuby library path. Your location may vary:
 
@@ -60,12 +56,10 @@ with paths and names if you prefer configure the Java stuff some other way.
 
 Below is a really simple test example using IRB:
 
-  $ jruby -S irb       # note use -d for additional $DEBUG info
-
-Copy and paste the following:
-
-  require 'buby'
-  burp = Buby.start_burp(nil)
+  $ jruby -S irb       # note use -d before -S for additional $DEBUG info
+  >> require 'buby'
+  >> Buby.load_burp("/path/to/burp.jar")
+  >> burp = Buby.start_burp()
 
 At this point, you should see Burp starting and if you used the '-d'
 flag, you'll also see several debug messages in IRB coming from Buby

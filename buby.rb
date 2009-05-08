@@ -38,19 +38,20 @@ include_class 'BurpExtender'
 #     Copyright 2008 PortSwigger Ltd. All rights reserved.
 #     See http://portswigger.net for license terms.
 #
-# * This ruby library and the accompanying BurpExtender.java implementation were 
-#   written by Eric Monti @ Matasano Security. 
+# * This ruby library and the accompanying BurpExtender.java implementation 
+#   were written by Eric Monti @ Matasano Security. 
 #
-#   Matasano claims no professional or legal affiliation with PortSwigger LTD. nor
-#   do we sell or officially endorse their products.
+#   Matasano claims no professional or legal affiliation with PortSwigger LTD. 
+#   nor do we sell or officially endorse their products.
 #
-#   However, this author would like to express his personal and professional respect 
-#   and appreciation for their making available the IBurpExtender extension API.
-#   The availability of this interface goes a long way to helping make Burp Suite 
-#   a truly first-class application.
+#   However, this author would like to express his personal and professional 
+#   respect and appreciation for their making available the IBurpExtender 
+#   extension API. The availability of this interface in an already great tool
+#   goes a long way to make Burp Suite a truly first-class application.
 #
-# * Forgive the name. It won out over "Burb" and "BurpRub" since it's just easier 
-#   to type and say out-loud. Mike Tracy also gets full credit as official Buby namer.
+# * Forgive the name. It won out over "Burb" and "BurpRub". It's just easier 
+#   to type and say out-loud. Mike Tracy gets full credit as official 
+#   Buby-namer.
 #
 class Buby
 
@@ -79,8 +80,8 @@ class Buby
   alias do_active_scan doActiveScan
   alias active_scan doActiveScan
 
-  # Send an HTTP request and response to the Burp Scanner tool to perform a passive 
-  # vulnerability scan.
+  # Send an HTTP request and response to the Burp Scanner tool to perform a 
+  # passive vulnerability scan.
   #  * host = The hostname of the remote HTTP server.
   #  * port = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
@@ -164,7 +165,7 @@ class Buby
   #  * port  = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
   #  * req   = The full HTTP request.
-  #  * tab   = The tab caption for this request in Repeater. (default is auto-generated)
+  #  * tab   = The tab caption displayed in Repeater. (default: auto-generated)
   def sendToRepeater(host, port, https, req, tab=nil)
     _check_cb.sendToRepeater(host, port, https, req.to_java_bytes, tab)
   end
@@ -374,14 +375,38 @@ class Buby
     return self
   end
 
-  def self.start_burp(handler, args=[], init_args=[])
-    handler ||= self
-    handler.new(*init_args).start_burp(args)
+  # Starts burp using a supplied handler class, 
+  #  h_class = Buby or a derived class. instance of which will become handler.
+  #  args = arguments to Burp
+  #  init_args = arguments to the handler constructor
+  #
+  #  Returns the handler instance
+  def self.start_burp(h_class=nil, init_args=nil args=nil)
+    h_class ||= self
+    init_args ||= []
+    args ||= []
+    h_class.new(*init_args).start_burp(args)
+  end
+
+  # Loads the burp library and confirms it includes the required burp
+  # namespace
+  def self.load_burp(jar_path)
+    require jar_path
+    include_class 'burp.StartBurp'
+    return true
   end
 end
 
+
 if __FILE__ == $0
-  $burp = Buby.start_burp(nil, ARGV)
+  begin
+    raise "you must specify the path to your burp.jar" unless jar = ARGV.shift
+    Buby.load_burp(jar)
+  rescue
+    STDERR.puts $!
+    exit 1
+  end
+  $burp = Buby.start_burp(nil, nil, ARGV)
   IRB.start if $DEBUG
 end
 
