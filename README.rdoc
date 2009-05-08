@@ -147,7 +147,7 @@ passes your request back to your Ruby runtime.
 
 It will look something like the following in IRB:
 
-  >> x.get("/")   
+  >> p.get("/")   
   [:got_proxy_request,
    [:msg_ref, 1],
    [:is_req, true],
