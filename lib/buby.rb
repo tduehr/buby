@@ -1,15 +1,13 @@
-#!/usr/bin/env jruby
-
 include Java
 
-require 'irb'
 require 'pp'
 require "buby.jar"
 
 include_class 'BurpExtender'
 
 # Buby is a mash-up of the commercial security testing web proxy PortSwigger 
-# Burp Suite(tm) driven from and tied to JRuby through the BurpExtender API.
+# Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from 
+# and tied to JRuby with a Java extension using the BurpExtender API.
 #
 # The Buby class is an abstract implementation of a BurpExtender ruby handler. 
 # Included are several abstract event handlers used from the BurpExtender
@@ -55,6 +53,12 @@ include_class 'BurpExtender'
 #
 class Buby
 
+  # :stopdoc:
+  VERSION = '1.0.0'
+  LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
+  PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
+  # :startdoc:
+
   # Returns the internal reference to the BurpExtender instance. This
   # reference gets set from Java through the evt_extender_init method.
   def burp_extender; @burp_extender; end
@@ -68,7 +72,8 @@ class Buby
     @burp_callbacks or raise "Burp callbacks have not been set"
   end
 
-  # Send an HTTP request to the Burp Scanner tool to perform an active vulnerability scan.
+  # Send an HTTP request to the Burp Scanner tool to perform an active 
+  # vulnerability scan.
   #  * host = The hostname of the remote HTTP server.
   #  * port = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
@@ -369,7 +374,7 @@ class Buby
 
   # Prepares the java BurpExtender implementation with a reference
   # to self as the module handler and launches burp suite.
-  def start_burp(args=[])
+  def start(args=[])
     BurpExtender.set_handler(self)
     Java::Burp::StartBurp.main(args.to_java(:string))
     return self
@@ -385,7 +390,7 @@ class Buby
     h_class ||= self
     init_args ||= []
     args ||= []
-    h_class.new(*init_args).start_burp(args)
+    h_class.new(*init_args).start(args)
   end
 
   # Attempts to load burp with require and confirm it provides the required 
@@ -395,7 +400,7 @@ class Buby
   # the required class
   #
   # Raises: may raise the usual require exceptions if jar_path is bad.
-  def self.has_burp?(jar_path)
+  def self.load_burp(jar_path)
     require jar_path
     return burp_loaded?
   end
@@ -409,6 +414,43 @@ class Buby
       return false
     end
   end
+
+  ### Extra cruft added by Mr Bones:
+
+  # Returns the library path for the module. If any arguments are given,
+  # they will be joined to the end of the libray path using
+  # <tt>File.join</tt>.
+  #
+  def self.libpath( *args )
+    args.empty? ? LIBPATH : ::File.join(LIBPATH, args.flatten)
+  end
+
+  # Returns the lpath for the module. If any arguments are given,
+  # they will be joined to the end of the path using
+  # <tt>File.join</tt>.
+  #
+  def self.path( *args )
+    args.empty? ? PATH : ::File.join(PATH, args.flatten)
+  end
+
+  # Utility method used to require all files ending in .rb that lie in the
+  # directory below this file that has the same name as the filename passed
+  # in. Optionally, a specific _directory_ name can be passed in such that
+  # the _filename_ does not have to be equivalent to the directory.
+  #
+  def self.require_all_libs_relative_to( fname, dir = nil )
+    dir ||= ::File.basename(fname, '.*')
+    search_me = ::File.expand_path(
+        ::File.join(::File.dirname(fname), dir, '**', '*.rb'))
+
+    Dir.glob(search_me).sort.each {|rb| require rb}
+  end
+
+  # Returns the version string for the library.
+  #
+  def self.version
+    VERSION
+  end
 end
 
 # Try requiring 'burp.jar' from the Ruby lib-path
@@ -416,20 +458,5 @@ unless Buby.burp_loaded?
   begin require "burp.jar" 
   rescue LoadError 
   end
-end
-
-
-if __FILE__ == $0
-  unless Buby.burp_loaded?
-    begin
-      raise "You must specify the path to your burp.jar" unless jar=ARGV.shift
-      raise "#{jar} did not provide burp.StartBurp" unless Buby.has_burp?(jar)
-    rescue
-      STDERR.puts "Error: #{$!}"
-      exit 1
-    end
-  end
-  $burp = Buby.start_burp()
-  IRB.start if $DEBUG
 end
 

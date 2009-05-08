@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib buby]))
+require 'irb'
+
+unless Buby.burp_loaded?
+  begin
+    raise "You must specify the path to your burp.jar" unless jar=ARGV.shift
+    raise "#{jar} did not provide burp.StartBurp" unless Buby.load_burp(jar)
+  rescue
+    STDERR.puts "Error: #{$!}"
+    exit 1
+  end
+end
+$burp = Buby.start_burp()
+IRB.start if $DEBUG

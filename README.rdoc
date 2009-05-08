@@ -1,75 +1,116 @@
+buby
+  by Eric Monti
+  http://github.com/emonti/buby
 
-=== DESCRIPTION:
+== DESCRIPTION:
 
-Buby is a JRuby-driven implementation of the BurpExtender Burp extension interface.
-All of the burp extension API is exposed via JRuby, letting you write ruby scripts to
-do various things like:
+Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.
 
-* Intercept and log proxied requests and responses via Burp into Ruby and perform
-  arbitrary processing on them.
+== FEATURES/PROBLEMS:
+
+* Intercept and log proxied requests and responses via Burp into Ruby and 
+  perform arbitrary processing on them.
 
 * Modify requests and responses in-line using Ruby scripts.
 
-* Pass requests from JRuby to various sub-interfaces in Burp
+* Pass requests and other information from JRuby to various sub-interfaces in 
+  Burp
 
-* and more... (within the limitations of Burp's extension API. and it has its limits)
+* Use the Burp framework for active and passive scanning using arbitrary
+  requests and responses.
 
-Buby is implemented using an abstract Ruby event handler and interface class. The
-Buby Ruby class is back-ended with a minimal BurpExtender class implemented in Java.
-The java code is required to conform to nuances in the Burp extension interface and 
-while it's in the pure Java runtime, it acts as 'glue' where deemed appropriate, but
-otherwise tries to stay out of the way.
+* Use the Burp framework for making arbitrary HTTP requests
 
-The java BurpExtender included with Buby is an implementation of IBurpExtender which is
-the interface API supplied by PortSwigger for writing extensions to Burp Suite. It mostly
-acts as a method proxy between Ruby and Java, doing very little except event handler
-proxying between the java and ruby runtimes with run-time type conversion as needed.
 
-=== REQUIREMENTS:
+Buby is implemented using an abstract Ruby event handler and interface class. The Buby Ruby class is back-ended with a minimal BurpExtender class implemented in Java.  The java code is required to conform to nuances in the Burp extension interface and while it's in the pure Java runtime, it acts as 'glue' where deemed appropriate, but otherwise tries to stay out of the way.
 
-Buby requires a copy of Burp Suite. Not sure if this will work with the unlicensed
-trial version. Point is, you'll need to get this separately since it's a trade-marked
-commercial product of PortSwigger Ltd.
+The java BurpExtender included with Buby is an implementation of IBurpExtender which is the interface API supplied by PortSwigger for writing extensions to Burp Suite. It mostly acts as a method proxy between Ruby and Java, doing very little except event handler proxying between the java and ruby runtimes with run-time type conversion as needed.
+
+
+== REQUIREMENTS:
+
+Buby requires a copy of Burp Suite. Not sure if this will work with the unlicensed trial version. Point is, you'll need to get this separately since it's a trade-marked commercial product of PortSwigger Ltd.
 
 See http://portswigger.net/
 
-=== BUILD/INSTALLATION:
 
-It is recommended to create a copy of burp specifically for use through JRuby.
-The buby.rb library is configured to require('buby.jar'), however you can muck around
-with paths and names if you prefer configure the Java stuff some other way.
+== BUILD/INSTALLATION:
 
-1. Compile BurpExtender.java:
+=== Gem
+You should be able to get up and running with just the gem and a copy of Burp. 
+I've packaged up a pre-built buby.jar file containing the required classes 
+minus ofcourse, Burp itself. 
 
-  > javac -classpath (/path/to/jruby/root)/lib/jruby.jar:buby.jar BurpExtender.java
+  gem install emonti-buby
 
-2. Create a buby.jar
-
-  > jar cvf buby.jar BurpExtender.class burp
-
-4. Copy buby to your JRuby library path. Your location may vary:
-
-  > cp buby.jar buby.rb (/path/to/jruby/root)/lib/site_ruby/
+See manual step #5 below. For best results, you'll still want to make your 
+burp.jar available in the ruby runtime library path.
 
 
-=== RUNNING:
+=== Manual
+Here are manual instructions if you want or need to build things yourself:
 
-Below is a really simple test example using IRB:
+1. Download buby from github
+  git clone git://github.com/emonti/buby.git
 
-  $ jruby -S irb       # note use -d before -S for additional $DEBUG info
-  >> require 'buby'
-  >> Buby.load_burp("/path/to/burp.jar")
-  >> burp = Buby.start_burp()
+2. Compile BurpExtender.java. Include jruby.jar in the classpath:
 
-At this point, you should see Burp starting and if you used the '-d'
-flag, you'll also see several debug messages in IRB coming from Buby
-as various event handlers are called by the BurpExtender java implementation.
+  cd buby/java/src
+  javac -classpath (.../jruby/root)/lib/jruby.jar:. BurpExtender.java
 
-To confirm all the stars are aligned, do a simple logging alert test:
+3. Create a new lib/buby.jar
 
-  burp.alert("hello Burp!")
+  jar cvf ../../lib/buby.jar .
 
-Viewing the Burp 'alerts' tab, you should see something like the following:
+4. Copy the buby library to your JRuby library path. Your location may vary:
+
+  cp buby.jar buby.rb (.../jruby)/lib/site_ruby/1.8/
+
+5. The last part is a bit tricky. Burp Suite itself is obviously not packaged
+   with buby. You'll need to somehow put your 'burp.jar' in a place where
+   it is visible in the JRuby RUBY-LIB paths. While there are a few other
+   methods added for pulling in 'burp.jar' during run-time, this one is by far
+   the least amount of hassle in the long run.
+
+Here's a quick way to see jruby's runtime lib-path:
+    
+  jruby -e 'puts $:'
+
+There is usually a '.../jruby/lib/1.8/java' directory reference in there, 
+though the directory may not exist in your set-up yet and you may need to 
+create it.
+
+Note: I keep my jruby installation under my home directory. Also, I think 
+my jruby version is out of date at the time of writing. But your configuration
+should still be relatively close to this. 
+
+Here's how I have mine set up.
+
+  mkdir ~/jruby-1.1.5/lib/ruby/1.8/java
+  ln -s ~/tools/burp.jar ~/jruby-1.1.5/lib/ruby/1.8/java/burp.jar
+
+Once this is done, everything should be ready to go.
+
+== TEST AND USAGE EXAMPLE:
+
+Here are some really simple test examples using Buby through IRB:
+
+  $ jruby -S irb
+
+  require 'buby'
+  $DEBUG = true
+
+  # Here's one way to explicitely add burp.jar into the runtime if its not
+  # already.
+  Buby.load_burp("/path/to/burp.jar") if not Buby.burp_loaded?
+  buby = Buby.start_burp()
+
+At this point, you should see Burp starting and with the $DEBUG flag, you'll 
+also see several debug messages in IRB coming from Buby as various events are 
+generated by the BurpExtender java implementation. Once Burp is running, click 
+on the alerts tab.
+
+You should see now something like the following in alerts:
 
   2:46:01 PM  suite   method BurpExtender.processProxyMessage() found
   2:46:01 PM  suite   method BurpExtender.registerExtenderCallbacks() found
@@ -78,14 +119,24 @@ Viewing the Burp 'alerts' tab, you should see something like the following:
   2:46:01 PM  proxy   proxy service started on port 8080
   2:46:01 PM  suite   [BurpExtender] registering JRuby handler callbacks
   2:46:01 PM  suite   [JRuby::Buby] registered callback
+
+To confirm you are connected back to Burp in IRB, do the following:
+
+  buby.alert("hello Burp!")
+
+Which should produce a new alert:
+
   2:47:00 PM  suite   hello Burp!
 
-Now make an HTTP request through the proxy. We'll use Net:HTTP
+
+Next, lets make an HTTP request through the proxy. We'll use Net:HTTP right 
+in IRB for illustration purposes. However, you can just as easily perform this 
+test through a browser configured to use Burp as its proxy.  
 
   require 'net/http'
   p = Net::HTTP::Proxy("localhost", 8080).start("www.example.com")
-  $DEBUG = true
   p.get("/")
+
 
 With $DEBUG = true, you should see the debugging output from Ruby as the proxy
 passes your request back to your Ruby runtime.
@@ -104,12 +155,13 @@ It will look something like the following in IRB:
    [:resourceType, nil],
    [:status, nil],
    [:req_content_type, nil],
-   [:message, "GET / HTTP/1.1\r\nAccept:...
+   [:message, "GET / HTTP/1.1\r\nAccept:..."],
    [:action, 0]]
 
-Back the in Burp proxy's intercept window, turn off interception if it hasn't already 
-been disabled by clicking the button saying 'intercept is off'. 
-Now you'll see the response in IRB as it passes back through the Burp proxy.
+You may also see the response right away depending on your intercept settings 
+in Burp. Back the in Burp proxy's intercept window, turn off interception if 
+it hasn't already been disabled. Now you should definitely see the response 
+in IRB as it passes back through the Burp proxy.
 
   [:got_proxy_response,
    [:msg_ref, 1],
@@ -122,32 +174,87 @@ Now you'll see the response in IRB as it passes back through the Burp proxy.
    [:resourceType, nil],
    [:status, "200"],
    [:req_content_type, "text/html; charset=utf-8"],
-   [:message, "HTTP/1.1 200 OK\r\n...],
+   [:message, "HTTP/1.1 200 OK\r\n..."],
    [:action, 0]]
   => #<Net::HTTPOK 200 OK readbody=true>
   >>
 
-Note also, the Net::HTTP request should have returned the same result as shown in the
-proxy.
+Note also, the Net::HTTP request should have returned the same result as shown in the proxy.
+
+Now, lets try something mildly interesting with the proxy. This contrived example will implement a proxy request manipulator to do HTTP request verb tampering on every GET request that goes through the proxy. 
+
+  # Note: I'm using 'instance_eval' here only to stay with the flow of the 
+  # existing IRB session. Normally, you'd probably want to implement this as 
+  # an override in your Buby-derived class.
+
+  buby.instance_eval do
+
+    def evt_proxy_message(*param)
+      msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, 
+      status, req_content_type, message, action = param
+
+      if is_req and http_meth=="GET"
+        # Change the HTTP request verb to something silly
+        message[0,3] = "PET"
+
+        # Forcibly disable interception in the Burp UI
+        action[0] = Buby::ACTION_DONT_INTERCEPT
+
+        # Return a new instance and still get $DEBUG info
+        return super(*param).dup
+      else
+        # Just get $DEBUG info for all other requests
+        return super(*param)
+      end
+    end
+
+  end
+
+  # Now, make another request using the Net::HTTP client
+  p.get("/")
 
 
-=== CREDIT:
+This should produce a request that looks like the following in IRB:
+
+  [:got_proxy_request,
+   ...
+   [:message,
+    "PET / HTTP/1.1\r\nAccept: */*\r\nUser-Agent: Ruby..."],
+    [:action, 2]]
+
+And, assuming 'www.example.com' checks for valid request verbs, you should see something like the following response:
+
+  [:got_proxy_response,
+   ...
+   [:http_meth, "PET"],
+   [:url, "/"],
+   [:resourceType, nil],
+   [:status, "400"],
+   ...
+   [:message,
+    "HTTP/1.1 400 Bad Request\r\nContent-Type:..."],
+   [:action, 0]]
+  => #<Net::HTTPBadRequest 400 Bad Request readbody=true>
+
+
+== CREDIT:
 * Burp and Burp Suite are trademarks of PortSwigger(ltd) 
   Copyright 2008 PortSwigger Ltd. All rights reserved.
   See http://portswigger.net for license terms.
 
 * This ruby library and the accompanying BurpExtender.java implementation are 
-  written by Eric Monti @ Matasano Security. 
+  written by Eric Monti @ Matasano Security. Matasano Security claims no 
+  professional or legal affiliation with PortSwigger LTD.
 
-  Matasano claims no professional or legal affiliation with PortSwigger LTD. nor
-  do we sell or officially endorse their products.
+  However, the author would like to express his personal and professional 
+  respect and admiration to Burp's authors and appreciation to PortSwigger for 
+  the availability of the IBurpExtender extension API.
 
-  However, this author would like to express his personal and professional respect 
-  and appreciation for their making available the IBurpExtender extension API.
   The availability of this interface goes a long way to helping make Burp Suite 
   a truly first-class application.
 
-=== LICENSE:
+== LICENSE:
+
 * Burp and Burp Suite are trademarks of PortSwigger Ltd.
   Copyright 2008 PortSwigger Ltd. All rights reserved.
   See http://portswigger.net for license terms.
