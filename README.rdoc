@@ -50,27 +50,29 @@ burp.jar available in the ruby runtime library path.
 === Manual
 Here are manual instructions if you want or need to build things yourself:
 
-1. Download buby from github
+Step 1. Download buby from github
   git clone git://github.com/emonti/buby.git
 
-2. Compile BurpExtender.java. Include jruby.jar in the classpath:
+Step 2. Compile BurpExtender.java. Include jruby.jar in the classpath:
 
   cd buby/java/src
   javac -classpath (.../jruby/root)/lib/jruby.jar:. BurpExtender.java
 
-3. Create a new lib/buby.jar
+Step 3. Create a new lib/buby.jar
 
   jar cvf ../../lib/buby.jar .
 
-4. Copy the buby library to your JRuby library path. Your location may vary:
+Step 4. Copy the buby library to your JRuby lib-path. Your location may vary:
 
   cp buby.jar buby.rb (.../jruby)/lib/site_ruby/1.8/
 
-5. The last part is a bit tricky. Burp Suite itself is obviously not packaged
-   with buby. You'll need to somehow put your 'burp.jar' in a place where
-   it is visible in the JRuby RUBY-LIB paths. While there are a few other
-   methods added for pulling in 'burp.jar' during run-time, this one is by far
-   the least amount of hassle in the long run.
+Step 5. 
+
+The last part is a bit tricky. Burp Suite itself is obviously not 
+with buby. You'll want to somehow put your 'burp.jar' in a place where
+it is visible in the JRuby RUBY-LIB paths. While there are a few other
+ways of pulling in 'burp.jar' during run-time, this one is by far
+the least amount of hassle in the long run.
 
 Here's a quick way to see jruby's runtime lib-path:
     
