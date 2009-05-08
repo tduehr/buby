@@ -5,14 +5,14 @@ Buby is a JRuby-driven implementation of the BurpExtender Burp extension interfa
 All of the burp extension API is exposed via JRuby, letting you write ruby scripts to
 do various things like:
 
-  * Intercept and log proxied requests and responses via Burp into Ruby and perform
-    arbitrary processing on them.
+* Intercept and log proxied requests and responses via Burp into Ruby and perform
+  arbitrary processing on them.
 
-  * Modify requests and responses in-line using Ruby scripts.
+* Modify requests and responses in-line using Ruby scripts.
 
-  * Pass requests from JRuby to various sub-interfaces in Burp
+* Pass requests from JRuby to various sub-interfaces in Burp
 
-  * and more... (within the limitations of Burp's extension API. and it has its limits)
+* and more... (within the limitations of Burp's extension API. and it has its limits)
 
 Buby is implemented using an abstract Ruby event handler and interface class. The
 Buby Ruby class is back-ended with a minimal BurpExtender class implemented in Java.
@@ -136,29 +136,30 @@ Now you'll see the response in IRB as it passes back through the Burp proxy.
 Note also, the Net::HTTP request should have returned the same result as shown in the
 proxy.
 
+
 === CREDIT:
-  * Burp and Burp Suite are trade-marks of PortSwigger(ltd) 
-    Copyright 2008 PortSwigger Ltd. All rights reserved.
-    See http://portswigger.net for license terms.
+* Burp and Burp Suite are trademarks of PortSwigger(ltd) 
+  Copyright 2008 PortSwigger Ltd. All rights reserved.
+  See http://portswigger.net for license terms.
 
-  * This ruby library and the accompanying BurpExtender.java implementation are 
-    written by Eric Monti @ Matasano Security. 
+* This ruby library and the accompanying BurpExtender.java implementation are 
+  written by Eric Monti @ Matasano Security. 
 
-    Matasano claims no professional or legal affiliation with PortSwigger LTD. nor
-    do we sell or officially endorse their products.
+  Matasano claims no professional or legal affiliation with PortSwigger LTD. nor
+  do we sell or officially endorse their products.
 
-    However, this author would like to express his personal and professional respect 
-    and appreciation for their making available the IBurpExtender extension API.
-    The availability of this interface goes a long way to helping make Burp Suite 
-    a truly first-class application.
+  However, this author would like to express his personal and professional respect 
+  and appreciation for their making available the IBurpExtender extension API.
+  The availability of this interface goes a long way to helping make Burp Suite 
+  a truly first-class application.
 
 === LICENSE:
 * Burp and Burp Suite are trademarks of PortSwigger Ltd.
-Copyright 2008 PortSwigger Ltd. All rights reserved.
-See http://portswigger.net for license terms.
+  Copyright 2008 PortSwigger Ltd. All rights reserved.
+  See http://portswigger.net for license terms.
 
 * The Buby Ruby library and its accompanying BurpExtender implementation are
-both freely available under the terms of the MIT public license:
+  both freely available under the terms of the MIT public license:
 
 (The MIT License)
 

@@ -14,43 +14,44 @@ include_class 'BurpExtender'
 # The Buby class is an abstract implementation of a BurpExtender ruby handler. 
 # Included are several abstract event handlers used from the BurpExtender
 # java implementation:
-#  * evt_extender_init
-#  * evt_proxy_message
-#  * evt_commandline_args
-#  * evt_register_callbacks
-#  * evt_application_closing
+# * evt_extender_init
+# * evt_proxy_message
+# * evt_command_line_args
+# * evt_register_callbacks
+# * evt_application_closing
 #
 # This class also exposes several methods used to access Burp functionality 
 # and user interfaces (note also, abbreviated aliases exist for each):
-#  * doActiveScan
-#  * doPassiveScan
-#  * excludeFromScope
-#  * includeInScope
-#  * isInScope
-#  * issueAlert
-#  * makeHttpRequest
-#  * sendToIntruder
-#  * sendToRepeater
-#  * sendToSpider
-#
-# Forgive the name. It won out over "Burb" and "BurpRub" since it's just easier 
-# to type and say out-loud. (Mike Tracy also gets credit ftw)
+# * doActiveScan
+# * doPassiveScan
+# * excludeFromScope
+# * includeInScope
+# * isInScope
+# * issueAlert
+# * makeHttpRequest
+# * sendToIntruder
+# * sendToRepeater
+# * sendToSpider
 #
 # Credit:
-#   * Burp and Burp Suite are trade-marks of PortSwigger Ltd.
+# * Burp and Burp Suite are trade-marks of PortSwigger Ltd.
 #     Copyright 2008 PortSwigger Ltd. All rights reserved.
 #     See http://portswigger.net for license terms.
 #
-#   * This ruby library and the accompanying BurpExtender.java implementation were 
-#     written by Eric Monti @ Matasano Security. 
+# * This ruby library and the accompanying BurpExtender.java implementation were 
+#   written by Eric Monti @ Matasano Security. 
 #
-#     Matasano claims no professional or legal affiliation with PortSwigger LTD. nor
-#     do we sell or officially endorse their products.
+#   Matasano claims no professional or legal affiliation with PortSwigger LTD. nor
+#   do we sell or officially endorse their products.
 #
-#     However, this author would like to express his personal and professional respect 
-#     and appreciation for their making available the IBurpExtender extension API.
-#     The availability of this interface goes a long way to helping make Burp Suite 
-#     a truly first-class application.
+#   However, this author would like to express his personal and professional respect 
+#   and appreciation for their making available the IBurpExtender extension API.
+#   The availability of this interface goes a long way to helping make Burp Suite 
+#   a truly first-class application.
+#
+# * Forgive the name. It won out over "Burb" and "BurpRub" since it's just easier 
+#   to type and say out-loud. Mike Tracy also gets full credit as official Buby namer.
+#
 class Buby
 
   # Returns the internal reference to the BurpExtender instance. This
@@ -130,7 +131,7 @@ class Buby
   alias issue_alert issueAlert
   alias alert issueAlert
 
-  # Issue an arbitrary HTTP requests and retrieve its response
+  # Issue an arbitrary HTTP request and retrieve its response
   #  * host  = The hostname of the remote HTTP server.
   #  * port  = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
@@ -225,8 +226,8 @@ class Buby
 
   # This method is called by BurpExtender while proxying HTTP messages and
   # before passing them through the Burp proxy. Implementations can use this
-  # method to implement various tasks with and to requests and responses such
-  # as interception, logging, modification, and on.
+  # method to implement arbitrary processing upon HTTP requests and responses 
+  # such as interception, logging, modification, and so on.
   #
   # The 'is_req' parameter indicates whether it is a response or request.
   #
@@ -237,50 +238,50 @@ class Buby
   # javadoc. Where applicable, decriptions have been modified for 
   # local parameter naming and other ruby-specific details added.
   #
-  # * msg_ref 
+  # * msg_ref:
   #   An identifier which is unique to a single request/response pair. This 
   #   can be used to correlate details of requests and responses and perform 
   #   processing on the response message accordingly. This number also 
   #   corresponds to the Burp UI's proxy "history" # column.
   #
-  # * is_req (true/false)
+  # * is_req: (true/false)
   #   Flags whether the message is a client request or a server response.
   #
-  # * rhost
+  # * rhost:
   #   The hostname of the remote HTTP server.
   #
-  # * rport 
+  # * rport:
   #   The port of the remote HTTP server.
   #
-  # * is_https 
+  # * is_https:
   #   Flags whether the protocol is HTTPS or HTTP.
   #
-  # * http_meth 
+  # * http_meth:
   #   The method verb used in the client request.
   #
-  # * url 
+  # * url:
   #   The requested URL. Set in both the request and response.
   #
-  # * resourceType 
+  # * resourceType:
   #   The filetype of the requested resource, or a zero-length string if the 
   #   resource has no filetype.
   #
-  # * status
+  # * status:
   #   The HTTP status code returned by the server. This value is nil for 
   #   request messages.
   #
-  # * req_content_type 
+  # * req_content_type:
   #   The content-type string returned by the server. This value is nil for 
   #   request messages.
   #
-  # * message 
+  # * message:
   #   The full HTTP message.  
   #   **Ruby note: 
   #     For convenience, the message is received and returned as a ruby 
   #     String object. Internally within Burp it is handled as a java byte[] 
   #     array. See also the notes about the return object below.
   #
-  # * action 
+  # * action:
   #   An array containing a single integer, allowing the implementation to 
   #   communicate back to Burp Proxy a non-default interception action for 
   #   the message. The default value is ACTION_FOLLOW_RULES (or 0). 
@@ -293,7 +294,7 @@ class Buby
   #   Refer to the BurpExtender.java source comments for more details.
   #
   #
-  # Returns:
+  # Return Value:
   #   Implementations should return either (a) the same object received
   #   in the message paramater, or (b) a different object containing a 
   #   modified message. 
