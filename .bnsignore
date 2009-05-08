@@ -21,3 +21,4 @@ pkg
 bin/experimental
 reference
 lib/burp.jar
+*.class
