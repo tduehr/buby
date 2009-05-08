@@ -381,7 +381,7 @@ class Buby
   #  init_args = arguments to the handler constructor
   #
   #  Returns the handler instance
-  def self.start_burp(h_class=nil, init_args=nil args=nil)
+  def self.start_burp(h_class=nil, init_args=nil, args=nil)
     h_class ||= self
     init_args ||= []
     args ||= []
