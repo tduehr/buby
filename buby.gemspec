@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{buby}
-  s.version = "1.0.0"
+  s.version = "1.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Monti - Matasano Security"]
-  s.date = %q{2009-05-08}
+  s.date = %q{2009-05-10}
   s.default_executable = %q{buby}
   s.description = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.}
   s.email = %q{emonti@matasano.com}
