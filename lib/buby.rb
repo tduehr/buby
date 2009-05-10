@@ -54,10 +54,24 @@ include_class 'BurpExtender'
 class Buby
 
   # :stopdoc:
-  VERSION = '1.0.0'
+  VERSION = '1.0.1'
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
+
+  def initialize(other=nil)
+    if other
+      raise "arg 0 must be another kind of Buby" unless other.is_a? Buby
+      @burp_extender = other.burp_extender
+      @burp_callbacks = other.burp_callbacks
+    end
+  end
+
+  # Makes this handler the active Ruby handler object for the BurpExtender
+  # Java runtime. (there can be only one!)
+  def activate!
+    BurpExtender.set_handler(self)
+  end
 
   # Returns the internal reference to the BurpExtender instance. This
   # reference gets set from Java through the evt_extender_init method.
@@ -374,8 +388,8 @@ class Buby
 
   # Prepares the java BurpExtender implementation with a reference
   # to self as the module handler and launches burp suite.
-  def start(args=[])
-    BurpExtender.set_handler(self)
+  def start_burp(args=[])
+    activate!()
     Java::Burp::StartBurp.main(args.to_java(:string))
     return self
   end
@@ -390,7 +404,7 @@ class Buby
     h_class ||= self
     init_args ||= []
     args ||= []
-    h_class.new(*init_args).start(args)
+    h_class.new(*init_args).start_burp(args)
   end
 
   # Attempts to load burp with require and confirm it provides the required 
