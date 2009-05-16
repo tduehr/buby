@@ -49,8 +49,8 @@ minus ofcourse, Burp itself.
   jruby -S gem install emonti-buby
 
 * IMPORTANT: The buby gem doesn't include a copy of Burp!  See manual step #5 
-below. For best results, you'll still want to make your burp.jar available 
-in the ruby runtime library path.
+  below. For best results, you'll still want to make your burp.jar available 
+  in the ruby runtime library path.
 
 
 === Manual
