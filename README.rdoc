@@ -45,7 +45,8 @@ You should be able to get up and running with just the gem and a copy of Burp.
 I've packaged up a pre-built buby.jar file containing the required classes 
 minus ofcourse, Burp itself. 
 
-  gem install emonti-buby
+  jruby -S gem sources -a http://gems.github.com # only have to do this once
+  jruby -S gem install emonti-buby
 
 * IMPORTANT: The buby gem doesn't include a copy of Burp!  See manual step #5 
 below. For best results, you'll still want to make your burp.jar available 
@@ -55,15 +56,15 @@ in the ruby runtime library path.
 === Manual
 Here are manual instructions if you want or need to build things yourself:
 
-Step 1. Download buby from github
+==== Step 1. Download buby from github
   git clone git://github.com/emonti/buby.git
 
-Step 2. Compile BurpExtender.java. Include jruby.jar in the classpath:
+==== Step 2. Compile BurpExtender.java. Include jruby.jar in the classpath:
 
   cd buby/java/src
   javac -classpath (.../jruby/root)/lib/jruby.jar:. BurpExtender.java
 
-Step 3. Create a new lib/buby.jar
+==== Step 3. Create a new java/buby.jar
 
   jar cvf ../buby.jar .
 
@@ -71,13 +72,13 @@ Note: At this point you can also just do a rake gem:install from the
 top-level, which will install a local 'buby' gem instead of 'emonti-buby'. If
 you do this, just skip the next step and move onto step #5.
 
-Step 4. Copy buby.rb and jar to your JRuby lib-path. Locations may vary:
+==== Step 4. Build a local gem and install it
 
   cd ../../
-  cp lib/buby.rb (.../jruby)/lib/site_ruby/1.8/
-  cp -p java/buby.jar (.../jruby)/lib/site_ruby/1.8/java/buby.jar
+  jruby -S gem build buby.gemspec
+  jruby -S gem install --local buby-*.gem
 
-Step 5. 
+==== Step 5. 
 
 The last part is a bit tricky. Burp Suite itself is obviously not included
 with buby. You'll want to somehow put your 'burp.jar' in a place where it 
@@ -85,8 +86,8 @@ is visible in the JRuby RUBY-LIB paths. There are a few other ways of pulling
 in Burp during runtime, but this method probably involves the least amount of 
 hassle in the long run.
 
-JRuby gives you a 'java' site_ruby directory for this kind of thing.  Here's a 
-quick way to see jruby's runtime lib-path:
+JRuby usually gives you a 'java' lib directory for this kind of thing.  Here's 
+a quick way to see jruby's runtime lib-path:
     
   jruby -e 'puts $:'
 
@@ -114,6 +115,7 @@ Here are some really simple test examples using Buby through IRB:
 
   $ jruby -S irb
 
+  require 'rubygems'
   require 'buby'
   $DEBUG = true
 
