@@ -68,10 +68,6 @@ Here are manual instructions if you want or need to build things yourself:
 
   jar cvf ../buby.jar .
 
-Note: At this point you can also just do a rake gem:install from the 
-top-level, which will install a local 'buby' gem instead of 'emonti-buby'. If
-you do this, just skip the next step and move onto step #5.
-
 ==== Step 4. Build a local gem and install it
 
   cd ../../
