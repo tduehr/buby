@@ -283,8 +283,8 @@ class Buby
   #   The requested URL. Set in both the request and response.
   #
   # * resourceType:
-  #   The filetype of the requested resource, or a zero-length string if the 
-  #   resource has no filetype.
+  #   The filetype of the requested resource, or nil if the resource has no 
+  #   filetype.
   #
   # * status:
   #   The HTTP status code returned by the server. This value is nil for 
