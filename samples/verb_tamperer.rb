@@ -1,4 +1,5 @@
 #!/usr/bin/env jruby
+require 'rubygems'
 require 'buby'
 
 class VerbTamperer < Buby
