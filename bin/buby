@@ -12,5 +12,10 @@ unless Buby.burp_loaded?
     exit 1
   end
 end
+
 $burp = Buby.start_burp()
-IRB.start if $DEBUG
+
+if $DEBUG
+  puts "Global $burp is set to #{$burp.inspect}"
+  IRB.start 
+end
