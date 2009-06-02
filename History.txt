@@ -1,3 +1,7 @@
+== 1.0.2 / 2009-06-02
+* Enhancements
+  * Added a sample illustrating synching cookies with Mechanize
+
 == 1.0.1 / 2009-05-10
 * Enhancements
   * Added some sugar to make swapping Burp event handlers easier.

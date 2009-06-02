@@ -18,7 +18,7 @@ announcement.txt
 coverage*/
 doc
 pkg
-bin/experimental
+experimental
 reference
 lib/burp.jar
 *.class
