@@ -2,6 +2,8 @@
 
 import burp.IBurpExtender;
 import burp.IBurpExtenderCallbacks;
+import burp.IScanIssue;
+import burp.IHttpRequestResponse;
 
 import org.jruby.*;
 import org.jruby.javasupport.JavaUtil;
