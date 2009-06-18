@@ -1,6 +1,9 @@
 
 Burp version 1.2.09 added major enhancements to Burp's extension API.
 
+Details here:
+  http://releases.portswigger.net/2009/05/v1209.html
+
 In order to include support for the new Burp features while still maintaining 
 compatability with older verions, the buby BurpExtender implementation has 
 been split into "branches" and both are included with the distribution.
