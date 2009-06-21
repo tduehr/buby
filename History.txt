@@ -1,3 +1,9 @@
+== 1.1.0 / 2009-06-18
+* Enhancements
+  * Added support for the new API features added in Burp 1.2.09.
+    See http://releases.portswigger.net/2009/05/v1209.html
+  * buby command-line tool exposes arguments for debugging and IRB
+
 == 1.0.2 / 2009-06-02
 * Enhancements
   * Added a sample illustrating synching cookies with Mechanize

@@ -2,20 +2,43 @@
 
 require File.expand_path(File.join(File.dirname(__FILE__), %w[.. lib buby]))
 require 'irb'
+require 'optparse'
 
-unless Buby.burp_loaded?
-  begin
-    raise "You must specify the path to your burp.jar" unless jar=ARGV.shift
-    raise "#{jar} did not provide burp.StartBurp" unless Buby.load_burp(jar)
-  rescue
-    STDERR.puts "Error: #{$!}"
-    exit 1
+args = {}
+
+begin
+  opts = OptionParser.new do |o|
+    o.banner = "Usage: #{File.basename $0} [options]"
+
+    o.on_tail("-h", "--help", "Show this help message") do
+      raise opts.to_s
+    end
+
+    o.on("-i", "--interactive", "Start IRB") { args[:irb] = true }
+
+    o.on("-d", "--debug", "Debug info") { args[:debug] = true }
+
+    o.on("-B", "--load-burp=PATH", "Load Burp Jar from PATH") do |b|
+      args[:load_burp] = b
+    end
   end
+
+  opts.parse!(ARGV)
+
+  if jar=args[:load_burp]
+    raise "Load Burp Error: #{jar} did not provide burp.StartBurp" unless Buby.load_burp(jar)
+  end
+  raise "Load Burp Error: Specify a path to your burp.jar with -B" unless Buby.burp_loaded?
+rescue
+  STDERR.puts $!
+  exit 1
 end
+
+$DEBUG=true if args[:debug]
 
 $burp = Buby.start_burp()
 
-if $DEBUG
+if args[:irb]
   puts "Global $burp is set to #{$burp.inspect}"
   IRB.start 
 end

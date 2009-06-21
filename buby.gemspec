@@ -2,17 +2,17 @@
 
 Gem::Specification.new do |s|
   s.name = %q{buby}
-  s.version = "1.0.1"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Monti - Matasano Security"]
-  s.date = %q{2009-06-02}
+  s.date = %q{2009-06-18}
   s.default_executable = %q{buby}
   s.description = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.}
   s.email = %q{emonti@matasano.com}
   s.executables = ["buby"]
-  s.extra_rdoc_files = ["History.txt", "README.rdoc", "bin/buby"]
-  s.files = ["History.txt", "README.rdoc", "Rakefile", "bin/buby", "buby.gemspec", "java/buby.jar", "java/src/BurpExtender.java", "java/src/burp/IBurpExtender.java", "java/src/burp/IBurpExtenderCallbacks.java", "lib/buby.rb", "samples/mechanize_burp.rb", "samples/verb_tamperer.rb", "spec/buby_spec.rb", "spec/spec_helper.rb", "tasks/ann.rake", "tasks/bones.rake", "tasks/gem.rake", "tasks/git.rake", "tasks/notes.rake", "tasks/post_load.rake", "tasks/rdoc.rake", "tasks/rubyforge.rake", "tasks/setup.rb", "tasks/spec.rake", "tasks/svn.rake", "tasks/test.rake", "tasks/zentest.rake", "test/test_buby.rb"]
+  s.extra_rdoc_files = ["History.txt", "README.rdoc", "bin/buby", "java/src/README.txt"]
+  s.files = ["History.txt", "README.rdoc", "Rakefile", "bin/buby", "buby.gemspec", "java/buby.jar", "java/src/README.txt", "java/src/current/BurpExtender.java", "java/src/current/burp/IBurpExtender.java", "java/src/current/burp/IBurpExtenderCallbacks.java", "java/src/current/burp/IHttpRequestResponse.java", "java/src/current/burp/IScanIssue.java", "java/src/current/burp/IScanQueueItem.java", "java/src/pre-1.2.09/BurpExtender.java", "java/src/pre-1.2.09/burp/IBurpExtender.java", "java/src/pre-1.2.09/burp/IBurpExtenderCallbacks.java", "lib/buby.rb", "samples/mechanize_burp.rb", "samples/verb_tamperer.rb", "spec/buby_spec.rb", "spec/spec_helper.rb", "tasks/ann.rake", "tasks/bones.rake", "tasks/gem.rake", "tasks/git.rake", "tasks/notes.rake", "tasks/post_load.rake", "tasks/rdoc.rake", "tasks/rubyforge.rake", "tasks/setup.rb", "tasks/spec.rake", "tasks/svn.rake", "tasks/test.rake", "tasks/zentest.rake", "test/test_buby.rb"]
   s.homepage = %q{http://github.com/emonti/buby}
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib", "java"]
