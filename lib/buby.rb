@@ -212,7 +212,16 @@ class Buby
   alias send_to_spider sendToSpider
   alias spider sendToSpider
 
-  def _check_available_and_call(meth, *args)
+  # This method is a __send__ call back gate for the IBurpExtenderCallbacks
+  # reference. It first checks to see if a method is available before calling
+  # with the specified arguments, and raises an exception if it is unavailable.
+  #
+  # This method was added for provisional calling of new callbacks added since
+  # Burp 1.2.09
+  #
+  # * meth = string or symbol name of method
+  # * args = variable length array of arguments to pass to meth
+  def _check_and_callback(meth, *args)
     cb = _check_cb
     unless cb.respond_to?(meth)
       raise "#{meth} is not available in your version of Burp"
@@ -223,7 +232,7 @@ class Buby
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp proxy history.
   def getProxyHistory
-    _check_available_and_call(:getProxyHistory)
+    _check_and_callback(:getProxyHistory)
   end
   alias proxy_history getProxyHistory
   alias get_proxy_history getProxyHistory
@@ -231,7 +240,7 @@ class Buby
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp site map.
   def getSiteMap
-    _check_available_and_call(:getSiteMap)
+    _check_and_callback(:getSiteMap)
   end
   alias site_map getSiteMap
   alias get_site_map getSiteMap
@@ -243,7 +252,7 @@ class Buby
   #
   # * filename = path and filename of the file to restore from
   def restoreState(filename)
-    _check_available_and_call(:restoreState, java.io.File.new(filename))
+    _check_and_callback(:restoreState, java.io.File.new(filename))
   end
   alias restore_state restoreState
 
@@ -253,7 +262,7 @@ class Buby
   #
   # * filename = path and filename of the file to save to
   def saveState(filename)
-    _check_available_and_call(:saveState, java.io.File.new(filename))
+    _check_and_callback(:saveState, java.io.File.new(filename))
   end
   alias save_state saveState
 
@@ -265,7 +274,7 @@ class Buby
   #
   # req = raw request string (converted to Java bytes[] in passing)
   def getParameters(req)
-    _check_available_and_call(:getParameters, req.to_s.to_java_bytes)
+    _check_and_callback(:getParameters, req.to_s.to_java_bytes)
   end
   alias parameters getParameters
   alias get_parameters getParameters
@@ -278,7 +287,7 @@ class Buby
   #
   # msg = raw request/response string (converted to Java bytes[] in passing)
   def getHeaders(msg)
-    _check_available_and_call(:getHeaders, msg.to_s.to_java_bytes)
+    _check_and_callback(:getHeaders, msg.to_s.to_java_bytes)
   end
   alias headers getHeaders
   alias get_Headers getHeaders
