@@ -22,3 +22,4 @@ experimental
 reference
 lib/burp.jar
 *.class
+*.gem
