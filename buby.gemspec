@@ -34,3 +34,4 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<bones>, [">= 2.5.1"])
   end
 end
+
