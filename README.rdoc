@@ -90,7 +90,7 @@ a quick way to see jruby's runtime lib-path:
 There is usually a '.../jruby/lib/1.8/java' directory reference in there, 
 though the actual directory may need to be created.
 
-Here's how I do it. I have jruby installation under my home directory.
+Here's how I do it. I have my jruby installation under my home directory.
 Your configuration details can be substituted below. 
 
   mkdir ~/jruby-1.1.5/lib/ruby/1.8/java
