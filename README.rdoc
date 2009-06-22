@@ -1,6 +1,6 @@
 buby
   by Eric Monti
-  http://github.com/emonti/buby
+  http://emonti.github.com/buby
 
 == DESCRIPTION:
 
