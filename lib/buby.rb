@@ -479,7 +479,7 @@ class Buby
   # IMPORTANT: This event handler is only used in Burp version 1.2.09 and 
   # higher.
   # 
-  # Note: this method mapps to the processHttpMessage BurpExtender Java method.
+  # Note: this method maps to the processHttpMessage BurpExtender Java method.
   #
   # This method should be overridden if you wish to implement functionality
   # relating to generalized requests and responses from any BurpSuite tool.
@@ -507,7 +507,7 @@ class Buby
   # IMPORTANT: This event handler is only used in Burp version 1.2.09 and 
   # higher.
   #
-  # Note: this method mapps to the newScanIssue BurpExtender Java method.
+  # Note: this method maps to the newScanIssue BurpExtender Java method.
   #
   # Parameters:
   # * issue = an instance of the IScanIssue Java class with methods for viewing
