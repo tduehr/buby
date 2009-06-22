@@ -34,8 +34,8 @@ The java BurpExtender included with Buby is an implementation of IBurpExtender w
   The C version of ruby will not work.
 
 * Burp (pro or free version): Buby is useless without a copy of Burp. 
-  Buby has been tested successfully with both Burp Suite free and pro versions 
-  1.2, 1.2.01, and 1.2.05. See http://portswigger.net/
+  Buby has been tested successfully with both Burp Suite free and pro versions.
+  As of version 1.1.0, Buby supports both pre and post 1.2.09 Burp extensions.
 
 
 == BUILD/INSTALL:
