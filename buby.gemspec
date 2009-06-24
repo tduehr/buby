@@ -2,18 +2,18 @@
 
 Gem::Specification.new do |s|
   s.name = %q{buby}
-  s.version = "1.1.0.0"
+  s.version = "1.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Monti - Matasano Security"]
-  s.date = %q{2009-06-21}
+  s.date = %q{2009-06-24}
   s.default_executable = %q{buby}
   s.description = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.}
   s.email = %q{emonti@matasano.com}
   s.executables = ["buby"]
   s.extra_rdoc_files = ["History.txt", "README.rdoc", "bin/buby"]
   s.files = ["History.txt", "README.rdoc", "Rakefile", "bin/buby", "buby.gemspec", "java/buby.jar", "java/src/BurpExtender.java", "java/src/burp/IBurpExtender.java", "java/src/burp/IBurpExtenderCallbacks.java", "java/src/burp/IHttpRequestResponse.java", "java/src/burp/IScanIssue.java", "java/src/burp/IScanQueueItem.java", "lib/buby.rb", "samples/mechanize_burp.rb", "samples/verb_tamperer.rb", "spec/buby_spec.rb", "spec/spec_helper.rb", "tasks/ann.rake", "tasks/bones.rake", "tasks/gem.rake", "tasks/git.rake", "tasks/notes.rake", "tasks/post_load.rake", "tasks/rdoc.rake", "tasks/rubyforge.rake", "tasks/setup.rb", "tasks/spec.rake", "tasks/svn.rake", "tasks/test.rake", "tasks/zentest.rake", "test/test_buby.rb"]
-  s.homepage = %q{http://github.com/emonti/buby}
+  s.homepage = %q{http://emonti.github.com/buby}
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib", "java"]
   s.rubyforge_project = %q{buby}
@@ -34,4 +34,3 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<bones>, [">= 2.5.1"])
   end
 end
-

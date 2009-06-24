@@ -1,3 +1,7 @@
+== 1.1.1 / 2009-06-24
+* Fix
+  * fixed getSiteMap callback front-end so that it takes the urlprefix argument
+
 == 1.1.0 / 2009-06-18
 * 1 major enhancement
   * Support added for the new Burp API features added in Burp 1.2.09.

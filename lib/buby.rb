@@ -72,7 +72,7 @@ include_class 'BurpExtender'
 class Buby
 
   # :stopdoc:
-  VERSION = '1.1.0'
+  VERSION = '1.1.1'
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
@@ -239,8 +239,8 @@ class Buby
 
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp site map.
-  def getSiteMap
-    _check_and_callback(:getSiteMap)
+  def getSiteMap(urlprefix)
+    _check_and_callback(:getSiteMap, urlprefix)
   end
   alias site_map getSiteMap
   alias get_site_map getSiteMap
