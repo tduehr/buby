@@ -140,7 +140,7 @@ Here are some simple test examples using Buby through the IRB shell:
 To confirm you are connected back to Burp in IRB, you can try writing to the
 alerts panel with something like the following:
 
-  $buby.alert("hello Burp!")
+  $burp.alert("hello Burp!")
 
 Which should produce a new alert:
 
@@ -205,7 +205,7 @@ Now, lets try something mildly interesting with the proxy. This contrived exampl
   # existing IRB session. Normally, you'd probably want to implement this as 
   # an override in your Buby-derived class.
 
-  $buby.instance_eval do
+  $burp.instance_eval do
 
     def evt_proxy_message(*param)
       msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, 
