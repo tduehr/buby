@@ -1,3 +1,8 @@
+== 1.1.2 / 2009-06-24
+* 1 enhancement
+  * Support added for the new getScanIssues extender method exposed in v1.2.15
+    See http://releases.portswigger.net/2009/08/v1215.html
+
 == 1.1.1 / 2009-06-24
 * Fix
   * fixed getSiteMap callback front-end so that it takes the urlprefix argument

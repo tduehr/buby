@@ -72,7 +72,7 @@ include_class 'BurpExtender'
 class Buby
 
   # :stopdoc:
-  VERSION = '1.1.1'
+  VERSION = '1.1.2'
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
@@ -244,6 +244,14 @@ class Buby
   end
   alias site_map getSiteMap
   alias get_site_map getSiteMap
+
+  # This method returns all of the current scan issues for URLs matching the 
+  # specified literal prefix. The prefix can be null to match all issues.
+  def getScanIssues(urlprefix)
+    _check_and_callback(:getScanIssues, urlprefix)
+  end
+  alias scan_issues getScanIssues
+  alias get_scan_issues getScanIssues
 
   # Restores Burp session state from a previously saved state file.
   # See also: saveState

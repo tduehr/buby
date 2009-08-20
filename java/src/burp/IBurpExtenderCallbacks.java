@@ -156,7 +156,8 @@ public interface IBurpExtenderCallbacks
     public void issueAlert(String message);
 
     /**
-     * The existing IBurpExtenderCallbacks interface adds several new methods 
+     * New stuff added as of v1.2.11.
+     * The new IBurpExtenderCallbacks interface adds several new methods 
      * which you can invoke to query and update Burp's state, and to parse raw 
      * HTTP messages for parameters and headers.
      */
@@ -170,6 +171,15 @@ public interface IBurpExtenderCallbacks
      * no javadoc yet from PortSwigger
      */
     public IHttpRequestResponse[] getSiteMap(String urlPrefix);
+
+    /** 
+     * This method returns all of the current scan issues for URLs matching 
+     * the specified literal prefix. 
+     * The prefix can be null to match all issues.
+     *
+     * Added in v1.2.15.
+     */
+    public IScanIssue[] getScanIssues(String urlPrefix);
 
     /**
      * no javadoc yet from PortSwigger
