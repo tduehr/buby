@@ -1,4 +1,4 @@
-== 1.1.2 / 2009-06-24
+== 1.1.2 / 2009-08-20
 * 1 enhancement
   * Support added for the new getScanIssues extender method exposed in v1.2.15
     See http://releases.portswigger.net/2009/08/v1215.html
