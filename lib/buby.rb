@@ -238,16 +238,17 @@ class Buby
   alias get_proxy_history getProxyHistory
 
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
-  # the Burp site map.
-  def getSiteMap(urlprefix)
+  # the Burp site map for all urls matching the specified literal prefix. 
+  # The prefix can be nil to return all objects.
+  def getSiteMap(urlprefix=nil)
     _check_and_callback(:getSiteMap, urlprefix)
   end
   alias site_map getSiteMap
   alias get_site_map getSiteMap
 
   # This method returns all of the current scan issues for URLs matching the 
-  # specified literal prefix. The prefix can be null to match all issues.
-  def getScanIssues(urlprefix)
+  # specified literal prefix. The prefix can be nil to match all issues.
+  def getScanIssues(urlprefix=nil)
     _check_and_callback(:getScanIssues, urlprefix)
   end
   alias scan_issues getScanIssues
