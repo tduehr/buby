@@ -118,9 +118,10 @@ class Buby
   #  * host = The hostname of the remote HTTP server.
   #  * port = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req  = The full HTTP request.
+  #  * req  = The full HTTP request. (String or Java bytes[])
   def doActiveScan(host, port, https, req)
-    _check_cb.doActiveScan(host, port, https, req.to_java_bytes)
+    req = req.to_java_bytes if req.is_a? String
+    _check_cb.doActiveScan(host, port, https, req)
   end
   alias do_active_scan doActiveScan
   alias active_scan doActiveScan
@@ -130,10 +131,12 @@ class Buby
   #  * host = The hostname of the remote HTTP server.
   #  * port = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req  = The full HTTP request.
-  #  * rsp  = The full HTTP response.
+  #  * req  = The full HTTP request. (String or Java bytes[])
+  #  * rsp  = The full HTTP response. (String or Java bytes[])
   def doPassiveScan(host, port, https, req, rsp)
-    _check_cb.doPassiveScan(host, port, https, req.to_java_bytes, rsp.to_java_bytes)
+    req = req.to_java_bytes if req.is_a? String
+    rsp = rsp.to_java_bytes if rsp.is_a? String
+    _check_cb.doPassiveScan(host, port, https, req, rsp)
   end
   alias do_passive_scan doPassiveScan
   alias passive_scan doPassiveScan
@@ -141,7 +144,8 @@ class Buby
   # Exclude the specified URL from the Suite-wide scope.
   #  * url = The URL to exclude from the Suite-wide scope.
   def excludeFromScope(url)
-    _check_cb.excludeFromScope(java.net.URL.new(url.to_s))
+    url = java.net.URL.new(url) if url.is_a? String
+    _check_cb.excludeFromScope(url)
   end
   alias exclude_from_scope excludeFromScope
   alias exclude_scope excludeFromScope
@@ -149,7 +153,8 @@ class Buby
   # Include the specified URL in the Suite-wide scope.
   #  * url = The URL to exclude in the Suite-wide scope.
   def includeInScope(url)
-    _check_cb.includeInScope(java.net.URL.new(url.to_s))
+    url = java.net.URL.new(url) if url.is_a? String
+    _check_cb.includeInScope(url)
   end
   alias include_in_scope includeInScope 
   alias include_scope includeInScope 
@@ -159,7 +164,8 @@ class Buby
   #
   # Returns: true / false
   def isInScope(url)
-    _check_cb.isInScope(java.net.URL.new(url.to_s))
+    url = java.net.URL.new(url) if url.is_a? String
+    _check_cb.isInScope(url)
   end
   alias is_in_scope isInScope
   alias in_scope? isInScope
@@ -176,13 +182,12 @@ class Buby
   #  * host  = The hostname of the remote HTTP server.
   #  * port  = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req   = The full HTTP request.
+  #  * req   = The full HTTP request. (String or Java bytes[])
   #
   # Returns: The full response retrieved from the remote server.
   def makeHttpRequest(host, port, https, req)
-    String.from_java_bytes(
-      _check_cb.makeHttpRequest(host, port, https, req.to_java_bytes)
-    )
+    req = req.to_java_bytes if req.is_a? String
+    String.from_java_bytes( _check_cb.makeHttpRequest(host, port, https, req) )
   end
   alias make_http_request makeHttpRequest
   alias make_request makeHttpRequest
@@ -191,9 +196,10 @@ class Buby
   #  * host  = The hostname of the remote HTTP server.
   #  * port  = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req   = The full HTTP request.
+  #  * req   = The full HTTP request.  (String or Java bytes[])
   def sendToIntruder(host, port, https, req)
-    _check_cb.sendToIntruder(host, port, https, req.to_java_bytes)
+    req = req.to_java_bytes if req.is_a? String
+    _check_cb.sendToIntruder(host, port, https, req)
   end
   alias send_to_intruder sendToIntruder
   alias intruder sendToIntruder
@@ -202,10 +208,11 @@ class Buby
   #  * host  = The hostname of the remote HTTP server.
   #  * port  = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req   = The full HTTP request.
+  #  * req   = The full HTTP request. (String or Java bytes[])
   #  * tab   = The tab caption displayed in Repeater. (default: auto-generated)
   def sendToRepeater(host, port, https, req, tab=nil)
-    _check_cb.sendToRepeater(host, port, https, req.to_java_bytes, tab)
+    req = req.to_java_bytes if req.is_a? String
+    _check_cb.sendToRepeater(host, port, https, req, tab)
   end
   alias send_to_repeater sendToRepeater
   alias repeater sendToRepeater
@@ -213,7 +220,8 @@ class Buby
   # Send a seed URL to the Burp Spider tool.
   #  * url = The new seed URL to begin spidering from.
   def sendToSpider(url)
-    _check_cb.includeInScope(java.net.URL.new(url.to_s))
+    url = java.net.URL.new(url) if url.is_a? String
+    _check_cb.includeInScope(url)
   end
   alias send_to_spider sendToSpider
   alias spider sendToSpider
@@ -289,9 +297,10 @@ class Buby
   #
   # IMPORTANT: This method is only available with Burp 1.2.09 and higher.
   #
-  # req = raw request string (converted to Java bytes[] in passing)
+  # req = raw request (String or Java bytes[])
   def getParameters(req)
-    _check_and_callback(:getParameters, req.to_s.to_java_bytes)
+    req = req.to_java_bytes if req.is_? String
+    _check_and_callback(:getParameters, req)
   end
   alias parameters getParameters
   alias get_parameters getParameters
@@ -302,12 +311,13 @@ class Buby
   #
   # IMPORTANT: This method is only available with Burp 1.2.09 and higher.
   #
-  # msg = raw request/response string (converted to Java bytes[] in passing)
+  # msg = raw request/response (String or Java bytes[])
   def getHeaders(msg)
-    _check_and_callback(:getHeaders, msg.to_s.to_java_bytes)
+    msg = msg.to_java_bytes if msg.is_a? String
+    _check_and_callback(:getHeaders, msg)
   end
   alias headers getHeaders
-  alias get_Headers getHeaders
+  alias get_headers getHeaders
 
 
   ### Event Handlers ###
