@@ -37,14 +37,20 @@ include_class 'BurpExtender'
 # * sendToRepeater
 # * sendToSpider
 #
-# Buby also provides front-end ruby methods for the new callback methods added
-# since Burp 1.2.09:
+# Buby also provides front-end ruby methods for the various callback methods 
+# supported by Burp. New callbacks have been cropping up in newer Burp versions
+# frequently. 
+# 
+# Available since Burp 1.2.09:
 # * getProxyHistory
 # * getSiteMap
 # * restoreState
 # * saveState
 # * getParameters
 # * getHeaders
+#
+# Available since Burp 1.2.15:
+# * getScanIssues
 #
 # If you wish to access any of the IBurpExtenderCallbacks methods directly. 
 # You can use 'burp_callbacks' to obtain a reference.
@@ -72,7 +78,7 @@ include_class 'BurpExtender'
 class Buby
 
   # :stopdoc:
-  VERSION = '1.1.2'
+  VERSION = '1.1.3'
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
@@ -248,6 +254,8 @@ class Buby
 
   # This method returns all of the current scan issues for URLs matching the 
   # specified literal prefix. The prefix can be nil to match all issues.
+  #
+  # IMPORTANT: This method is only available with Burp 1.2.15 and higher.
   def getScanIssues(urlprefix=nil)
     _check_and_callback(:getScanIssues, urlprefix)
   end
@@ -532,6 +540,111 @@ class Buby
     pp([:got_app_close]) if $DEBUG
   end
 
+  ### Sugar/Convenience methods
+
+  # This is a convenience wrapper which can load a given burp state file and 
+  # lets its caller to perform actions inside of a block on the site map 
+  # contained in the loaded session. 
+  #
+  # If a statefile argument isn't specified current burp session state is used.
+  #
+  # Yields each entry in the site map to a block (which is required)
+  def with_site_map(urlprefix=nil, statefile=nil)
+    with_statefile(statefile) do |this|
+      this.site_map(urlprefix).to_a.each {|h| yield h}
+    end
+  end
+
+  # This is a convenience wrapper which can load a given burp state file and 
+  # lets its caller to perform actions inside of a block on the proxy history 
+  # contained in the loaded session. 
+  #
+  # If a statefile argument isn't specified current burp session state is used.
+  #
+  # Yields each entry in the proxy history to a block (which is required)
+  def with_proxy_history(statefile=nil)
+    with_statefile(statefile) do |this|
+      this.proxy_history.to_a.each {|h| yield h }
+    end
+  end
+
+  # This is a convenience wrapper which loads a given burp statefile and lets
+  # its caller to perform actions with burp on it inside of a block. 
+  # It expects a block to yield 'self' is yielded for the duration 
+  # of the statefile load.
+  #
+  # It can safely be used without a statefile argument, in which case the
+  # current session state is used.
+  #
+  # It can safely be run without a statefile argument in which the 
+  # current burp session state is used.
+  def with_statefile(statefile=nil)
+    if statefile
+      # save current state:
+      old_state=".#{$$}.#{Time.now.to_i}.state.bak"
+      self.alert "Saving current state to temp statefile: #{old_state}"
+      self.save_state old_state 
+
+      self.alert "Restoring state: #{statefile}"
+      self.restore_state statefile
+    end
+
+    yield self
+
+    if statefile
+      # restore original state
+      self.alert "Restoring temp statefile: #{old_state}"
+      self.restore_state old_state
+      self.alert "Deleting temp state file: #{old_state}"
+      File.unlink old_state
+    end
+  end
+
+  # Searches the proxy history for the url's matched by the specified 
+  # regular expression (returns them all if urlrx is nil).
+  #
+  # A statefile to search in can optionally be specified or the existing
+  # state will be used if statefile is nil.
+  #
+  # This method also accepts an optional block which is passed each of the
+  # matched history members.
+  def search_proxy_history(statefile=nil, urlrx=nil)
+    ret = nil
+    with_statefile(statefile) do |this|
+      ret = this.proxy_history.to_a.select do |r| 
+        if urlrx
+          true if r.url.to_s =~ urlrx
+        else
+          true
+        end
+      end
+      if block_given?
+        ret.each {|r| yield r }
+      end
+    end
+    return ret
+  end
+
+  # Harvest cookies from a session's proxy history.
+  #
+  # Params:
+  #   cookie    = optional: name of cookie to harvest
+  #   urlrx     = optional: regular expression to match urls against
+  #   statefile = optional: filename for a burp session file to temporarily load
+  #               and harvest from.
+  def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
+    ret = []
+    search_proxy_history(statefile, urlrx) do |msg|
+      rsp = String.from_java_bytes(msg.response)
+      found = []
+      find_cookie_in_response(rsp, cookie) {|c| found << c}
+      ret += found.map {|f| f << msg }
+    end
+    return ret
+  end
+
+  ### Startup stuff
+
   # Prepares the java BurpExtender implementation with a reference
   # to self as the module handler and launches burp suite.
   def start_burp(args=[])
@@ -611,7 +724,8 @@ class Buby
   def self.version
     VERSION
   end
-end
+
+end # Buby
 
 # Try requiring 'burp.jar' from the Ruby lib-path
 unless Buby.burp_loaded?
