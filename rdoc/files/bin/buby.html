@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Sun Jun 21 19:00:35 -0500 2009</td>
+      <td>Tue Jun 23 12:59:11 -0500 2009</td>
     </tr>
     </table>
   </div>
@@ -68,15 +68,73 @@
 
   <div id="contextContent">
 
+    <div id="description">
+      <p>
+#!/usr/bin/env jruby
+</p>
+<p>
+require File.expand_path(File.join(File.dirname(<em>FILE</em>), %w[.. lib
+buby])) require &#8216;irb&#8217; require &#8216;optparse&#8216;
+</p>
+<p>
+args = {}
+</p>
+<p>
+begin
+</p>
+<pre>
+  opts = OptionParser.new do |o|
+    o.banner = &quot;Usage: #{File.basename $0} [options]&quot;
 
-    <div id="requires-list">
-      <h3 class="section-bar">Required files</h3>
+    o.on_tail(&quot;-h&quot;, &quot;--help&quot;, &quot;Show this help message&quot;) do
+      raise opts.to_s
+    end
 
-      <div class="name-list">
-      irb&nbsp;&nbsp;
-      optparse&nbsp;&nbsp;
-      </div>
+    o.on(&quot;-i&quot;, &quot;--interactive&quot;, &quot;Start IRB&quot;) { args[:irb] = true }
+
+    o.on(&quot;-d&quot;, &quot;--debug&quot;, &quot;Debug info&quot;) { args[:debug] = true }
+
+    o.on(&quot;-B&quot;, &quot;--load-burp=PATH&quot;, &quot;Load Burp Jar from PATH&quot;) do |b|
+      args[:load_burp] = b
+    end
+  end
+
+  opts.parse!(ARGV)
+
+  if jar=args[:load_burp]
+    raise &quot;Load Burp Error: #{jar} did not provide burp.StartBurp&quot; unless Buby.load_burp(jar)
+  end
+  raise &quot;Load Burp Error: Specify a path to your burp.jar with -B&quot; unless Buby.burp_loaded?
+</pre>
+<p>
+rescue
+</p>
+<pre>
+  STDERR.puts $!
+  exit 1
+</pre>
+<p>
+end
+</p>
+<p>
+$DEBUG=true if args[:debug]
+</p>
+<p>
+$burp = <a href="../../classes/Buby.html#M000068">Buby.start_burp</a>()
+</p>
+<p>
+if args[:irb]
+</p>
+<pre>
+  puts &quot;Global $burp is set to #{$burp.inspect}&quot;
+  IRB.start
+</pre>
+<p>
+end
+</p>
+
     </div>
+
 
    </div>
 

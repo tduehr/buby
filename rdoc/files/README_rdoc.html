@@ -56,7 +56,7 @@
     </tr>
     <tr class="top-aligned-row">
       <td><strong>Last Update:</strong></td>
-      <td>Sun Jun 21 19:00:35 -0500 2009</td>
+      <td>Fri Jul 10 15:00:39 -0500 2009</td>
     </tr>
     </table>
   </div>
@@ -74,7 +74,7 @@ buby
 </p>
 <pre>
   by Eric Monti
-  http://github.com/emonti/buby
+  http://emonti.github.com/buby
 </pre>
 <h2>DESCRIPTION:</h2>
 <p>
@@ -132,9 +132,9 @@ will not work.
 </li>
 <li>Burp (pro or free version): <a href="../classes/Buby.html">Buby</a> is
 useless without a copy of Burp. <a href="../classes/Buby.html">Buby</a> has
-been tested successfully with both Burp Suite free and pro versions 1.2,
-1.2.01, and 1.2.05. See <a
-href="http://portswigger.net">portswigger.net</a>/
+been tested successfully with both Burp Suite free and pro versions. As of
+version 1.1.0, <a href="../classes/Buby.html">Buby</a> supports both pre
+and post 1.2.09 Burp extensions.
 
 </li>
 </ul>
@@ -260,7 +260,7 @@ To confirm you are connected back to Burp in IRB, you can try writing to
 the alerts panel with something like the following:
 </p>
 <pre>
-  $buby.alert(&quot;hello Burp!&quot;)
+  $burp.alert(&quot;hello Burp!&quot;)
 </pre>
 <p>
 Which should produce a new alert:
@@ -340,7 +340,7 @@ tampering on every GET request that goes through the proxy.
   # existing IRB session. Normally, you'd probably want to implement this as
   # an override in your Buby-derived class.
 
-  $buby.instance_eval do
+  $burp.instance_eval do
 
     def evt_proxy_message(*param)
       msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType,
