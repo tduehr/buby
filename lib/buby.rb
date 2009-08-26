@@ -502,7 +502,7 @@ class Buby
   # relating to generalized requests and responses from any BurpSuite tool.
   # You may want to use evt_proxy_message if you only intend to work with only 
   # proxied messages. Note, however, the IHttpRequestResponse Java object is 
-  # not used in evt_proxy_http_message and gives evt_http_message a somewhat 
+  # not used in evt_proxy_message and gives evt_http_message a somewhat 
   # nicer interface to work with.
   #
   # Parameters:
