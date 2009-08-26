@@ -39,6 +39,22 @@ $DEBUG=true if args[:debug]
 $burp = Buby.start_burp()
 
 if args[:irb]
-  puts "Global $burp is set to #{$burp.inspect}"
-  IRB.start 
+  def quit(*args)
+    if args[0] == :for_real
+      exit
+    else
+      puts "Close the burp window to exit."
+    end
+  end
+  # yucky hack...
+  IRB.setup(nil)
+  IRB.conf[:IRB_NAME] = File.basename($0, ".rb")
+  module IRB
+    class <<self
+      def setup(*args); end
+    end
+  end
+  puts "Global $burp is set to #{$burp.inspect}",
+       " Important Note: You'll need to exit by closing the burp window."
+  IRB.start()
 end
