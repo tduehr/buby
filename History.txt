@@ -1,3 +1,11 @@
+== 1.1.3 / 2009-08-25
+* 1 enhancement
+  * new convenience methods added for iterating and searching through
+    proxy history, scan history, etc.
+* 1 fix
+  * The gem now includes a buby.jar which should be usable with Java 1.5+
+    (previously the jar had been compiled only for Java 1.6)
+
 == 1.1.2 / 2009-08-20
 * 1 enhancement
   * Support added for the new getScanIssues extender method exposed in v1.2.15
