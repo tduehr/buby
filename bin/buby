@@ -39,13 +39,6 @@ $DEBUG=true if args[:debug]
 $burp = Buby.start_burp()
 
 if args[:irb]
-  def quit(*args)
-    if args[0] == :for_real
-      exit
-    else
-      puts "Close the burp window to exit."
-    end
-  end
   # yucky hack...
   IRB.setup(nil)
   IRB.conf[:IRB_NAME] = File.basename($0, ".rb")
