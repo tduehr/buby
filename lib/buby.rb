@@ -299,7 +299,7 @@ class Buby
   #
   # req = raw request (String or Java bytes[])
   def getParameters(req)
-    req = req.to_java_bytes if req.is_? String
+    req = req.to_java_bytes if req.is_a? String
     _check_and_callback(:getParameters, req)
   end
   alias parameters getParameters
