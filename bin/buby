@@ -22,12 +22,18 @@ begin
       args[:load_burp] = b
     end
 
-    o.on('-r', '--restore=FILE', "Restore burpsession on startup") do |r|
+    o.on('-s', '--state=FILE', "Restore burp state file on startup") do |r|
       args[:restore] = r
     end
 
-    o.on('-I', '--include=LIB', "require() a Ruby lib after Burp loads") do |i|
-      (args[:include] ||= []).push(i)
+    o.on('-r', '--require=LIB', 
+         'load a ruby lib (or jar) after Burp loads') do |i|
+      (args[:requires] ||= []).push(i)
+    end
+
+    o.on('-e', '--extend=MOD', 
+         'Extend Buby with a module (loaded via -r?)') do |m|
+      (args[:extensions] ||= []).push(m)
     end
   end
 
@@ -36,7 +42,9 @@ begin
   if jar=args[:load_burp]
     raise "Load Burp Error: #{jar} did not provide burp.StartBurp" unless Buby.load_burp(jar)
   end
+
   raise "Load Burp Error: Specify a path to your burp.jar with -B" unless Buby.burp_loaded?
+
 rescue
   STDERR.puts $!
   exit 1
@@ -46,14 +54,33 @@ $DEBUG=true if args[:debug]
 
 $burp = Buby.start_burp()
 
-if libs=args[:include]
-  libs.each {|lib| STDERR.puts "loading #{lib}"; require(lib)}
+if libs=args[:requires]
+  libs.each {|lib| STDERR.puts "Loading: #{lib.inspect}"; require(lib)}
+end
+
+def resolve_const(str)
+  raise "can't resolve empty name #{str.inspect}" if str.empty?
+  names = str.split('::')
+  obj = ::Object
+  names.each do |name|
+    raise "#{name.inspect} is not defined" unless obj.const_defined?(name)
+    obj = obj.const_get(name)
+  end
+  return obj if obj != ::Object
+end
+
+if mods=args[:extensions]
+  mods.each do |mod|
+    obj = resolve_const(mod)
+    raise "#{obj.name} is not a module" unless obj.kind_of? Module
+    STDERR.puts "Extending $burp with: #{obj.name}"
+    $burp.extend(obj)
+  end
 end
 
 if f=args[:restore]
-  unless File.exists?(f)
-    raise "no such file #{f.inspect}"
-  end
+  raise "no such file #{f.inspect}" unless File.exists?(f)
+  STDERR.puts "Restoring burp state from: #{f.inspect}"
   $burp.restore_state(f)
 end
 
