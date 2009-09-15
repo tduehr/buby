@@ -21,6 +21,14 @@ begin
     o.on("-B", "--load-burp=PATH", "Load Burp Jar from PATH") do |b|
       args[:load_burp] = b
     end
+
+    o.on('-r', '--restore=FILE', "Restore burpsession on startup") do |r|
+      args[:restore] = r
+    end
+
+    o.on('-I', '--include=LIB', "require() a Ruby lib after Burp loads") do |i|
+      (args[:include] ||= []).push(i)
+    end
   end
 
   opts.parse!(ARGV)
@@ -38,6 +46,17 @@ $DEBUG=true if args[:debug]
 
 $burp = Buby.start_burp()
 
+if libs=args[:include]
+  libs.each {|lib| STDERR.puts "loading #{lib}"; require(lib)}
+end
+
+if f=args[:restore]
+  unless File.exists?(f)
+    raise "no such file #{f.inspect}"
+  end
+  $burp.restore_state(f)
+end
+
 if args[:irb]
   # yucky hack...
   IRB.setup(nil)
@@ -51,3 +70,4 @@ if args[:irb]
        " Important Note: You'll need to exit by closing the burp window."
   IRB.start()
 end
+
