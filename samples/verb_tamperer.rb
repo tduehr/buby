@@ -2,7 +2,7 @@
 require 'rubygems'
 require 'buby'
 
-class VerbTamperer < Buby
+module VerbTamperer
   def evt_proxy_message(*param)
     msg_ref, is_req, rhost, rport, is_https, http_meth, url, 
     resourceType, status, req_content_type, message, action = param
@@ -18,4 +18,8 @@ class VerbTamperer < Buby
   end
 end
 
-VerbTamperer.start_burp()
+if __FILE__ == $0
+  $burp = Buby.new()
+  $burp.extend(VerbTamperer)
+  $burp.start_burp()
+end
