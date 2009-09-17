@@ -11,7 +11,7 @@ module DrbBuby
 #    cb.issueAlert("[DrbBuby] Service on: #{@drb_server.uri}")
   end
 
-  def buby_module_init
+  def init_DrbBuby
     ## want to bind the DRb service on a specific socket?
     uri ='druby://127.0.0.1:9999'
     ## or let it choose one automatically:
@@ -26,6 +26,6 @@ if __FILE__ == $0
   $burp = Buby.new
   $burp.extend(DrbBuby)
   $burp.start_burp()
-  $burp.buby_module_init
+  $burp.init_DrbBuby
 end
 

@@ -75,7 +75,9 @@ if mods=args[:extensions]
     raise "#{obj.name} is not a module" unless obj.kind_of? Module
     STDERR.puts "Extending $burp with: #{obj.name}"
     $burp.extend(obj)
-    $burp.buby_module_init if $burp.respond_to? :buby_module_init
+    if $burp.respond_to?(imeth=:"init_#{mod.split('::').last}")
+      $burp.__send__ imeth
+    end
   end
 end
 
