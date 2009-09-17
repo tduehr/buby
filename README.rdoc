@@ -34,8 +34,7 @@ The java BurpExtender included with Buby is an implementation of IBurpExtender w
   The C version of ruby will not work.
 
 * Burp (pro or free version): Buby is useless without a copy of Burp. 
-  Buby has been tested successfully with both Burp Suite free and pro versions.
-  As of version 1.1.0, Buby supports both pre and post 1.2.09 Burp extensions.
+  Buby has been tested successfully with Burp 1.2.x.
 
 
 == BUILD/INSTALL:
@@ -97,24 +96,22 @@ Your configuration details can be substituted below.
   ln -s ~/tools/burp.jar ~/jruby-1.1.5/lib/ruby/1.8/java/burp.jar
 
 Now everything should be ready to go. Try at least the first few parts of the 
-test below to confirm everything is set up. Or if you installed the gem, just 
-run 'buby' from the command-line.
-
+test below to confirm everything is set up. 
 
 == TEST AND USAGE EXAMPLE:
 
-The gem includes a command-line tool called 'buby' but it doesn't do much right
-now. You can, however, use this as a minimal test to confirm whether Burp can 
-be launched from ruby and that Buby and Burp are connected.
-
-Launch buby for simple testing and debugging with the 'buby' command-line tool:
+The gem includes a command-line executable called 'buby'. You can use this to 
+test your Buby set-up and try out a few features.
 
   $ buby -h
   Usage: buby [options]
-      -i, --interactive                Start IRB
-      -d, --debug                      Debug info
-      -B, --load-burp=PATH             Load Burp Jar from PATH
-      -h, --help                       Show this help message
+      -i, --interactive          Start IRB
+      -d, --debug                Debug info
+      -B, --load-burp=PATH       Load Burp Jar from PATH
+      -s, --state=FILE           Restore burp state file on startup
+      -r, --require=LIB          load a ruby lib (or jar) after Burp loads
+      -e, --extend=MOD           Extend Buby with a module (loaded via -r?)
+      -h, --help                 Show this help message
 
   $ buby -i -d
   [:got_extender, #<Java::Default::BurpExtender:0x80 ...>]
@@ -157,7 +154,7 @@ test through a browser configured to use Burp as its proxy.
 
 
 With $DEBUG = true, you should see the debugging output from Ruby as the proxy
-passes your request back to your Ruby runtime.
+passes your request back to your HTTP client/browser.
 
 It will look something like the following in IRB:
 
