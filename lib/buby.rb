@@ -2,6 +2,7 @@ include Java
 
 require 'pp'
 require "buby.jar"
+require 'buby/helpers.rb'
 
 include_class 'BurpExtender'
 
@@ -246,7 +247,12 @@ class Buby
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp proxy history.
   def getProxyHistory
-    _check_and_callback(:getProxyHistory)
+    ret = _check_and_callback(:getProxyHistory)
+    if ret.size > 0 and not HttpRequestResponseHelper.implanted?
+      HttpRequestResponseHelper.implant(ret[0])
+    end
+    ret.size.times {|i| yield(ret[i], i)} if block_given?
+    ret
   end
   alias proxy_history getProxyHistory
   alias get_proxy_history getProxyHistory
@@ -255,7 +261,12 @@ class Buby
   # the Burp site map for all urls matching the specified literal prefix. 
   # The prefix can be nil to return all objects.
   def getSiteMap(urlprefix=nil)
-    _check_and_callback(:getSiteMap, urlprefix)
+    ret = _check_and_callback(:getSiteMap, urlprefix)
+    if ret.size > 0 and not HttpRequestResponseHelper.implanted?
+      HttpRequestResponseHelper.implant(ret[0])
+    end
+    ret.size.times {|i| yield(ret[i], i)} if block_given?
+    ret
   end
   alias site_map getSiteMap
   alias get_site_map getSiteMap
@@ -265,7 +276,12 @@ class Buby
   #
   # IMPORTANT: This method is only available with Burp 1.2.15 and higher.
   def getScanIssues(urlprefix=nil)
-    _check_and_callback(:getScanIssues, urlprefix)
+    ret = _check_and_callback(:getScanIssues, urlprefix)
+    if ret.size > 0 and not ScanIssuesHelper.implanted?
+      ScanIssuesHelper.implant(ret[0])
+    end
+    ret.size.times {|i| yield(ret[i], i)} if block_given?
+    ret
   end
   alias scan_issues getScanIssues
   alias get_scan_issues getScanIssues
@@ -510,7 +526,8 @@ class Buby
   #
   # This method should be overridden if you wish to implement functionality
   # relating to generalized requests and responses from any BurpSuite tool.
-  # You may want to use evt_proxy_message if you only intend to work with only 
+  #
+  # You may want to use evt_proxy_message if you only intend to work on
   # proxied messages. Note, however, the IHttpRequestResponse Java object is 
   # not used in evt_proxy_message and gives evt_http_message a somewhat 
   # nicer interface to work with.
@@ -524,6 +541,9 @@ class Buby
   #   methods for accessing and manipulating various attributes of the message.
   #
   def evt_http_message tool_name, is_request, message_info
+    if not HttpRequestResponseHelper.implanted?
+      HttpRequestResponseHelper.implant(message_info)
+    end
     pp([:got_http_message, tool_name, is_request, message_info]) if $DEBUG
   end
 
@@ -574,14 +594,13 @@ class Buby
   # Yields each entry in the proxy history to a block (which is required)
   def with_proxy_history(statefile=nil)
     with_statefile(statefile) do |this|
-      this.proxy_history.to_a.each {|h| yield h }
+      this.proxy_history {|h, i| yield h }
     end
   end
 
   # This is a convenience wrapper which loads a given burp statefile and lets
-  # its caller to perform actions with burp on it inside of a block. 
-  # It expects a block to yield 'self' is yielded for the duration 
-  # of the statefile load.
+  # its caller perform actions via burp while its loaded on it inside of a 
+  # block. The old state is restored after the block completes.
   #
   # It can safely be used without a statefile argument, in which case the
   # current session state is used.
@@ -593,10 +612,9 @@ class Buby
       # save current state:
       old_state=".#{$$}.#{Time.now.to_i}.state.bak"
       self.alert "Saving current state to temp statefile: #{old_state}"
-      self.save_state old_state 
-
+      self.save_state(old_state)
       self.alert "Restoring state: #{statefile}"
-      self.restore_state statefile
+      self.restore_state(statefile)
     end
 
     yield self
@@ -619,17 +637,10 @@ class Buby
   # This method also accepts an optional block which is passed each of the
   # matched history members.
   def search_proxy_history(statefile=nil, urlrx=nil)
-    ret = nil
-    with_statefile(statefile) do |this|
-      ret = this.proxy_history.to_a.select do |r| 
-        if urlrx
-          true if r.url.to_s =~ urlrx
-        else
-          true
-        end
-      end
-      if block_given?
-        ret.each {|r| yield r }
+    ret = []
+    with_proxy_history(statefile) do |r|
+      if (not urlrx) or r.url.to_s =~ urlrx
+        ret << r if (not block_given?) or yield(r)
       end
     end
     return ret
@@ -644,11 +655,10 @@ class Buby
   #               and harvest from.
   def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
     ret = []
-    search_proxy_history(statefile, urlrx) do |msg|
-      rsp = String.from_java_bytes(msg.response)
-      found = []
-      find_cookie_in_response(rsp, cookie) {|c| found << c}
-      ret += found.map {|f| f << msg }
+    search_proxy_history(statefile, urlrx) do |hrr|
+      rsp = hrr.response_str
+      hdrs = headers(rsp)
+      ret += hdrs.select {|h| h[0].downcase == 'set-cookie'}.map{|h| h[1]}
     end
     return ret
   end
