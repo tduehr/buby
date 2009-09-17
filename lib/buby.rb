@@ -656,9 +656,10 @@ class Buby
   def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
     ret = []
     search_proxy_history(statefile, urlrx) do |hrr|
-      rsp = hrr.response_str
-      hdrs = headers(rsp)
-      ret += hdrs.select {|h| h[0].downcase == 'set-cookie'}.map{|h| h[1]}
+      hdrs = hrr.rsp_headers
+      ret += hdrs.select do |h| 
+        h[0].downcase == 'set-cookie'
+      end.map{|h| h[1]}
     end
     return ret
   end

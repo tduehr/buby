@@ -26,7 +26,7 @@ class Buby
     end
     alias rsp_headers response_headers
 
-    # returns the body of the request, minus headers
+    # Returns the message body of the response, minus headers
     def response_body
       (@rsp_split ||= rsp_str.split(/\r?\n\r?\n/, 2))[1]
     end
@@ -40,7 +40,13 @@ class Buby
     alias request_string request_str
     alias req_str request_str
 
-    #
+    # Returns a split array of headers. Example:
+    #   [
+    #     ["GET / HTTP/1.1"],
+    #     ["Host", "www.example.org"],
+    #     ["User-Agent", "Mozilla/5.0 (..."],
+    #     ...
+    #   ]
     def request_headers
       if headers=(@req_split ||= req_str.split(/\r?\n\r?\n/, 2))[0]
         @req_headers ||= headers.split(/\r?\n/).map {|h| h.split(/\s*:\s*/,2)}
@@ -48,6 +54,7 @@ class Buby
     end
     alias req_headers request_headers
 
+    # Returns the request message body or an empty string if there is none.
     def request_body
       (@req_split ||= req_str.split(/\r?\n\r?\n/, 2))[1]
     end
@@ -80,7 +87,7 @@ class Buby
     # interface in ruby. All later instances will also get 'us' for free!
     def self.implant(base)
       return if @implanted
-      base.class.instance_eval { include(ScanIssueHelper) }
+      base.class.instance_eval { include(ScanIssuesHelper) }
       @implanted = true
     end
 
