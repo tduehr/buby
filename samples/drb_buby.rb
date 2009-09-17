@@ -26,5 +26,6 @@ if __FILE__ == $0
   $burp = Buby.new
   $burp.extend(DrbBuby)
   $burp.start_burp()
+  $burp.buby_module_init
 end
 
