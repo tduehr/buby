@@ -2,7 +2,7 @@ include Java
 
 require 'pp'
 require "buby.jar"
-require 'buby/helpers.rb'
+require 'buby/extends.rb'
 
 include_class 'BurpExtender'
 
@@ -227,7 +227,7 @@ class Buby
   alias send_to_spider sendToSpider
   alias spider sendToSpider
 
-  # This method is a __send__ call back gate for the IBurpExtenderCallbacks
+  # This method is a __send__ callback gate for the IBurpExtenderCallbacks
   # reference. It first checks to see if a method is available before calling
   # with the specified arguments, and raises an exception if it is unavailable.
   #
@@ -244,47 +244,36 @@ class Buby
     cb.__send__ meth, *args
   end
 
+
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp proxy history.
   def getProxyHistory
-    ret = _check_and_callback(:getProxyHistory)
-    if ret.size > 0 and not HttpRequestResponseHelper.implanted?
-      HttpRequestResponseHelper.implant(ret[0])
-    end
-    ret.size.times {|i| yield(ret[i], i)} if block_given?
-    ret
+    HttpRequestResponseList.new(_check_and_callback(:getProxyHistory))
   end
   alias proxy_history getProxyHistory
   alias get_proxy_history getProxyHistory
+
 
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp site map for all urls matching the specified literal prefix. 
   # The prefix can be nil to return all objects.
   def getSiteMap(urlprefix=nil)
-    ret = _check_and_callback(:getSiteMap, urlprefix)
-    if ret.size > 0 and not HttpRequestResponseHelper.implanted?
-      HttpRequestResponseHelper.implant(ret[0])
-    end
-    ret.size.times {|i| yield(ret[i], i)} if block_given?
-    ret
+    HttpRequestResponseList.new(_check_and_callback(:getSiteMap, urlprefix))
   end
   alias site_map getSiteMap
   alias get_site_map getSiteMap
+
 
   # This method returns all of the current scan issues for URLs matching the 
   # specified literal prefix. The prefix can be nil to match all issues.
   #
   # IMPORTANT: This method is only available with Burp 1.2.15 and higher.
   def getScanIssues(urlprefix=nil)
-    ret = _check_and_callback(:getScanIssues, urlprefix)
-    if ret.size > 0 and not ScanIssuesHelper.implanted?
-      ScanIssuesHelper.implant(ret[0])
-    end
-    ret.size.times {|i| yield(ret[i], i)} if block_given?
-    ret
+    ScanIssuesList.new( _check_and_callback(:getScanIssues, urlprefix) )
   end
   alias scan_issues getScanIssues
   alias get_scan_issues getScanIssues
+
 
   # Restores Burp session state from a previously saved state file.
   # See also: saveState
@@ -297,6 +286,7 @@ class Buby
   end
   alias restore_state restoreState
 
+
   # Saves the current Burp session to a state file. See also restoreState.
   #
   # IMPORTANT: This method is only available with Burp 1.2.09 and higher.
@@ -306,6 +296,7 @@ class Buby
     _check_and_callback(:saveState, java.io.File.new(filename))
   end
   alias save_state saveState
+
 
   # Parses a raw HTTP request message and returns an associative array 
   # containing parameters as they are structured in the 'Parameters' tab in the 
@@ -320,6 +311,7 @@ class Buby
   end
   alias parameters getParameters
   alias get_parameters getParameters
+
 
   # Parses a raw HTTP message (request or response ) and returns an associative
   # array containing the headers as they are structured in the 'Headers' tab 
@@ -540,10 +532,8 @@ class Buby
   # * message_info = an instance of the IHttpRequestResponse Java class with
   #   methods for accessing and manipulating various attributes of the message.
   #
-  def evt_http_message tool_name, is_request, message_info
-    if not HttpRequestResponseHelper.implanted?
-      HttpRequestResponseHelper.implant(message_info)
-    end
+  def evt_http_message(tool_name, is_request, message_info)
+    HttpRequestResponseHelper.implant(message_info)
     pp([:got_http_message, tool_name, is_request, message_info]) if $DEBUG
   end
 
@@ -560,6 +550,7 @@ class Buby
   # * issue = an instance of the IScanIssue Java class with methods for viewing
   #   information on the scan issue that was generated.
   def evt_scan_issue(issue)
+    ScanIssueHelper.implant(issue)
     pp([:got_scan_issue, issue]) if $DEBUG
   end
 
@@ -581,7 +572,7 @@ class Buby
   # Yields each entry in the site map to a block (which is required)
   def with_site_map(urlprefix=nil, statefile=nil)
     with_statefile(statefile) do |this|
-      this.site_map(urlprefix).to_a.each {|h| yield h}
+      this.site_map(urlprefix).each {|h| yield h }
     end
   end
 
@@ -594,7 +585,7 @@ class Buby
   # Yields each entry in the proxy history to a block (which is required)
   def with_proxy_history(statefile=nil)
     with_statefile(statefile) do |this|
-      this.proxy_history {|h, i| yield h }
+      this.proxy_history.each {|h| yield h }
     end
   end
 
@@ -656,8 +647,7 @@ class Buby
   def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
     ret = []
     search_proxy_history(statefile, urlrx) do |hrr|
-      hdrs = hrr.rsp_headers
-      ret += hdrs.select do |h| 
+      ret += hrr.rsp_headers.select do |h| 
         h[0].downcase == 'set-cookie'
       end.map{|h| h[1]}
     end
