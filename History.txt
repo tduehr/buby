@@ -1,9 +1,12 @@
 == 1.1.4 / 2009-09-14
 * enhancements
-  * added -s/--state, -r/--require, -e/--extend options to buby executable
-  * modified samples to use as modules with -r/-e as well as run standalone
-  * added drb samples
   * buby got implants! (har har)
+  * Ruby wrapper classes added for proxy_history, site_map, and scan_issues
+  * Object extensions for IHttpRequestResponse burp's class implementation
+  * Object extensions for IScanIssue burp's class implementation
+  * Added -s/--state, -r/--require, -e/--extend to buby cmd-line executable
+  * Modified samples for use as modules with -r/-e as well as run standalone
+  * Added drb client and server sample
 
 == 1.1.3.1 / 2009-09-09
 * fix
