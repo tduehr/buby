@@ -35,6 +35,11 @@ begin
          'Extend Buby with a module (loaded via -r?)') do |m|
       (args[:extensions] ||= []).push(m)
     end
+
+    o.on('-v', '--version', 'Prints version and exits.') do 
+      puts "#{File.basename $0} v#{Buby::VERSION}"
+      exit 0
+    end
   end
 
   opts.parse!(ARGV)

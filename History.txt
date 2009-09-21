@@ -2,9 +2,10 @@
 * enhancements
   * buby got implants! (har har)
   * Ruby wrapper classes added for proxy_history, site_map, and scan_issues
-  * Object extensions for IHttpRequestResponse burp's class implementation
-  * Object extensions for IScanIssue burp's class implementation
+  * Extensions module for IHttpRequestResponse burp's class implementation
+  * Extensions module for IScanIssue burp's class implementation
   * Added -s/--state, -r/--require, -e/--extend to buby cmd-line executable
+  * Added -v/--version buby cmd-line flag
   * Modified samples for use as modules with -r/-e as well as run standalone
   * Added drb client and server sample
 
