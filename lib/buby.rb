@@ -644,12 +644,18 @@ class Buby
   #   urlrx     = optional: regular expression to match urls against
   #   statefile = optional: filename for a burp session file to temporarily load
   #               and harvest from.
+  #
+  # Takes an optional block as additional 'select' criteria for cookies.
+  # The block return value of true/false will determine whether a cookie is
+  # string is selected.
   def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
     ret = []
     search_proxy_history(statefile, urlrx) do |hrr|
-      ret += hrr.rsp_headers.select do |h| 
-        h[0].downcase == 'set-cookie'
-      end.map{|h| h[1]}
+      if heads=hrr.rsp_headers
+        ret += heads.select do |h| 
+          h[0].downcase == 'set-cookie' and (not block_given? or yield(h[1]))
+        end.map{|h| h[1]}
+      end
     end
     return ret
   end
