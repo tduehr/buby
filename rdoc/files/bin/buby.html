@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: buby</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>buby</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>bin/buby
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Tue Sep 22 18:11:22 -0006 2009</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+#!/usr/bin/env jruby
+</p>
+<p>
+require File.expand_path(File.join(File.dirname(<em>FILE</em>), %w[.. lib
+buby])) require &#8216;irb&#8217; require &#8216;optparse&#8216;
+</p>
+<p>
+args = {}
+</p>
+<p>
+begin
+</p>
+<pre>
+  opts = OptionParser.new do |o|
+    o.banner = &quot;Usage: #{File.basename $0} [options]&quot;
+
+    o.on_tail(&quot;-h&quot;, &quot;--help&quot;, &quot;Show this help message&quot;) do
+      raise opts.to_s
+    end
+
+    o.on(&quot;-i&quot;, &quot;--interactive&quot;, &quot;Start IRB&quot;) { args[:irb] = true }
+
+    o.on(&quot;-d&quot;, &quot;--debug&quot;, &quot;Debug info&quot;) { args[:debug] = true }
+
+    o.on(&quot;-B&quot;, &quot;--load-burp=PATH&quot;, &quot;Load Burp Jar from PATH&quot;) do |b|
+      args[:load_burp] = b
+    end
+
+    o.on('-s', '--state=FILE', &quot;Restore burp state file on startup&quot;) do |r|
+      args[:restore] = r
+    end
+
+    o.on('-r', '--require=LIB',
+         'load a ruby lib (or jar) after Burp loads') do |i|
+      (args[:requires] ||= []).push(i)
+    end
+
+    o.on('-e', '--extend=MOD',
+         'Extend Buby with a module (loaded via -r?)') do |m|
+      (args[:extensions] ||= []).push(m)
+    end
+
+    o.on('-v', '--version', 'Prints version and exits.') do
+      puts &quot;#{File.basename $0} v#{Buby::VERSION}&quot;
+      exit 0
+    end
+  end
+
+  opts.parse!(ARGV)
+
+  if jar=args[:load_burp]
+    raise &quot;Load Burp Error: #{jar} did not provide burp.StartBurp&quot; unless Buby.load_burp(jar)
+  end
+
+  raise &quot;Load Burp Error: Specify a path to your burp.jar with -B&quot; unless Buby.burp_loaded?
+</pre>
+<p>
+rescue
+</p>
+<pre>
+  STDERR.puts $!
+  exit 1
+</pre>
+<p>
+end
+</p>
+<p>
+$DEBUG=true if args[:debug]
+</p>
+<p>
+$burp = <a href="../../classes/Buby.html#M000068">Buby.start_burp</a>()
+</p>
+<p>
+if libs=args[:requires]
+</p>
+<pre>
+  libs.each {|lib| STDERR.puts &quot;Loading: #{lib.inspect}&quot;; require(lib)}
+</pre>
+<p>
+end
+</p>
+<p>
+def resolve_const(str)
+</p>
+<pre>
+  raise &quot;can't resolve empty name #{str.inspect}&quot; if str.empty?
+  names = str.split('::')
+  obj = ::Object
+  names.each do |name|
+    raise &quot;#{name.inspect} is not defined&quot; unless obj.const_defined?(name)
+    obj = obj.const_get(name)
+  end
+  return obj if obj != ::Object
+</pre>
+<p>
+end
+</p>
+<p>
+if mods=args[:extensions]
+</p>
+<pre>
+  mods.each do |mod|
+    obj = resolve_const(mod)
+    raise &quot;#{obj.name} is not a module&quot; unless obj.kind_of? Module
+    STDERR.puts &quot;Extending $burp with: #{obj.name}&quot;
+    $burp.extend(obj)
+    if $burp.respond_to?(imeth=:&quot;init_#{mod.split('::').last}&quot;)
+      $burp.__send__ imeth
+    end
+  end
+</pre>
+<p>
+end
+</p>
+<p>
+if f=args[:restore]
+</p>
+<pre>
+  raise &quot;no such file #{f.inspect}&quot; unless File.exists?(f)
+  STDERR.puts &quot;Restoring burp state from: #{f.inspect}&quot;
+  $burp.restore_state(f)
+</pre>
+<p>
+end
+</p>
+<p>
+if args[:irb]
+</p>
+<pre>
+  # yucky hack...
+  IRB.setup(nil)
+  IRB.conf[:IRB_NAME] = File.basename($0, &quot;.rb&quot;)
+  module IRB
+    class &lt;&lt;self
+      def setup(*args); end
+    end
+  end
+  puts &quot;Global $burp is set to #{$burp.inspect}&quot;,
+       &quot; Important Note: You'll need to exit by closing the burp window.&quot;
+  IRB.start()
+</pre>
+<p>
+end
+</p>
+
+    </div>
+
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

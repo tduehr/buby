@@ -1,0 +1,2458 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Class: Buby</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href=".././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+    <div id="classHeader">
+        <table class="header-table">
+        <tr class="top-aligned-row">
+          <td><strong>Class</strong></td>
+          <td class="class-name-in-header">Buby</td>
+        </tr>
+        <tr class="top-aligned-row">
+            <td><strong>In:</strong></td>
+            <td>
+                <a href="../files/lib/buby_rb.html">
+                lib/buby.rb
+                </a>
+        <br />
+                <a href="../files/lib/buby/extends/buby_array_wrapper_rb.html">
+                lib/buby/extends/buby_array_wrapper.rb
+                </a>
+        <br />
+                <a href="../files/lib/buby/extends/http_request_response_rb.html">
+                lib/buby/extends/http_request_response.rb
+                </a>
+        <br />
+                <a href="../files/lib/buby/extends/scan_issue_rb.html">
+                lib/buby/extends/scan_issue.rb
+                </a>
+        <br />
+            </td>
+        </tr>
+
+        <tr class="top-aligned-row">
+            <td><strong>Parent:</strong></td>
+            <td>
+                Object
+            </td>
+        </tr>
+        </table>
+    </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+<a href="Buby.html">Buby</a> is a mash-up of the commercial security
+testing web proxy PortSwigger Burp Suite(tm) allowing you to add scripting
+to Burp. Burp is driven from and tied to JRuby with a Java extension using
+the BurpExtender API.
+</p>
+<p>
+The <a href="Buby.html">Buby</a> class is an abstract implementation of a
+BurpExtender ruby handler. Included are several abstract event handlers
+used from the BurpExtender java implementation:
+</p>
+<ul>
+<li><a href="Buby.html#M000056">evt_extender_init</a>
+
+</li>
+<li><a href="Buby.html#M000059">evt_proxy_message</a>
+
+</li>
+<li><a href="Buby.html#M000057">evt_command_line_args</a>
+
+</li>
+<li><a href="Buby.html#M000058">evt_register_callbacks</a>
+
+</li>
+<li><a href="Buby.html#M000062">evt_application_closing</a>
+
+</li>
+</ul>
+<p>
+<a href="Buby.html">Buby</a> also supports the newer event handlers
+available in Burp 1.2.09 and up:
+</p>
+<ul>
+<li><a href="Buby.html#M000060">evt_http_message</a>
+
+</li>
+<li><a href="Buby.html#M000061">evt_scan_issue</a>
+
+</li>
+</ul>
+<p>
+This class also exposes several methods to access Burp functionality and
+user interfaces through the IBurpExtenderCallbacks interface (note, several
+abbreviated aliases also exist for each):
+</p>
+<ul>
+<li><a href="Buby.html#M000006">doActiveScan</a>
+
+</li>
+<li><a href="Buby.html#M000009">doPassiveScan</a>
+
+</li>
+<li><a href="Buby.html#M000012">excludeFromScope</a>
+
+</li>
+<li><a href="Buby.html#M000015">includeInScope</a>
+
+</li>
+<li><a href="Buby.html#M000018">isInScope</a>
+
+</li>
+<li><a href="Buby.html#M000021">issueAlert</a>
+
+</li>
+<li><a href="Buby.html#M000024">makeHttpRequest</a>
+
+</li>
+<li><a href="Buby.html#M000027">sendToIntruder</a>
+
+</li>
+<li><a href="Buby.html#M000030">sendToRepeater</a>
+
+</li>
+<li><a href="Buby.html#M000033">sendToSpider</a>
+
+</li>
+</ul>
+<p>
+<a href="Buby.html">Buby</a> also provides front-end ruby methods for the
+various callback methods supported by Burp. New callbacks have been
+cropping up in newer Burp versions frequently.
+</p>
+<p>
+Available since Burp 1.2.09:
+</p>
+<ul>
+<li><a href="Buby.html#M000037">getProxyHistory</a>
+
+</li>
+<li><a href="Buby.html#M000040">getSiteMap</a>
+
+</li>
+<li><a href="Buby.html#M000046">restoreState</a>
+
+</li>
+<li><a href="Buby.html#M000048">saveState</a>
+
+</li>
+<li><a href="Buby.html#M000050">getParameters</a>
+
+</li>
+<li><a href="Buby.html#M000053">getHeaders</a>
+
+</li>
+</ul>
+<p>
+Available since Burp 1.2.15:
+</p>
+<ul>
+<li><a href="Buby.html#M000043">getScanIssues</a>
+
+</li>
+</ul>
+<p>
+If you wish to access any of the IBurpExtenderCallbacks methods directly.
+You can use &#8216;<a href="Buby.html#M000004">burp_callbacks</a>&#8217; to
+obtain a reference.
+</p>
+<p>
+Credit:
+</p>
+<ul>
+<li>Burp and Burp Suite are trade-marks of PortSwigger Ltd.
+
+<pre>
+  Copyright 2008 PortSwigger Ltd. All rights reserved.
+  See http://portswigger.net for license terms.
+</pre>
+</li>
+<li>This ruby library and the accompanying BurpExtender.java implementation
+were written by Eric Monti @ Matasano Security.
+
+<p>
+Matasano claims no professional or legal affiliation with PortSwigger LTD.
+nor do we sell or officially endorse any of their products.
+</p>
+<p>
+However, this author would like to express his personal and professional
+respect and appreciation for their making available the BurpExtender
+extension API. The availability of this interface in an already great tool
+goes a long way to make Burp Suite a truly first-class application.
+</p>
+</li>
+<li>Forgive the name. It won out over &quot;Burb&quot; and &quot;BurpRub&quot;.
+It&#8216;s just easier to type and say out-loud. Mike Tracy gets full
+credit as official <a href="Buby.html">Buby</a>-namer.
+
+</li>
+</ul>
+
+    </div>
+
+
+   </div>
+
+    <div id="method-list">
+      <h3 class="section-bar">Methods</h3>
+
+      <div class="name-list">
+      <a href="#M000036">_check_and_callback</a>&nbsp;&nbsp;
+      <a href="#M000005">_check_cb</a>&nbsp;&nbsp;
+      <a href="#M000002">activate!</a>&nbsp;&nbsp;
+      <a href="#M000008">active_scan</a>&nbsp;&nbsp;
+      <a href="#M000023">alert</a>&nbsp;&nbsp;
+      <a href="#M000004">burp_callbacks</a>&nbsp;&nbsp;
+      <a href="#M000003">burp_extender</a>&nbsp;&nbsp;
+      <a href="#M000071">burp_loaded?</a>&nbsp;&nbsp;
+      <a href="#M000006">doActiveScan</a>&nbsp;&nbsp;
+      <a href="#M000009">doPassiveScan</a>&nbsp;&nbsp;
+      <a href="#M000007">do_active_scan</a>&nbsp;&nbsp;
+      <a href="#M000010">do_passive_scan</a>&nbsp;&nbsp;
+      <a href="#M000062">evt_application_closing</a>&nbsp;&nbsp;
+      <a href="#M000057">evt_command_line_args</a>&nbsp;&nbsp;
+      <a href="#M000056">evt_extender_init</a>&nbsp;&nbsp;
+      <a href="#M000060">evt_http_message</a>&nbsp;&nbsp;
+      <a href="#M000059">evt_proxy_message</a>&nbsp;&nbsp;
+      <a href="#M000058">evt_register_callbacks</a>&nbsp;&nbsp;
+      <a href="#M000061">evt_scan_issue</a>&nbsp;&nbsp;
+      <a href="#M000012">excludeFromScope</a>&nbsp;&nbsp;
+      <a href="#M000013">exclude_from_scope</a>&nbsp;&nbsp;
+      <a href="#M000014">exclude_scope</a>&nbsp;&nbsp;
+      <a href="#M000053">getHeaders</a>&nbsp;&nbsp;
+      <a href="#M000050">getParameters</a>&nbsp;&nbsp;
+      <a href="#M000037">getProxyHistory</a>&nbsp;&nbsp;
+      <a href="#M000043">getScanIssues</a>&nbsp;&nbsp;
+      <a href="#M000040">getSiteMap</a>&nbsp;&nbsp;
+      <a href="#M000055">get_headers</a>&nbsp;&nbsp;
+      <a href="#M000052">get_parameters</a>&nbsp;&nbsp;
+      <a href="#M000039">get_proxy_history</a>&nbsp;&nbsp;
+      <a href="#M000045">get_scan_issues</a>&nbsp;&nbsp;
+      <a href="#M000042">get_site_map</a>&nbsp;&nbsp;
+      <a href="#M000067">harvest_cookies_from_history</a>&nbsp;&nbsp;
+      <a href="#M000054">headers</a>&nbsp;&nbsp;
+      <a href="#M000020">in_scope?</a>&nbsp;&nbsp;
+      <a href="#M000015">includeInScope</a>&nbsp;&nbsp;
+      <a href="#M000016">include_in_scope</a>&nbsp;&nbsp;
+      <a href="#M000017">include_scope</a>&nbsp;&nbsp;
+      <a href="#M000029">intruder</a>&nbsp;&nbsp;
+      <a href="#M000018">isInScope</a>&nbsp;&nbsp;
+      <a href="#M000019">is_in_scope</a>&nbsp;&nbsp;
+      <a href="#M000021">issueAlert</a>&nbsp;&nbsp;
+      <a href="#M000022">issue_alert</a>&nbsp;&nbsp;
+      <a href="#M000072">libpath</a>&nbsp;&nbsp;
+      <a href="#M000070">load_burp</a>&nbsp;&nbsp;
+      <a href="#M000024">makeHttpRequest</a>&nbsp;&nbsp;
+      <a href="#M000025">make_http_request</a>&nbsp;&nbsp;
+      <a href="#M000026">make_request</a>&nbsp;&nbsp;
+      <a href="#M000001">new</a>&nbsp;&nbsp;
+      <a href="#M000051">parameters</a>&nbsp;&nbsp;
+      <a href="#M000011">passive_scan</a>&nbsp;&nbsp;
+      <a href="#M000073">path</a>&nbsp;&nbsp;
+      <a href="#M000038">proxy_history</a>&nbsp;&nbsp;
+      <a href="#M000032">repeater</a>&nbsp;&nbsp;
+      <a href="#M000074">require_all_libs_relative_to</a>&nbsp;&nbsp;
+      <a href="#M000046">restoreState</a>&nbsp;&nbsp;
+      <a href="#M000047">restore_state</a>&nbsp;&nbsp;
+      <a href="#M000048">saveState</a>&nbsp;&nbsp;
+      <a href="#M000049">save_state</a>&nbsp;&nbsp;
+      <a href="#M000044">scan_issues</a>&nbsp;&nbsp;
+      <a href="#M000066">search_proxy_history</a>&nbsp;&nbsp;
+      <a href="#M000027">sendToIntruder</a>&nbsp;&nbsp;
+      <a href="#M000030">sendToRepeater</a>&nbsp;&nbsp;
+      <a href="#M000033">sendToSpider</a>&nbsp;&nbsp;
+      <a href="#M000028">send_to_intruder</a>&nbsp;&nbsp;
+      <a href="#M000031">send_to_repeater</a>&nbsp;&nbsp;
+      <a href="#M000034">send_to_spider</a>&nbsp;&nbsp;
+      <a href="#M000041">site_map</a>&nbsp;&nbsp;
+      <a href="#M000035">spider</a>&nbsp;&nbsp;
+      <a href="#M000068">start_burp</a>&nbsp;&nbsp;
+      <a href="#M000069">start_burp</a>&nbsp;&nbsp;
+      <a href="#M000075">version</a>&nbsp;&nbsp;
+      <a href="#M000064">with_proxy_history</a>&nbsp;&nbsp;
+      <a href="#M000063">with_site_map</a>&nbsp;&nbsp;
+      <a href="#M000065">with_statefile</a>&nbsp;&nbsp;
+      </div>
+    </div>
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+    <div id="class-list">
+      <h3 class="section-bar">Classes and Modules</h3>
+
+      Module <a href="Buby/HttpRequestResponseHelper.html" class="link">Buby::HttpRequestResponseHelper</a><br />
+Module <a href="Buby/ScanIssueHelper.html" class="link">Buby::ScanIssueHelper</a><br />
+Class <a href="Buby/BubyArrayWrapper.html" class="link">Buby::BubyArrayWrapper</a><br />
+Class <a href="Buby/HttpRequestResponseList.html" class="link">Buby::HttpRequestResponseList</a><br />
+Class <a href="Buby/ScanIssuesList.html" class="link">Buby::ScanIssuesList</a><br />
+
+    </div>
+
+    <div id="constants-list">
+      <h3 class="section-bar">Constants</h3>
+
+      <div class="name-list">
+        <table summary="Constants">
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">ACTION_FOLLOW_RULES</td>
+          <td>=</td>
+          <td class="context-item-value">BurpExtender::ACTION_FOLLOW_RULES</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">ACTION_DO_INTERCEPT</td>
+          <td>=</td>
+          <td class="context-item-value">BurpExtender::ACTION_DO_INTERCEPT</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">ACTION_DONT_INTERCEPT</td>
+          <td>=</td>
+          <td class="context-item-value">BurpExtender::ACTION_DONT_INTERCEPT</td>
+        </tr>
+        <tr class="top-aligned-row context-row">
+          <td class="context-item-name">ACTION_DROP</td>
+          <td>=</td>
+          <td class="context-item-value">BurpExtender::ACTION_DROP</td>
+        </tr>
+        </table>
+      </div>
+    </div>
+
+
+
+      
+
+
+    <!-- if method_list -->
+    <div id="methods">
+      <h3 class="section-bar">Public Class methods</h3>
+
+      <div id="method-M000071" class="method-detail">
+        <a name="M000071"></a>
+
+        <div class="method-heading">
+          <a href="#M000071" class="method-signature">
+          <span class="method-name">burp_loaded?</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Checks the Java namespace to see if Burp has been loaded.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000071-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000071-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 693</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">burp_loaded?</span>
+    <span class="ruby-keyword kw">begin</span> 
+      <span class="ruby-identifier">include_class</span> <span class="ruby-value str">'burp.StartBurp'</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">true</span>
+    <span class="ruby-keyword kw">rescue</span> <span class="ruby-constant">NameError</span>
+      <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">false</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000072" class="method-detail">
+        <a name="M000072"></a>
+
+        <div class="method-heading">
+          <a href="#M000072" class="method-signature">
+          <span class="method-name">libpath</span><span class="method-args">( *args )</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns the library <a href="Buby.html#M000073">path</a> for the module. If
+any arguments are given, they will be joined to the end of the libray <a
+href="Buby.html#M000073">path</a> using <tt>File.join</tt>.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000072-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000072-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 708</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">libpath</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">args</span> )
+    <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-value">? </span><span class="ruby-constant">LIBPATH</span> <span class="ruby-operator">:</span> <span class="ruby-operator">::</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">LIBPATH</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">flatten</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000070" class="method-detail">
+        <a name="M000070"></a>
+
+        <div class="method-heading">
+          <a href="#M000070" class="method-signature">
+          <span class="method-name">load_burp</span><span class="method-args">(jar_path)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Attempts to load burp with require and confirm it provides the required
+class in the Java namespace.
+</p>
+<p>
+Returns: true/false depending on whether the required jar provides us the
+required class
+</p>
+<p>
+Raises: may raise the usual require exceptions if jar_path is bad.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000070-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000070-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 687</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">load_burp</span>(<span class="ruby-identifier">jar_path</span>)
+    <span class="ruby-identifier">require</span> <span class="ruby-identifier">jar_path</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">burp_loaded?</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000001" class="method-detail">
+        <a name="M000001"></a>
+
+        <div class="method-heading">
+          <a href="#M000001" class="method-signature">
+          <span class="method-name">new</span><span class="method-args">(other=nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000001-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000001-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 87</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">other</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">other</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;arg 0 must be another kind of Buby&quot;</span> <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">other</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">Buby</span>
+      <span class="ruby-ivar">@burp_extender</span> = <span class="ruby-identifier">other</span>.<span class="ruby-identifier">burp_extender</span>
+      <span class="ruby-ivar">@burp_callbacks</span> = <span class="ruby-identifier">other</span>.<span class="ruby-identifier">burp_callbacks</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000073" class="method-detail">
+        <a name="M000073"></a>
+
+        <div class="method-heading">
+          <a href="#M000073" class="method-signature">
+          <span class="method-name">path</span><span class="method-args">( *args )</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns the lpath for the module. If any arguments are given, they will be
+joined to the end of the <a href="Buby.html#M000073">path</a> using
+<tt>File.join</tt>.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000073-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000073-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 716</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">path</span>( <span class="ruby-operator">*</span><span class="ruby-identifier">args</span> )
+    <span class="ruby-identifier">args</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-value">? </span><span class="ruby-constant">PATH</span> <span class="ruby-operator">:</span> <span class="ruby-operator">::</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-constant">PATH</span>, <span class="ruby-identifier">args</span>.<span class="ruby-identifier">flatten</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000074" class="method-detail">
+        <a name="M000074"></a>
+
+        <div class="method-heading">
+          <a href="#M000074" class="method-signature">
+          <span class="method-name">require_all_libs_relative_to</span><span class="method-args">( fname, dir = nil )</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Utility method used to require all files ending in .rb that lie in the
+directory below this file that has the same name as the filename passed in.
+Optionally, a specific <em>directory</em> name can be passed in such that
+the <em>filename</em> does not have to be equivalent to the directory.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000074-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000074-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 725</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">require_all_libs_relative_to</span>( <span class="ruby-identifier">fname</span>, <span class="ruby-identifier">dir</span> = <span class="ruby-keyword kw">nil</span> )
+    <span class="ruby-identifier">dir</span> <span class="ruby-operator">||=</span> <span class="ruby-operator">::</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">fname</span>, <span class="ruby-value str">'.*'</span>)
+    <span class="ruby-identifier">search_me</span> = <span class="ruby-operator">::</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">expand_path</span>(
+        <span class="ruby-operator">::</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-operator">::</span><span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">fname</span>), <span class="ruby-identifier">dir</span>, <span class="ruby-value str">'**'</span>, <span class="ruby-value str">'*.rb'</span>))
+
+    <span class="ruby-constant">Dir</span>.<span class="ruby-identifier">glob</span>(<span class="ruby-identifier">search_me</span>).<span class="ruby-identifier">sort</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">rb</span><span class="ruby-operator">|</span> <span class="ruby-identifier">require</span> <span class="ruby-identifier">rb</span>}
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000069" class="method-detail">
+        <a name="M000069"></a>
+
+        <div class="method-heading">
+          <a href="#M000069" class="method-signature">
+          <span class="method-name">start_burp</span><span class="method-args">(h_class=nil, init_args=nil, args=nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Starts burp using a supplied handler class,
+</p>
+<pre>
+ h_class = Buby or a derived class. instance of which will become handler.
+ args = arguments to Burp
+ init_args = arguments to the handler constructor
+
+ Returns the handler instance
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000069-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000069-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 673</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">start_burp</span>(<span class="ruby-identifier">h_class</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">init_args</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">args</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">h_class</span> <span class="ruby-operator">||=</span> <span class="ruby-keyword kw">self</span>
+    <span class="ruby-identifier">init_args</span> <span class="ruby-operator">||=</span> []
+    <span class="ruby-identifier">args</span> <span class="ruby-operator">||=</span> []
+    <span class="ruby-identifier">h_class</span>.<span class="ruby-identifier">new</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">init_args</span>).<span class="ruby-identifier">start_burp</span>(<span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000075" class="method-detail">
+        <a name="M000075"></a>
+
+        <div class="method-heading">
+          <a href="#M000075" class="method-signature">
+          <span class="method-name">version</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns the <a href="Buby.html#M000075">version</a> string for the library.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000075-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000075-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 735</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">version</span>
+    <span class="ruby-constant">VERSION</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="section-bar">Public Instance methods</h3>
+
+      <div id="method-M000036" class="method-detail">
+        <a name="M000036"></a>
+
+        <div class="method-heading">
+          <a href="#M000036" class="method-signature">
+          <span class="method-name">_check_and_callback</span><span class="method-args">(meth, *args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is a <em>send</em> callback gate for the IBurpExtenderCallbacks
+reference. It first checks to see if a method is available before calling
+with the specified arguments, and raises an exception if it is unavailable.
+</p>
+<ul>
+<li>meth = string or symbol name of method
+
+</li>
+<li>args = variable length array of arguments to pass to meth
+
+</li>
+</ul>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000036-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000036-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 236</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">meth</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+    <span class="ruby-identifier">cb</span> = <span class="ruby-identifier">_check_cb</span>
+    <span class="ruby-keyword kw">unless</span> <span class="ruby-identifier">cb</span>.<span class="ruby-identifier">respond_to?</span>(<span class="ruby-identifier">meth</span>)
+      <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{meth} is not available in your version of Burp&quot;</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-identifier">cb</span>.<span class="ruby-identifier">__send__</span> <span class="ruby-identifier">meth</span>, <span class="ruby-operator">*</span><span class="ruby-identifier">args</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000005" class="method-detail">
+        <a name="M000005"></a>
+
+        <div class="method-heading">
+          <a href="#M000005" class="method-signature">
+          <span class="method-name">_check_cb</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Internal method to check for the existence of the <a
+href="Buby.html#M000004">burp_callbacks</a> reference before doing anything
+with it.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000005-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000005-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 113</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">_check_cb</span>
+    <span class="ruby-ivar">@burp_callbacks</span> <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">raise</span> <span class="ruby-value str">&quot;Burp callbacks have not been set&quot;</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000002" class="method-detail">
+        <a name="M000002"></a>
+
+        <div class="method-heading">
+          <a href="#M000002" class="method-signature">
+          <span class="method-name">activate!</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Makes this handler the active Ruby handler object for the BurpExtender Java
+runtime. (there can be only one!)
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000002-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000002-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 97</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">activate!</span>
+    <span class="ruby-constant">BurpExtender</span>.<span class="ruby-identifier">set_handler</span>(<span class="ruby-keyword kw">self</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000008" class="method-detail">
+        <a name="M000008"></a>
+
+        <div class="method-heading">
+          <span class="method-name">active_scan</span><span class="method-args">(host, port, https, req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000006">doActiveScan</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000023" class="method-detail">
+        <a name="M000023"></a>
+
+        <div class="method-heading">
+          <span class="method-name">alert</span><span class="method-args">(msg)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000021">issueAlert</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000004" class="method-detail">
+        <a name="M000004"></a>
+
+        <div class="method-heading">
+          <a href="#M000004" class="method-signature">
+          <span class="method-name">burp_callbacks</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns the internal reference to the IBupExtenderCallbacks instance. This
+reference gets set from Java through the <a
+href="Buby.html#M000058">evt_register_callbacks</a> method. It is exposed
+to allow you to access the IBurpExtenderCallbacks instance directly if you
+so choose.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000004-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000004-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 109</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">burp_callbacks</span>; <span class="ruby-ivar">@burp_callbacks</span>; <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000003" class="method-detail">
+        <a name="M000003"></a>
+
+        <div class="method-heading">
+          <a href="#M000003" class="method-signature">
+          <span class="method-name">burp_extender</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns the internal reference to the BurpExtender instance. This reference
+gets set from Java through the <a
+href="Buby.html#M000056">evt_extender_init</a> method.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000003-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000003-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 103</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">burp_extender</span>; <span class="ruby-ivar">@burp_extender</span>; <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000006" class="method-detail">
+        <a name="M000006"></a>
+
+        <div class="method-heading">
+          <a href="#M000006" class="method-signature">
+          <span class="method-name">doActiveScan</span><span class="method-args">(host, port, https, req)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Send an HTTP request to the Burp Scanner tool to perform an active
+vulnerability scan.
+</p>
+<pre>
+ * host = The hostname of the remote HTTP server.
+ * port = The port of the remote HTTP server.
+ * https = Flags whether the protocol is HTTPS or HTTP.
+ * req  = The full HTTP request. (String or Java bytes[])
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000006-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000006-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 123</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">doActiveScan</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>)
+    <span class="ruby-identifier">req</span> = <span class="ruby-identifier">req</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">doActiveScan</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000009" class="method-detail">
+        <a name="M000009"></a>
+
+        <div class="method-heading">
+          <a href="#M000009" class="method-signature">
+          <span class="method-name">doPassiveScan</span><span class="method-args">(host, port, https, req, rsp)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Send an HTTP request and response to the Burp Scanner tool to perform a
+passive vulnerability scan.
+</p>
+<pre>
+ * host = The hostname of the remote HTTP server.
+ * port = The port of the remote HTTP server.
+ * https = Flags whether the protocol is HTTPS or HTTP.
+ * req  = The full HTTP request. (String or Java bytes[])
+ * rsp  = The full HTTP response. (String or Java bytes[])
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000009-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000009-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 137</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">doPassiveScan</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">rsp</span>)
+    <span class="ruby-identifier">req</span> = <span class="ruby-identifier">req</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">rsp</span> = <span class="ruby-identifier">rsp</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">rsp</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">doPassiveScan</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">rsp</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000007" class="method-detail">
+        <a name="M000007"></a>
+
+        <div class="method-heading">
+          <span class="method-name">do_active_scan</span><span class="method-args">(host, port, https, req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000006">doActiveScan</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000010" class="method-detail">
+        <a name="M000010"></a>
+
+        <div class="method-heading">
+          <span class="method-name">do_passive_scan</span><span class="method-args">(host, port, https, req, rsp)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000009">doPassiveScan</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000062" class="method-detail">
+        <a name="M000062"></a>
+
+        <div class="method-heading">
+          <a href="#M000062" class="method-signature">
+          <span class="method-name">evt_application_closing</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is called by BurpExtender right before closing the application.
+Implementations can use this method to perform cleanup tasks such as
+closing files or databases before exit.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000062-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000062-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 557</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evt_application_closing</span> 
+    <span class="ruby-identifier">pp</span>([<span class="ruby-identifier">:got_app_close</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$DEBUG</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000057" class="method-detail">
+        <a name="M000057"></a>
+
+        <div class="method-heading">
+          <a href="#M000057" class="method-signature">
+          <span class="method-name">evt_command_line_args</span><span class="method-args">(args)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is called by the BurpExtender implementation Burp startup. The
+args parameter contains main()&#8217;s argv command-line arguments array.
+</p>
+<p>
+Note: This maps to the &#8216;setCommandLineArgs&#8217; method in the java
+implementation of BurpExtender.
+</p>
+<p>
+The return value is ignored.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000057-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000057-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 348</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evt_command_line_args</span> <span class="ruby-identifier">args</span>
+    <span class="ruby-identifier">pp</span>([<span class="ruby-identifier">:got_args</span>, <span class="ruby-identifier">args</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$DEBUG</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000056" class="method-detail">
+        <a name="M000056"></a>
+
+        <div class="method-heading">
+          <a href="#M000056" class="method-signature">
+          <span class="method-name">evt_extender_init</span><span class="method-args">(ext)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is called by the BurpExtender java implementation upon
+initialization of the BurpExtender instance for Burp. The args parameter is
+passed with a instance of the newly initialized BurpExtender instance so
+that implementations can access and extend its public interfaces.
+</p>
+<p>
+The return value is ignored.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000056-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000056-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 336</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evt_extender_init</span> <span class="ruby-identifier">ext</span>
+    <span class="ruby-ivar">@burp_extender</span> = <span class="ruby-identifier">ext</span>
+    <span class="ruby-identifier">pp</span>([<span class="ruby-identifier">:got_extender</span>, <span class="ruby-identifier">ext</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$DEBUG</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000060" class="method-detail">
+        <a name="M000060"></a>
+
+        <div class="method-heading">
+          <a href="#M000060" class="method-signature">
+          <span class="method-name">evt_http_message</span><span class="method-args">(tool_name, is_request, message_info)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is invoked whenever any of Burp&#8216;s tools makes an HTTP
+request or receives a response. This is effectively a generalised <a
+href="Buby.html#M000075">version</a> of the pre-existing <a
+href="Buby.html#M000059">evt_proxy_message</a> method, and can be used to
+intercept and modify the HTTP traffic of all Burp tools.
+</p>
+<p>
+IMPORTANT: This event handler is only used in Burp <a
+href="Buby.html#M000075">version</a> 1.2.09 and higher.
+</p>
+<p>
+Note: this method maps to the processHttpMessage BurpExtender Java method.
+</p>
+<p>
+This method should be overridden if you wish to implement functionality
+relating to generalized requests and responses from any BurpSuite tool.
+</p>
+<p>
+You may want to use <a href="Buby.html#M000059">evt_proxy_message</a> if
+you only intend to work on proxied messages. Note, however, the
+IHttpRequestResponse Java object is not used in <a
+href="Buby.html#M000059">evt_proxy_message</a> and gives <a
+href="Buby.html#M000060">evt_http_message</a> a somewhat nicer interface to
+work with.
+</p>
+<p>
+Parameters:
+</p>
+<ul>
+<li>tool_name = a string name of the tool that generated the message
+
+</li>
+<li>is_request = boolean true = request / false = response
+
+</li>
+<li>message_info = an instance of the IHttpRequestResponse Java class with
+methods for accessing and manipulating various attributes of the message.
+
+</li>
+</ul>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000060-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000060-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 532</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evt_http_message</span>(<span class="ruby-identifier">tool_name</span>, <span class="ruby-identifier">is_request</span>, <span class="ruby-identifier">message_info</span>)
+    <span class="ruby-constant">HttpRequestResponseHelper</span>.<span class="ruby-identifier">implant</span>(<span class="ruby-identifier">message_info</span>)
+    <span class="ruby-identifier">pp</span>([<span class="ruby-identifier">:got_http_message</span>, <span class="ruby-identifier">tool_name</span>, <span class="ruby-identifier">is_request</span>, <span class="ruby-identifier">message_info</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$DEBUG</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000059" class="method-detail">
+        <a name="M000059"></a>
+
+        <div class="method-heading">
+          <a href="#M000059" class="method-signature">
+          <span class="method-name">evt_proxy_message</span><span class="method-args">(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is called by BurpExtender while proxying HTTP messages and
+before passing them through the Burp proxy. Implementations can use this
+method to implement arbitrary processing upon HTTP requests and responses
+such as interception, logging, modification, and so on.
+</p>
+<p>
+The &#8216;is_req&#8217; parameter indicates whether it is a response or
+request.
+</p>
+<p>
+Note: This method maps to the &#8216;processProxyMessage&#8217; method in
+the java implementation of BurpExtender.
+</p>
+<p>
+Below are the <a href="Buby.html#M000051">parameters</a> descriptions based
+on the IBurpExtender javadoc. Where applicable, decriptions have been
+modified for local parameter naming and other ruby-specific details added.
+</p>
+<ul>
+<li>msg_ref: An identifier which is unique to a single request/response pair.
+This can be used to correlate details of requests and responses and perform
+processing on the response message accordingly. This number also
+corresponds to the Burp UI&#8216;s proxy &quot;history&quot; # column.
+
+</li>
+<li>is_req: (true/false) Flags whether the message is a client request or a
+server response.
+
+</li>
+<li>rhost: The hostname of the remote HTTP server.
+
+</li>
+<li>rport: The port of the remote HTTP server.
+
+</li>
+<li>is_https: Flags whether the protocol is HTTPS or HTTP.
+
+</li>
+<li>http_meth: The method verb used in the client request.
+
+</li>
+<li>url: The requested URL. Set in both the request and response.
+
+</li>
+<li>resourceType: The filetype of the requested resource, or nil if the
+resource has no filetype.
+
+</li>
+<li>status: The HTTP status code returned by the server. This value is nil for
+request messages.
+
+</li>
+<li>req_content_type: The content-type string returned by the server. This
+value is nil for request messages.
+
+</li>
+<li>message: The full HTTP message. **Ruby note:
+
+<pre>
+  For convenience, the message is received and returned as a ruby
+  String object. Internally within Burp it is handled as a java byte[]
+  array. See also the notes about the return object below.
+</pre>
+</li>
+<li>action: An array containing a single integer, allowing the implementation
+to communicate back to Burp Proxy a non-default interception action for the
+message. The default value is ACTION_FOLLOW_RULES (or 0). Possible values
+include:
+
+<pre>
+  ACTION_FOLLOW_RULES = 0
+  ACTION_DO_INTERCEPT = 1
+  ACTION_DONT_INTERCEPT = 2
+  ACTION_DROP = 3
+</pre>
+<p>
+Refer to the BurpExtender.java source comments for more details.
+</p>
+</li>
+</ul>
+<p>
+Return Value:
+</p>
+<pre>
+  Implementations should return either (a) the same object received
+  in the message paramater, or (b) a different object containing a
+  modified message.
+</pre>
+<p>
+**IMPORTANT RUBY NOTE: Always be sure to return a <a
+href="Buby.html#M000001">new</a> object if making modifications to
+messages.
+</p>
+<p>
+Explanation: The (a) and (b) convention above is followed rather literally
+during type conversion on the return value back into the java BurpExtender.
+</p>
+<p>
+When determining whether a change has been made in the message or not, the
+decision is made based on whether the object returned is the same as the
+object submitted in the call to <a
+href="Buby.html#M000059">evt_proxy_message</a>.
+</p>
+<p>
+So, for example, using in-place modification of the message using range
+substring assignments or destructive method variations like String.sub!()
+and String.gsub! alone won&#8216;t work because the same object gets
+returned to BurpExtender.
+</p>
+<p>
+In short, this means that if you want modifications to be made, be sure to
+return a different String than the one you got in your handler.
+</p>
+<p>
+So for example this code won&#8216;t do anything at all:
+</p>
+<pre>
+  ...
+  message.sub!(/^GET /, &quot;HEAD &quot;)
+  return message
+</pre>
+<p>
+Nor this:
+</p>
+<pre>
+  message[0..4] = &quot;HEAD &quot;
+  return message
+</pre>
+<p>
+But this will
+</p>
+<pre>
+  ...
+  return message.sub(/^GET /, &quot;HEAD &quot;)
+</pre>
+<p>
+And so will this
+</p>
+<pre>
+  ...
+  message[0..4] = &quot;HEAD &quot;
+  return message.dup
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000059-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000059-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 487</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evt_proxy_message</span> <span class="ruby-identifier">msg_ref</span>, <span class="ruby-identifier">is_req</span>, <span class="ruby-identifier">rhost</span>, <span class="ruby-identifier">rport</span>, <span class="ruby-identifier">is_https</span>, <span class="ruby-identifier">http_meth</span>, <span class="ruby-identifier">url</span>, <span class="ruby-identifier">resourceType</span>, <span class="ruby-identifier">status</span>, <span class="ruby-identifier">req_content_type</span>, <span class="ruby-identifier">message</span>, <span class="ruby-identifier">action</span>
+    <span class="ruby-identifier">pp</span>([ (<span class="ruby-identifier">is_req</span>)<span class="ruby-operator">?</span> <span class="ruby-identifier">:got_proxy_request</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">:got_proxy_response</span>,
+         [<span class="ruby-identifier">:msg_ref</span>, <span class="ruby-identifier">msg_ref</span>], 
+         [<span class="ruby-identifier">:is_req</span>, <span class="ruby-identifier">is_req</span>], 
+         [<span class="ruby-identifier">:rhost</span>, <span class="ruby-identifier">rhost</span>], 
+         [<span class="ruby-identifier">:rport</span>, <span class="ruby-identifier">rport</span>], 
+         [<span class="ruby-identifier">:is_https</span>, <span class="ruby-identifier">is_https</span>], 
+         [<span class="ruby-identifier">:http_meth</span>, <span class="ruby-identifier">http_meth</span>], 
+         [<span class="ruby-identifier">:url</span>, <span class="ruby-identifier">url</span>], 
+         [<span class="ruby-identifier">:resourceType</span>, <span class="ruby-identifier">resourceType</span>], 
+         [<span class="ruby-identifier">:status</span>, <span class="ruby-identifier">status</span>], 
+         [<span class="ruby-identifier">:req_content_type</span>, <span class="ruby-identifier">req_content_type</span>], 
+         [<span class="ruby-identifier">:message</span>, <span class="ruby-identifier">message</span>], 
+         [<span class="ruby-identifier">:action</span>, <span class="ruby-identifier">action</span>[<span class="ruby-value">0</span>]] ]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$DEBUG</span>
+    
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">message</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000058" class="method-detail">
+        <a name="M000058"></a>
+
+        <div class="method-heading">
+          <a href="#M000058" class="method-signature">
+          <span class="method-name">evt_register_callbacks</span><span class="method-args">(cb)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is called by BurpExtender on startup to register Burp&#8216;s
+IBurpExtenderCallbacks interface object.
+</p>
+<p>
+This maps to the &#8216;registerExtenderCallbacks&#8217; method in the Java
+implementation of BurpExtender.
+</p>
+<p>
+The return value is ignored.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000058-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000058-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 359</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evt_register_callbacks</span> <span class="ruby-identifier">cb</span>
+    <span class="ruby-ivar">@burp_callbacks</span> = <span class="ruby-identifier">cb</span>
+    <span class="ruby-identifier">cb</span>.<span class="ruby-identifier">issueAlert</span>(<span class="ruby-node">&quot;[JRuby::#{self.class}] registered callback&quot;</span>)
+    <span class="ruby-identifier">pp</span>([<span class="ruby-identifier">:got_callbacks</span>, <span class="ruby-identifier">cb</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$DEBUG</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000061" class="method-detail">
+        <a name="M000061"></a>
+
+        <div class="method-heading">
+          <a href="#M000061" class="method-signature">
+          <span class="method-name">evt_scan_issue</span><span class="method-args">(issue)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method is invoked whenever Burp Scanner discovers a <a
+href="Buby.html#M000001">new</a>, unique issue, and can be used to perform
+customised reporting or logging of detected issues.
+</p>
+<p>
+IMPORTANT: This event handler is only used in Burp <a
+href="Buby.html#M000075">version</a> 1.2.09 and higher.
+</p>
+<p>
+Note: this method maps to the BurpExtender Java method.
+</p>
+<p>
+Parameters:
+</p>
+<ul>
+<li>issue = an instance of the IScanIssue Java class with methods for viewing
+information on the scan issue that was generated.
+
+</li>
+</ul>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000061-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000061-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 549</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">evt_scan_issue</span>(<span class="ruby-identifier">issue</span>)
+    <span class="ruby-constant">ScanIssueHelper</span>.<span class="ruby-identifier">implant</span>(<span class="ruby-identifier">issue</span>)
+    <span class="ruby-identifier">pp</span>([<span class="ruby-identifier">:got_scan_issue</span>, <span class="ruby-identifier">issue</span>]) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">$DEBUG</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000012" class="method-detail">
+        <a name="M000012"></a>
+
+        <div class="method-heading">
+          <a href="#M000012" class="method-signature">
+          <span class="method-name">excludeFromScope</span><span class="method-args">(url)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Exclude the specified URL from the Suite-wide scope.
+</p>
+<pre>
+ * url = The URL to exclude from the Suite-wide scope.
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000012-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000012-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 147</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">excludeFromScope</span>(<span class="ruby-identifier">url</span>)
+    <span class="ruby-identifier">url</span> = <span class="ruby-identifier">java</span>.<span class="ruby-identifier">net</span>.<span class="ruby-constant">URL</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">excludeFromScope</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000013" class="method-detail">
+        <a name="M000013"></a>
+
+        <div class="method-heading">
+          <span class="method-name">exclude_from_scope</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000012">excludeFromScope</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000014" class="method-detail">
+        <a name="M000014"></a>
+
+        <div class="method-heading">
+          <span class="method-name">exclude_scope</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000012">excludeFromScope</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000053" class="method-detail">
+        <a name="M000053"></a>
+
+        <div class="method-heading">
+          <a href="#M000053" class="method-signature">
+          <span class="method-name">getHeaders</span><span class="method-args">(msg)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Parses a raw HTTP message (request or response ) and returns an associative
+array containing the <a href="Buby.html#M000054">headers</a> as they are
+structured in the &#8216;Headers&#8217; tab in the Burp request/response
+viewer UI.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<p>
+msg = raw request/response (String or Java bytes[])
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000053-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000053-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 320</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getHeaders</span>(<span class="ruby-identifier">msg</span>)
+    <span class="ruby-identifier">msg</span> = <span class="ruby-identifier">msg</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">msg</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">:getHeaders</span>, <span class="ruby-identifier">msg</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000050" class="method-detail">
+        <a name="M000050"></a>
+
+        <div class="method-heading">
+          <a href="#M000050" class="method-signature">
+          <span class="method-name">getParameters</span><span class="method-args">(req)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Parses a raw HTTP request message and returns an associative array
+containing <a href="Buby.html#M000051">parameters</a> as they are
+structured in the &#8216;Parameters&#8217; tab in the Burp request UI.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<p>
+req = raw request (String or Java bytes[])
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000050-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000050-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 305</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getParameters</span>(<span class="ruby-identifier">req</span>)
+    <span class="ruby-identifier">req</span> = <span class="ruby-identifier">req</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">:getParameters</span>, <span class="ruby-identifier">req</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000037" class="method-detail">
+        <a name="M000037"></a>
+
+        <div class="method-heading">
+          <a href="#M000037" class="method-signature">
+          <span class="method-name">getProxyHistory</span><span class="method-args">()</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns a Java array of IHttpRequestResponse objects pulled directly from
+the Burp proxy history.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000037-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000037-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 247</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getProxyHistory</span>
+    <span class="ruby-constant">HttpRequestResponseList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">:getProxyHistory</span>))
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000043" class="method-detail">
+        <a name="M000043"></a>
+
+        <div class="method-heading">
+          <a href="#M000043" class="method-signature">
+          <span class="method-name">getScanIssues</span><span class="method-args">(urlprefix=nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This method returns all of the current scan issues for URLs matching the
+specified literal prefix. The prefix can be nil to match all issues.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.15 and higher.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000043-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000043-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 268</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getScanIssues</span>(<span class="ruby-identifier">urlprefix</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-constant">ScanIssuesList</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">:getScanIssues</span>, <span class="ruby-identifier">urlprefix</span>) )
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000040" class="method-detail">
+        <a name="M000040"></a>
+
+        <div class="method-heading">
+          <a href="#M000040" class="method-signature">
+          <span class="method-name">getSiteMap</span><span class="method-args">(urlprefix=nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Returns a Java array of IHttpRequestResponse objects pulled directly from
+the Burp site map for all urls matching the specified literal prefix. The
+prefix can be nil to return all objects.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000040-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000040-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 257</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">getSiteMap</span>(<span class="ruby-identifier">urlprefix</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-constant">HttpRequestResponseList</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">:getSiteMap</span>, <span class="ruby-identifier">urlprefix</span>))
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000055" class="method-detail">
+        <a name="M000055"></a>
+
+        <div class="method-heading">
+          <span class="method-name">get_headers</span><span class="method-args">(msg)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000053">getHeaders</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000052" class="method-detail">
+        <a name="M000052"></a>
+
+        <div class="method-heading">
+          <span class="method-name">get_parameters</span><span class="method-args">(req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000050">getParameters</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000039" class="method-detail">
+        <a name="M000039"></a>
+
+        <div class="method-heading">
+          <span class="method-name">get_proxy_history</span><span class="method-args">()</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000037">getProxyHistory</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000045" class="method-detail">
+        <a name="M000045"></a>
+
+        <div class="method-heading">
+          <span class="method-name">get_scan_issues</span><span class="method-args">(urlprefix=nil)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000043">getScanIssues</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000042" class="method-detail">
+        <a name="M000042"></a>
+
+        <div class="method-heading">
+          <span class="method-name">get_site_map</span><span class="method-args">(urlprefix=nil)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000040">getSiteMap</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000067" class="method-detail">
+        <a name="M000067"></a>
+
+        <div class="method-heading">
+          <a href="#M000067" class="method-signature">
+          <span class="method-name">harvest_cookies_from_history</span><span class="method-args">(cookie=nil, urlrx=nil, statefile=nil) {|h[1]| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Harvest cookies from a session&#8216;s proxy history.
+</p>
+<p>
+Params:
+</p>
+<pre>
+  cookie    = optional: name of cookie to harvest
+  urlrx     = optional: regular expression to match urls against
+  statefile = optional: filename for a burp session file to temporarily load
+              and harvest from.
+</pre>
+<p>
+Takes an optional block as additional &#8216;select&#8217; criteria for
+cookies. The block return value of true/false will determine whether a
+cookie string is selected.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000067-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000067-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 645</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">harvest_cookies_from_history</span>(<span class="ruby-identifier">cookie</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">urlrx</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">statefile</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">ret</span> = []
+    <span class="ruby-identifier">search_proxy_history</span>(<span class="ruby-identifier">statefile</span>, <span class="ruby-identifier">urlrx</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">hrr</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">heads</span>=<span class="ruby-identifier">hrr</span>.<span class="ruby-identifier">rsp_headers</span>
+        <span class="ruby-identifier">ret</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">heads</span>.<span class="ruby-identifier">select</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> 
+          <span class="ruby-identifier">h</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-value str">'set-cookie'</span> <span class="ruby-keyword kw">and</span> (<span class="ruby-keyword kw">not</span> <span class="ruby-identifier">block_given?</span> <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">h</span>[<span class="ruby-value">1</span>]))
+        <span class="ruby-keyword kw">end</span>.<span class="ruby-identifier">map</span>{<span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-identifier">h</span>[<span class="ruby-value">1</span>]}
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">ret</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000054" class="method-detail">
+        <a name="M000054"></a>
+
+        <div class="method-heading">
+          <span class="method-name">headers</span><span class="method-args">(msg)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000053">getHeaders</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000020" class="method-detail">
+        <a name="M000020"></a>
+
+        <div class="method-heading">
+          <span class="method-name">in_scope?</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000018">isInScope</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000015" class="method-detail">
+        <a name="M000015"></a>
+
+        <div class="method-heading">
+          <a href="#M000015" class="method-signature">
+          <span class="method-name">includeInScope</span><span class="method-args">(url)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Include the specified URL in the Suite-wide scope.
+</p>
+<pre>
+ * url = The URL to exclude in the Suite-wide scope.
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000015-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000015-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 156</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">includeInScope</span>(<span class="ruby-identifier">url</span>)
+    <span class="ruby-identifier">url</span> = <span class="ruby-identifier">java</span>.<span class="ruby-identifier">net</span>.<span class="ruby-constant">URL</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">includeInScope</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000016" class="method-detail">
+        <a name="M000016"></a>
+
+        <div class="method-heading">
+          <span class="method-name">include_in_scope</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000015">includeInScope</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000017" class="method-detail">
+        <a name="M000017"></a>
+
+        <div class="method-heading">
+          <span class="method-name">include_scope</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000015">includeInScope</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000029" class="method-detail">
+        <a name="M000029"></a>
+
+        <div class="method-heading">
+          <span class="method-name">intruder</span><span class="method-args">(host, port, https, req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000027">sendToIntruder</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000018" class="method-detail">
+        <a name="M000018"></a>
+
+        <div class="method-heading">
+          <a href="#M000018" class="method-signature">
+          <span class="method-name">isInScope</span><span class="method-args">(url)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Query whether a specified URL is within the current Suite-wide scope.
+</p>
+<pre>
+ * url = The URL to query
+</pre>
+<p>
+Returns: true / false
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000018-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000018-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 167</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">isInScope</span>(<span class="ruby-identifier">url</span>)
+    <span class="ruby-identifier">url</span> = <span class="ruby-identifier">java</span>.<span class="ruby-identifier">net</span>.<span class="ruby-constant">URL</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">isInScope</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000019" class="method-detail">
+        <a name="M000019"></a>
+
+        <div class="method-heading">
+          <span class="method-name">is_in_scope</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000018">isInScope</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000021" class="method-detail">
+        <a name="M000021"></a>
+
+        <div class="method-heading">
+          <a href="#M000021" class="method-signature">
+          <span class="method-name">issueAlert</span><span class="method-args">(msg)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Display a message in the Burp Suite alerts tab.
+</p>
+<pre>
+ * msg =  The alert message to display.
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000021-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000021-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 176</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">issueAlert</span>(<span class="ruby-identifier">msg</span>)
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">issueAlert</span>(<span class="ruby-identifier">msg</span>.<span class="ruby-identifier">to_s</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000022" class="method-detail">
+        <a name="M000022"></a>
+
+        <div class="method-heading">
+          <span class="method-name">issue_alert</span><span class="method-args">(msg)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000021">issueAlert</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000024" class="method-detail">
+        <a name="M000024"></a>
+
+        <div class="method-heading">
+          <a href="#M000024" class="method-signature">
+          <span class="method-name">makeHttpRequest</span><span class="method-args">(host, port, https, req)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Issue an arbitrary HTTP request and retrieve its response
+</p>
+<pre>
+ * host  = The hostname of the remote HTTP server.
+ * port  = The port of the remote HTTP server.
+ * https = Flags whether the protocol is HTTPS or HTTP.
+ * req   = The full HTTP request. (String or Java bytes[])
+</pre>
+<p>
+Returns: The full response retrieved from the remote server.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000024-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000024-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 189</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">makeHttpRequest</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>)
+    <span class="ruby-identifier">req</span> = <span class="ruby-identifier">req</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-constant">String</span>.<span class="ruby-identifier">from_java_bytes</span>( <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">makeHttpRequest</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>) )
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000025" class="method-detail">
+        <a name="M000025"></a>
+
+        <div class="method-heading">
+          <span class="method-name">make_http_request</span><span class="method-args">(host, port, https, req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000024">makeHttpRequest</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000026" class="method-detail">
+        <a name="M000026"></a>
+
+        <div class="method-heading">
+          <span class="method-name">make_request</span><span class="method-args">(host, port, https, req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000024">makeHttpRequest</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000051" class="method-detail">
+        <a name="M000051"></a>
+
+        <div class="method-heading">
+          <span class="method-name">parameters</span><span class="method-args">(req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000050">getParameters</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000011" class="method-detail">
+        <a name="M000011"></a>
+
+        <div class="method-heading">
+          <span class="method-name">passive_scan</span><span class="method-args">(host, port, https, req, rsp)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000009">doPassiveScan</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000038" class="method-detail">
+        <a name="M000038"></a>
+
+        <div class="method-heading">
+          <span class="method-name">proxy_history</span><span class="method-args">()</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000037">getProxyHistory</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000032" class="method-detail">
+        <a name="M000032"></a>
+
+        <div class="method-heading">
+          <span class="method-name">repeater</span><span class="method-args">(host, port, https, req, tab=nil)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000030">sendToRepeater</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000046" class="method-detail">
+        <a name="M000046"></a>
+
+        <div class="method-heading">
+          <a href="#M000046" class="method-signature">
+          <span class="method-name">restoreState</span><span class="method-args">(filename)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Restores Burp session state from a previously saved state file. See also:
+<a href="Buby.html#M000048">saveState</a>
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<ul>
+<li>filename = <a href="Buby.html#M000073">path</a> and filename of the file to
+restore from
+
+</li>
+</ul>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000046-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000046-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 281</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">restoreState</span>(<span class="ruby-identifier">filename</span>)
+    <span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">:restoreState</span>, <span class="ruby-identifier">java</span>.<span class="ruby-identifier">io</span>.<span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">filename</span>))
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000047" class="method-detail">
+        <a name="M000047"></a>
+
+        <div class="method-heading">
+          <span class="method-name">restore_state</span><span class="method-args">(filename)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000046">restoreState</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000048" class="method-detail">
+        <a name="M000048"></a>
+
+        <div class="method-heading">
+          <a href="#M000048" class="method-signature">
+          <span class="method-name">saveState</span><span class="method-args">(filename)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Saves the current Burp session to a state file. See also <a
+href="Buby.html#M000046">restoreState</a>.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<ul>
+<li>filename = <a href="Buby.html#M000073">path</a> and filename of the file to
+save to
+
+</li>
+</ul>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000048-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000048-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 292</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">saveState</span>(<span class="ruby-identifier">filename</span>)
+    <span class="ruby-identifier">_check_and_callback</span>(<span class="ruby-identifier">:saveState</span>, <span class="ruby-identifier">java</span>.<span class="ruby-identifier">io</span>.<span class="ruby-constant">File</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">filename</span>))
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000049" class="method-detail">
+        <a name="M000049"></a>
+
+        <div class="method-heading">
+          <span class="method-name">save_state</span><span class="method-args">(filename)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000048">saveState</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000044" class="method-detail">
+        <a name="M000044"></a>
+
+        <div class="method-heading">
+          <span class="method-name">scan_issues</span><span class="method-args">(urlprefix=nil)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000043">getScanIssues</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000066" class="method-detail">
+        <a name="M000066"></a>
+
+        <div class="method-heading">
+          <a href="#M000066" class="method-signature">
+          <span class="method-name">search_proxy_history</span><span class="method-args">(statefile=nil, urlrx=nil) {|r| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Searches the proxy history for the url&#8216;s matched by the specified
+regular expression (returns them all if urlrx is nil).
+</p>
+<p>
+A statefile to search in can optionally be specified or the existing state
+will be used if statefile is nil.
+</p>
+<p>
+This method also accepts an optional block which is passed each of the
+matched history members.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000066-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000066-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 624</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">search_proxy_history</span>(<span class="ruby-identifier">statefile</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">urlrx</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">ret</span> = []
+    <span class="ruby-identifier">with_proxy_history</span>(<span class="ruby-identifier">statefile</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword kw">if</span> (<span class="ruby-keyword kw">not</span> <span class="ruby-identifier">urlrx</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">url</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">=~</span> <span class="ruby-identifier">urlrx</span>
+        <span class="ruby-identifier">ret</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">r</span> <span class="ruby-keyword kw">if</span> (<span class="ruby-keyword kw">not</span> <span class="ruby-identifier">block_given?</span>) <span class="ruby-keyword kw">or</span> <span class="ruby-keyword kw">yield</span>(<span class="ruby-identifier">r</span>)
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">return</span> <span class="ruby-identifier">ret</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000027" class="method-detail">
+        <a name="M000027"></a>
+
+        <div class="method-heading">
+          <a href="#M000027" class="method-signature">
+          <span class="method-name">sendToIntruder</span><span class="method-args">(host, port, https, req)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Send an HTTP request to the Burp Intruder tool
+</p>
+<pre>
+ * host  = The hostname of the remote HTTP server.
+ * port  = The port of the remote HTTP server.
+ * https = Flags whether the protocol is HTTPS or HTTP.
+ * req   = The full HTTP request.  (String or Java bytes[])
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000027-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000027-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 201</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sendToIntruder</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>)
+    <span class="ruby-identifier">req</span> = <span class="ruby-identifier">req</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">sendToIntruder</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000030" class="method-detail">
+        <a name="M000030"></a>
+
+        <div class="method-heading">
+          <a href="#M000030" class="method-signature">
+          <span class="method-name">sendToRepeater</span><span class="method-args">(host, port, https, req, tab=nil)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Send an HTTP request to the Burp Repeater tool.
+</p>
+<pre>
+ * host  = The hostname of the remote HTTP server.
+ * port  = The port of the remote HTTP server.
+ * https = Flags whether the protocol is HTTPS or HTTP.
+ * req   = The full HTTP request. (String or Java bytes[])
+ * tab   = The tab caption displayed in Repeater. (default: auto-generated)
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000030-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000030-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 214</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sendToRepeater</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">tab</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">req</span> = <span class="ruby-identifier">req</span>.<span class="ruby-identifier">to_java_bytes</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">req</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">sendToRepeater</span>(<span class="ruby-identifier">host</span>, <span class="ruby-identifier">port</span>, <span class="ruby-identifier">https</span>, <span class="ruby-identifier">req</span>, <span class="ruby-identifier">tab</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000033" class="method-detail">
+        <a name="M000033"></a>
+
+        <div class="method-heading">
+          <a href="#M000033" class="method-signature">
+          <span class="method-name">sendToSpider</span><span class="method-args">(url)</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Send a seed URL to the Burp Spider tool.
+</p>
+<pre>
+ * url = The new seed URL to begin spidering from.
+</pre>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000033-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000033-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 223</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">sendToSpider</span>(<span class="ruby-identifier">url</span>)
+    <span class="ruby-identifier">url</span> = <span class="ruby-identifier">java</span>.<span class="ruby-identifier">net</span>.<span class="ruby-constant">URL</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">is_a?</span> <span class="ruby-constant">String</span>
+    <span class="ruby-identifier">_check_cb</span>.<span class="ruby-identifier">includeInScope</span>(<span class="ruby-identifier">url</span>)
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000028" class="method-detail">
+        <a name="M000028"></a>
+
+        <div class="method-heading">
+          <span class="method-name">send_to_intruder</span><span class="method-args">(host, port, https, req)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000027">sendToIntruder</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000031" class="method-detail">
+        <a name="M000031"></a>
+
+        <div class="method-heading">
+          <span class="method-name">send_to_repeater</span><span class="method-args">(host, port, https, req, tab=nil)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000030">sendToRepeater</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000034" class="method-detail">
+        <a name="M000034"></a>
+
+        <div class="method-heading">
+          <span class="method-name">send_to_spider</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000033">sendToSpider</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000041" class="method-detail">
+        <a name="M000041"></a>
+
+        <div class="method-heading">
+          <span class="method-name">site_map</span><span class="method-args">(urlprefix=nil)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000040">getSiteMap</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000035" class="method-detail">
+        <a name="M000035"></a>
+
+        <div class="method-heading">
+          <span class="method-name">spider</span><span class="method-args">(url)</span>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Alias for <a href="Buby.html#M000033">sendToSpider</a>
+</p>
+        </div>
+      </div>
+
+      <div id="method-M000068" class="method-detail">
+        <a name="M000068"></a>
+
+        <div class="method-heading">
+          <a href="#M000068" class="method-signature">
+          <span class="method-name">start_burp</span><span class="method-args">(args=[])</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+Prepares the java BurpExtender implementation with a reference to self as
+the module handler and launches burp suite.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000068-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000068-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 661</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">start_burp</span>(<span class="ruby-identifier">args</span>=[])
+    <span class="ruby-identifier">activate!</span>()
+    <span class="ruby-constant">Java</span><span class="ruby-operator">::</span><span class="ruby-constant">Burp</span><span class="ruby-operator">::</span><span class="ruby-constant">StartBurp</span>.<span class="ruby-identifier">main</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">to_java</span>(<span class="ruby-identifier">:string</span>))
+    <span class="ruby-keyword kw">return</span> <span class="ruby-keyword kw">self</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000064" class="method-detail">
+        <a name="M000064"></a>
+
+        <div class="method-heading">
+          <a href="#M000064" class="method-signature">
+          <span class="method-name">with_proxy_history</span><span class="method-args">(statefile=nil) {|h| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This is a convenience wrapper which can load a given burp state file and
+lets its caller to perform actions inside of a block on the proxy history
+contained in the loaded session.
+</p>
+<p>
+If a statefile argument isn&#8216;t specified current burp session state is
+used.
+</p>
+<p>
+Yields each entry in the proxy history to a block.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000064-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000064-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 583</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">with_proxy_history</span>(<span class="ruby-identifier">statefile</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">with_statefile</span>(<span class="ruby-identifier">statefile</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">this</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">this</span>.<span class="ruby-identifier">proxy_history</span>.<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">h</span> }
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000063" class="method-detail">
+        <a name="M000063"></a>
+
+        <div class="method-heading">
+          <a href="#M000063" class="method-signature">
+          <span class="method-name">with_site_map</span><span class="method-args">(urlprefix=nil, statefile=nil) {|h| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This is a convenience wrapper which can load a given burp state file and
+lets its caller to perform actions inside of a block on the site map
+contained in the loaded session.
+</p>
+<p>
+If a statefile argument isn&#8216;t specified current burp session state is
+used.
+</p>
+<p>
+Yields each entry in the site map to a block.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000063-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000063-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 570</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">with_site_map</span>(<span class="ruby-identifier">urlprefix</span>=<span class="ruby-keyword kw">nil</span>, <span class="ruby-identifier">statefile</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-identifier">with_statefile</span>(<span class="ruby-identifier">statefile</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">this</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">this</span>.<span class="ruby-identifier">site_map</span>(<span class="ruby-identifier">urlprefix</span>).<span class="ruby-identifier">each</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">h</span><span class="ruby-operator">|</span> <span class="ruby-keyword kw">yield</span> <span class="ruby-identifier">h</span> }
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="method-M000065" class="method-detail">
+        <a name="M000065"></a>
+
+        <div class="method-heading">
+          <a href="#M000065" class="method-signature">
+          <span class="method-name">with_statefile</span><span class="method-args">(statefile=nil) {|self| ...}</span>
+          </a>
+        </div>
+      
+        <div class="method-description">
+          <p>
+This is a convenience wrapper which loads a given burp statefile and lets
+its caller perform actions via burp while its loaded on it inside of a
+block. The old state is restored after the block completes.
+</p>
+<p>
+It can safely be run with a nil statefile argument in which the current
+burp session state is used.
+</p>
+          <p><a class="source-toggle" href="#"
+            onclick="toggleCode('M000065-source');return false;">[Source]</a></p>
+          <div class="method-source-code" id="M000065-source">
+<pre>
+<span class="ruby-comment cmt"># File lib/buby.rb, line 595</span>
+  <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">with_statefile</span>(<span class="ruby-identifier">statefile</span>=<span class="ruby-keyword kw">nil</span>)
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">statefile</span>
+      <span class="ruby-comment cmt"># save current state:</span>
+      <span class="ruby-identifier">old_state</span>=<span class="ruby-node">&quot;.#{$$}.#{Time.now.to_i}.state.bak&quot;</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">alert</span> <span class="ruby-node">&quot;Saving current state to temp statefile: #{old_state}&quot;</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">save_state</span>(<span class="ruby-identifier">old_state</span>)
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">alert</span> <span class="ruby-node">&quot;Restoring state: #{statefile}&quot;</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">restore_state</span>(<span class="ruby-identifier">statefile</span>)
+    <span class="ruby-keyword kw">end</span>
+
+    <span class="ruby-keyword kw">yield</span> <span class="ruby-keyword kw">self</span>
+
+    <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">statefile</span>
+      <span class="ruby-comment cmt"># restore original state</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">alert</span> <span class="ruby-node">&quot;Restoring temp statefile: #{old_state}&quot;</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">restore_state</span> <span class="ruby-identifier">old_state</span>
+      <span class="ruby-keyword kw">self</span>.<span class="ruby-identifier">alert</span> <span class="ruby-node">&quot;Deleting temp state file: #{old_state}&quot;</span>
+      <span class="ruby-constant">File</span>.<span class="ruby-identifier">unlink</span> <span class="ruby-identifier">old_state</span>
+    <span class="ruby-keyword kw">end</span>
+  <span class="ruby-keyword kw">end</span>
+</pre>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>
