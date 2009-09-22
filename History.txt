@@ -1,3 +1,8 @@
+== 1.1.4.1 / 2009-09-22
+* fix
+  * Buby.harvest_cookies_from_history() was broken. 
+    It now implements select() block semantics and always returns an array.
+    
 == 1.1.4 / 2009-09-14
 * enhancements
   * buby got implants! (har har)
