@@ -231,9 +231,6 @@ class Buby
   # reference. It first checks to see if a method is available before calling
   # with the specified arguments, and raises an exception if it is unavailable.
   #
-  # This method was added for provisional calling of new callbacks added since
-  # Burp 1.2.09
-  #
   # * meth = string or symbol name of method
   # * args = variable length array of arguments to pass to meth
   def _check_and_callback(meth, *args)
@@ -544,7 +541,7 @@ class Buby
   # IMPORTANT: This event handler is only used in Burp version 1.2.09 and 
   # higher.
   #
-  # Note: this method maps to the newScanIssue BurpExtender Java method.
+  # Note: this method maps to the BurpExtender Java method.
   #
   # Parameters:
   # * issue = an instance of the IScanIssue Java class with methods for viewing
@@ -569,7 +566,7 @@ class Buby
   #
   # If a statefile argument isn't specified current burp session state is used.
   #
-  # Yields each entry in the site map to a block (which is required)
+  # Yields each entry in the site map to a block.
   def with_site_map(urlprefix=nil, statefile=nil)
     with_statefile(statefile) do |this|
       this.site_map(urlprefix).each {|h| yield h }
@@ -582,7 +579,7 @@ class Buby
   #
   # If a statefile argument isn't specified current burp session state is used.
   #
-  # Yields each entry in the proxy history to a block (which is required)
+  # Yields each entry in the proxy history to a block.
   def with_proxy_history(statefile=nil)
     with_statefile(statefile) do |this|
       this.proxy_history.each {|h| yield h }
@@ -593,10 +590,7 @@ class Buby
   # its caller perform actions via burp while its loaded on it inside of a 
   # block. The old state is restored after the block completes.
   #
-  # It can safely be used without a statefile argument, in which case the
-  # current session state is used.
-  #
-  # It can safely be run without a statefile argument in which the 
+  # It can safely be run with a nil statefile argument in which the 
   # current burp session state is used.
   def with_statefile(statefile=nil)
     if statefile
@@ -700,7 +694,7 @@ class Buby
     begin 
       include_class 'burp.StartBurp'
       return true
-    rescue
+    rescue NameError
       return false
     end
   end
