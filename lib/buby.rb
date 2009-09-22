@@ -646,7 +646,7 @@ class Buby
   #               and harvest from.
   #
   # Takes an optional block as additional 'select' criteria for cookies.
-  # The block return value of true/false will determine whether a cookie is
+  # The block return value of true/false will determine whether a cookie 
   # string is selected.
   def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
     ret = []
