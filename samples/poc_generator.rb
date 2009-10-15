@@ -61,7 +61,7 @@ module PocGenerator
     headers = getHeaders(reqstr).to_a
     verb, action, vers = headers.first.split(/\s+/, 3)
 
-    if headers.grep(/^content-type: application\/(?:x-)?www-form-urlencoded(?:\W|$)/i)
+    if headers.grep(/^content-type: application\/(?:x-)?(?:www-form-url|url-)encoded(?:\W|$)/i)
       params = params.map do |p| 
         p.map do |f|
           f.gsub(/%[a-f0-9]{2}/i) do |x| 
