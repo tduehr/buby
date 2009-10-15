@@ -1,0 +1,3961 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="custom.css" type="text/css" charset="utf-8" />
+<link rel="stylesheet" href="syntax_highlight.css" type="text/css" charset="utf-8" />
+
+    <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
+    <script src="app.js" type="text/javascript" charset="utf-8"></script>
+    <title>Class: Buby</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="section class Buby">
+  <h1 class="title">Class: Buby</h1>
+  <div class="section docstring">
+  <p>
+Buby is a mash-up of the commercial security testing web proxy PortSwigger
+Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from
+and tied to JRuby with a Java extension using the BurpExtender API.
+</p>
+<p>
+The Buby class is an abstract implementation of a BurpExtender ruby
+handler. Included are several abstract event handlers used from the
+BurpExtender java implementation:
+</p>
+<ul>
+<li>evt_extender_init
+
+</li>
+<li>evt_proxy_message
+
+</li>
+<li>evt_command_line_args
+
+</li>
+<li>evt_register_callbacks
+
+</li>
+<li>evt_application_closing
+
+</li>
+</ul>
+<p>
+Buby also supports the newer event handlers available in Burp 1.2.09 and
+up:
+</p>
+<ul>
+<li>evt_http_message
+
+</li>
+<li>evt_scan_issue
+
+</li>
+</ul>
+<p>
+This class also exposes several methods to access Burp functionality and
+user interfaces through the IBurpExtenderCallbacks interface (note, several
+abbreviated aliases also exist for each):
+</p>
+<ul>
+<li>doActiveScan
+
+</li>
+<li>doPassiveScan
+
+</li>
+<li>excludeFromScope
+
+</li>
+<li>includeInScope
+
+</li>
+<li>isInScope
+
+</li>
+<li>issueAlert
+
+</li>
+<li>makeHttpRequest
+
+</li>
+<li>sendToIntruder
+
+</li>
+<li>sendToRepeater
+
+</li>
+<li>sendToSpider
+
+</li>
+</ul>
+<p>
+Buby also provides front-end ruby methods for the various callback methods
+supported by Burp. New callbacks have been cropping up in newer Burp
+versions frequently.
+</p>
+<p>
+Available since Burp 1.2.09:
+</p>
+<ul>
+<li>getProxyHistory
+
+</li>
+<li>getSiteMap
+
+</li>
+<li>restoreState
+
+</li>
+<li>saveState
+
+</li>
+<li>getParameters
+
+</li>
+<li>getHeaders
+
+</li>
+</ul>
+<p>
+Available since Burp 1.2.15:
+</p>
+<ul>
+<li>getScanIssues
+
+</li>
+</ul>
+<p>
+Available since Burp 1.2.17:
+</p>
+<ul>
+<li>exitSuite
+
+</li>
+</ul>
+<p>
+If you wish to access any of the IBurpExtenderCallbacks methods directly.
+You can use &#8216;burp_callbacks&#8217; to obtain a reference.
+</p>
+<p>
+Credit:
+</p>
+<ul>
+<li>Burp and Burp Suite are trade-marks of PortSwigger Ltd.
+
+<pre class="code">
+  <span class='Copyright constant id'>Copyright</span> <span class='integer val'>2008</span> <span class='PortSwigger constant id'>PortSwigger</span> <span class='Ltd constant id'>Ltd</span><span class='dot token'>.</span> <span class='All constant id'>All</span> <span class='rights identifier id'>rights</span> <span class='reserved identifier id'>reserved</span><span class='dot token'>.</span>
+  <span class='See constant id'>See</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/portswigger.net for license terms.
+</span></pre>
+</li>
+<li>This ruby library and the accompanying BurpExtender.java implementation
+were written by Eric Monti @ Matasano Security.
+
+<p>
+Matasano claims no professional or legal affiliation with PortSwigger LTD.
+nor do we sell or officially endorse any of their products.
+</p>
+<p>
+However, this author would like to express his personal and professional
+respect and appreciation for their making available the BurpExtender
+extension API. The availability of this interface in an already great tool
+goes a long way to make Burp Suite a truly first-class application.
+</p>
+</li>
+<li>Forgive the name. It won out over &quot;Burb&quot; and &quot;BurpRub&quot;.
+It&#8217;s just easier to type and say out-loud. Mike Tracy gets full
+credit as official Buby-namer.
+
+</li>
+</ul>
+<p>
+Buby
+</p>
+
+</div><div class="section constants">
+  <div class="thisclass">
+  <h1>Constants</h1>
+  <dl>
+    
+      <dt id="ACTION_DO_INTERCEPT-constant">ACTION_DO_INTERCEPT</dt>
+      <dd>BurpExtender::ACTION_DO_INTERCEPT</dd>
+    
+      <dt id="ACTION_DONT_INTERCEPT-constant">ACTION_DONT_INTERCEPT</dt>
+      <dd>BurpExtender::ACTION_DONT_INTERCEPT</dd>
+    
+      <dt id="ACTION_DROP-constant">ACTION_DROP</dt>
+      <dd>BurpExtender::ACTION_DROP</dd>
+    
+      <dt id="ACTION_FOLLOW_RULES-constant">ACTION_FOLLOW_RULES</dt>
+      <dd>BurpExtender::ACTION_FOLLOW_RULES</dd>
+    
+      <dt id="LIBPATH-constant">LIBPATH</dt>
+      <dd>::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR</dd>
+    
+      <dt id="PATH-constant">PATH</dt>
+      <dd>::File.dirname(LIBPATH) + ::File::SEPARATOR</dd>
+    
+      <dt id="VERSION-constant">VERSION</dt>
+      <dd>'1.1.5'</dd>
+    
+  </dl>
+</div>
+
+</div><div class="section constructor">
+<h1>Constructor Summary</h1>
+  <div id="initialize-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>initialize</span><span class='args'>(other = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+:startdoc:
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+90
+91
+92
+93
+94
+95
+96</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 90</span>
+
+<span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='other identifier id'>other</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='other identifier id'>other</span>
+    <span class='raise identifier id'>raise</span> <span class='string val'>&quot;arg 0 must be another kind of Buby&quot;</span> <span class='unless unless_mod kw'>unless</span> <span class='other identifier id'>other</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='Buby constant id'>Buby</span>
+    <span class='@burp_extender ivar id'>@burp_extender</span> <span class='assign token'>=</span> <span class='other identifier id'>other</span><span class='dot token'>.</span><span class='burp_extender identifier id'>burp_extender</span>
+    <span class='@burp_callbacks ivar id'>@burp_callbacks</span> <span class='assign token'>=</span> <span class='other identifier id'>other</span><span class='dot token'>.</span><span class='burp_callbacks identifier id'>burp_callbacks</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</div>  <div class="section visibilitygroup public">
+    <h1>Public Visibility</h1>
+      <div class="section methodsummary class public">
+    <h1>Public Class Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#burp_loaded%3F-class_method" title="burp_loaded?">burp_loaded?</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Checks the Java namespace to see if Burp has been loaded.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#libpath-class_method" title="libpath">libpath</a></span><span class='args'>(*args)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Extra cruft added by Mr Bones: Returns the library path for the module.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#load_burp-class_method" title="load_burp">load_burp</a></span><span class='args'>(jar_path)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Attempts to load burp with require and confirm it provides the required
+class in the Java namespace.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#path-class_method" title="path">path</a></span><span class='args'>(*args)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the lpath for the module.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#require_all_libs_relative_to-class_method" title="require_all_libs_relative_to">require_all_libs_relative_to</a></span><span class='args'>(fname, dir = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Utility method used to require all files ending in .
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#start_burp-class_method" title="start_burp">start_burp</a></span><span class='args'>(h_class = nil, init_args = nil, args = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Starts burp using a supplied handler class,
+</p>
+<pre class="code">
+ <span class='h_class identifier id'>h_class</span> <span class='assign token'>=</span> <span class='Buby constant id'>Buby</span> <span class='or or kw'>or</span> <span class='a identifier id'>a</span> <span class='derived identifier id'>derived</span> <span class='class class kw'>class</span><span class='dot token'>.</span>
+</pre>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#version-class_method" title="version">version</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the version string for the library.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+
+  </div>
+  <div class="section methodsummary instance public">
+    <h1>Public Instance Method Summary</h1>
+<table class="summary">
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#_check_and_callback-instance_method" title="#_check_and_callback">#_check_and_callback</a></span><span class='args'>(meth, *args)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method is a <em>send</em> callback gate for the IBurpExtenderCallbacks
+reference.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#_check_cb-instance_method" title="#_check_cb">#_check_cb</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Internal method to check for the existence of the burp_callbacks reference
+before doing anything with it.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#activate%21-instance_method" title="#activate!">#activate!</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Makes this handler the active Ruby handler object for the BurpExtender Java
+runtime.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#burp_callbacks-instance_method" title="#burp_callbacks">#burp_callbacks</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the internal reference to the IBupExtenderCallbacks instance.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#burp_extender-instance_method" title="#burp_extender">#burp_extender</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns the internal reference to the BurpExtender instance.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#doActiveScan-instance_method" title="#doActiveScan">#doActiveScan</a></span><span class='args'>(host, port, https, req)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#active_scan</span>
+        
+          <span class='alias'>#do_active_scan</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Send an HTTP request to the Burp Scanner tool to perform an active
+vulnerability scan.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#doPassiveScan-instance_method" title="#doPassiveScan">#doPassiveScan</a></span><span class='args'>(host, port, https, req, rsp)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#do_passive_scan</span>
+        
+          <span class='alias'>#passive_scan</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Send an HTTP request and response to the Burp Scanner tool to perform a
+passive vulnerability scan.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#evt_application_closing-instance_method" title="#evt_application_closing">#evt_application_closing</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method is called by BurpExtender right before closing the application.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#evt_command_line_args-instance_method" title="#evt_command_line_args">#evt_command_line_args</a></span><span class='args'>(args)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method is called by the BurpExtender implementation Burp startup.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#evt_extender_init-instance_method" title="#evt_extender_init">#evt_extender_init</a></span><span class='args'>(ext)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Event Handlers ### This method is called by the BurpExtender java
+implementation upon initialization of the BurpExtender instance for Burp.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#evt_http_message-instance_method" title="#evt_http_message">#evt_http_message</a></span><span class='args'>(tool_name, is_request, message_info)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method is invoked whenever any of Burp&#8217;s tools makes an HTTP
+request or receives a response.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#evt_proxy_message-instance_method" title="#evt_proxy_message">#evt_proxy_message</a></span><span class='args'>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method is called by BurpExtender while proxying HTTP messages and
+before passing them through the Burp proxy.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#evt_register_callbacks-instance_method" title="#evt_register_callbacks">#evt_register_callbacks</a></span><span class='args'>(cb)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method is called by BurpExtender on startup to register Burp&#8217;s
+IBurpExtenderCallbacks interface object.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#evt_scan_issue-instance_method" title="#evt_scan_issue">#evt_scan_issue</a></span><span class='args'>(issue)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method is invoked whenever Burp Scanner discovers a new, unique issue,
+and can be used to perform customised reporting or logging of detected
+issues.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#excludeFromScope-instance_method" title="#excludeFromScope">#excludeFromScope</a></span><span class='args'>(url)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#exclude_from_scope</span>
+        
+          <span class='alias'>#exclude_scope</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Exclude the specified URL from the Suite-wide scope.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#exitSuite-instance_method" title="#exitSuite">#exitSuite</a></span><span class='args'>(prompt_user = false)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#close</span>
+        
+          <span class='alias'>#exit_suite</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Shuts down Burp programatically.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#getHeaders-instance_method" title="#getHeaders">#getHeaders</a></span><span class='args'>(msg)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#get_headers</span>
+        
+          <span class='alias'>#headers</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Parses a raw HTTP message (request or response ) and returns an associative
+array containing the headers as they are structured in the
+&#8216;Headers&#8217; tab in the Burp request/response viewer UI.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#getParameters-instance_method" title="#getParameters">#getParameters</a></span><span class='args'>(req)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#parameters</span>
+        
+          <span class='alias'>#get_parameters</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Parses a raw HTTP request message and returns an associative array
+containing parameters as they are structured in the
+&#8216;Parameters&#8217; tab in the Burp request UI.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#getProxyHistory-instance_method" title="#getProxyHistory">#getProxyHistory</a></span><span class='args'></span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#get_proxy_history</span>
+        
+          <span class='alias'>#proxy_history</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns a Java array of IHttpRequestResponse objects pulled directly from
+the Burp proxy history.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#getScanIssues-instance_method" title="#getScanIssues">#getScanIssues</a></span><span class='args'>(urlprefix = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#get_scan_issues</span>
+        
+          <span class='alias'>#scan_issues</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+This method returns all of the current scan issues for URLs matching the
+specified literal prefix.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#getSiteMap-instance_method" title="#getSiteMap">#getSiteMap</a></span><span class='args'>(urlprefix = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#get_site_map</span>
+        
+          <span class='alias'>#site_map</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Returns a Java array of IHttpRequestResponse objects pulled directly from
+the Burp site map for all urls matching the specified literal prefix.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#harvest_cookies_from_history-instance_method" title="#harvest_cookies_from_history">#harvest_cookies_from_history</a></span><span class='args'>(cookie = nil, urlrx = nil, statefile = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Harvest cookies from a session&#8217;s proxy history.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#includeInScope-instance_method" title="#includeInScope">#includeInScope</a></span><span class='args'>(url)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#include_scope</span>
+        
+          <span class='alias'>#include_in_scope</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Include the specified URL in the Suite-wide scope.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#isInScope-instance_method" title="#isInScope">#isInScope</a></span><span class='args'>(url)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#in_scope?</span>
+        
+          <span class='alias'>#is_in_scope</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Query whether a specified URL is within the current Suite-wide scope.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#issueAlert-instance_method" title="#issueAlert">#issueAlert</a></span><span class='args'>(msg)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#alert</span>
+        
+          <span class='alias'>#issue_alert</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Display a message in the Burp Suite alerts tab.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#makeHttpRequest-instance_method" title="#makeHttpRequest">#makeHttpRequest</a></span><span class='args'>(host, port, https, req)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#make_http_request</span>
+        
+          <span class='alias'>#make_request</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Issue an arbitrary HTTP request and retrieve its response
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='host identifier id'>host</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='hostname identifier id'>hostname</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+</pre>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#restoreState-instance_method" title="#restoreState">#restoreState</a></span><span class='args'>(filename)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#restore_state</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Restores Burp session state from a previously saved state file.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#saveState-instance_method" title="#saveState">#saveState</a></span><span class='args'>(filename)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#save_state</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Saves the current Burp session to a state file.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#search_proxy_history-instance_method" title="#search_proxy_history">#search_proxy_history</a></span><span class='args'>(statefile = nil, urlrx = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Searches the proxy history for the url&#8217;s matched by the specified
+regular expression (returns them all if urlrx is nil).
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#sendToIntruder-instance_method" title="#sendToIntruder">#sendToIntruder</a></span><span class='args'>(host, port, https, req)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#intruder</span>
+        
+          <span class='alias'>#send_to_intruder</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Send an HTTP request to the Burp Intruder tool
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='host identifier id'>host</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='hostname identifier id'>hostname</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+</pre>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#sendToRepeater-instance_method" title="#sendToRepeater">#sendToRepeater</a></span><span class='args'>(host, port, https, req, tab = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#repeater</span>
+        
+          <span class='alias'>#send_to_repeater</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Send an HTTP request to the Burp Repeater tool.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#sendToSpider-instance_method" title="#sendToSpider">#sendToSpider</a></span><span class='args'>(url)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+          <span class='alias'>#send_to_spider</span>
+        
+          <span class='alias'>#spider</span>
+        
+      </th>
+      <td class="docstring">
+        <p>
+Send a seed URL to the Burp Spider tool.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#start_burp-instance_method" title="#start_burp">#start_burp</a></span><span class='args'>(args = [])</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Startup stuff Prepares the java BurpExtender implementation with a
+reference to self as the module handler and launches burp suite.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#with_proxy_history-instance_method" title="#with_proxy_history">#with_proxy_history</a></span><span class='args'>(statefile = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This is a convenience wrapper which can load a given burp state file and
+lets its caller to perform actions inside of a block on the proxy history
+contained in the loaded session.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#with_site_map-instance_method" title="#with_site_map">#with_site_map</a></span><span class='args'>(urlprefix = nil, statefile = nil)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Sugar/Convenience methods This is a convenience wrapper which can load a
+given burp state file and lets its caller to perform actions inside of a
+block on the site map contained in the loaded session.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
+            <span class='name'><a href="#with_statefile-instance_method" title="#with_statefile">#with_statefile</a></span><span class='args'>(statefile = nil)</span>
+            <span class='block'>{|_self| ... }</span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+This is a convenience wrapper which loads a given burp statefile and lets
+its caller perform actions via burp while its loaded on it inside of a
+block.
+</p>
+
+        
+      </td>
+    </tr>
+  
+</table>
+
+  </div>
+<div class="section methoddetails class public">
+  <h1>Public Class Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>burp_loaded?</h3>
+</div><div id="burp_loaded?-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>burp_loaded?</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Checks the Java namespace to see if Burp has been loaded.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+703
+704
+705
+706
+707
+708
+709
+710</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 703</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='burp_loaded? fid id'>burp_loaded?</span>
+  <span class='begin begin kw'>begin</span> 
+    <span class='include_class identifier id'>include_class</span> <span class='string val'>'burp.StartBurp'</span>
+    <span class='return return kw'>return</span> <span class='true true kw'>true</span>
+  <span class='rescue rescue kw'>rescue</span> <span class='NameError constant id'>NameError</span>
+    <span class='return return kw'>return</span> <span class='false false kw'>false</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>libpath</h3>
+</div><div id="libpath-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>libpath</span><span class='args'>(*args)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Extra cruft added by Mr Bones: Returns the library path for the module. If
+any arguments are given, they will be joined to the end of the libray path
+using <tt>File.join</tt>.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+718
+719
+720</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 718</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='libpath identifier id'>libpath</span><span class='lparen token'>(</span> <span class='mult op'>*</span><span class='args identifier id'>args</span> <span class='rparen token'>)</span>
+  <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='integer val'>? </span><span class='LIBPATH constant id'>LIBPATH</span> <span class='colon op'>:</span> <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='LIBPATH constant id'>LIBPATH</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>load_burp</h3>
+</div><div id="load_burp-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>load_burp</span><span class='args'>(jar_path)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Attempts to load burp with require and confirm it provides the required
+class in the Java namespace.
+</p>
+<p>
+Returns: true/false depending on whether the required jar provides us the
+required class
+</p>
+<p>
+Raises: may raise the usual require exceptions if jar_path is bad.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+697
+698
+699
+700</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 697</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='load_burp identifier id'>load_burp</span><span class='lparen token'>(</span><span class='jar_path identifier id'>jar_path</span><span class='rparen token'>)</span>
+  <span class='require identifier id'>require</span> <span class='jar_path identifier id'>jar_path</span>
+  <span class='return return kw'>return</span> <span class='burp_loaded? fid id'>burp_loaded?</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>path</h3>
+</div><div id="path-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>path</span><span class='args'>(*args)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Returns the lpath for the module. If any arguments are given, they will be
+joined to the end of the path using <tt>File.join</tt>.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+726
+727
+728</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 726</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='lparen token'>(</span> <span class='mult op'>*</span><span class='args identifier id'>args</span> <span class='rparen token'>)</span>
+  <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='integer val'>? </span><span class='PATH constant id'>PATH</span> <span class='colon op'>:</span> <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='PATH constant id'>PATH</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>require_all_libs_relative_to</h3>
+</div><div id="require_all_libs_relative_to-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>require_all_libs_relative_to</span><span class='args'>(fname, dir = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Utility method used to require all files ending in .rb that lie in the
+directory below this file that has the same name as the filename passed in.
+Optionally, a specific <em>directory</em> name can be passed in such that
+the <em>filename</em> does not have to be equivalent to the directory.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+735
+736
+737
+738
+739
+740
+741</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 735</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='require_all_libs_relative_to identifier id'>require_all_libs_relative_to</span><span class='lparen token'>(</span> <span class='fname identifier id'>fname</span><span class='comma token'>,</span> <span class='dir identifier id'>dir</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span> <span class='rparen token'>)</span>
+  <span class='dir identifier id'>dir</span> <span class='opasgn op'>||=</span> <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='basename identifier id'>basename</span><span class='lparen token'>(</span><span class='fname identifier id'>fname</span><span class='comma token'>,</span> <span class='string val'>'.*'</span><span class='rparen token'>)</span>
+  <span class='search_me identifier id'>search_me</span> <span class='assign token'>=</span> <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='expand_path identifier id'>expand_path</span><span class='lparen token'>(</span>
+      <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='dirname identifier id'>dirname</span><span class='lparen token'>(</span><span class='fname identifier id'>fname</span><span class='rparen token'>)</span><span class='comma token'>,</span> <span class='dir identifier id'>dir</span><span class='comma token'>,</span> <span class='string val'>'**'</span><span class='comma token'>,</span> <span class='string val'>'*.rb'</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+
+  <span class='Dir constant id'>Dir</span><span class='dot token'>.</span><span class='glob identifier id'>glob</span><span class='lparen token'>(</span><span class='search_me identifier id'>search_me</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='sort identifier id'>sort</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='rb identifier id'>rb</span><span class='bitor op'>|</span> <span class='require identifier id'>require</span> <span class='rb identifier id'>rb</span><span class='rbrace token'>}</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>start_burp</h3>
+</div><div id="start_burp-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>start_burp</span><span class='args'>(h_class = nil, init_args = nil, args = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Starts burp using a supplied handler class,
+</p>
+<pre class="code">
+ <span class='h_class identifier id'>h_class</span> <span class='assign token'>=</span> <span class='Buby constant id'>Buby</span> <span class='or or kw'>or</span> <span class='a identifier id'>a</span> <span class='derived identifier id'>derived</span> <span class='class class kw'>class</span><span class='dot token'>.</span> <span class='instance identifier id'>instance</span> <span class='of identifier id'>of</span> <span class='which identifier id'>which</span> <span class='will identifier id'>will</span> <span class='become identifier id'>become</span> <span class='handler identifier id'>handler</span><span class='dot token'>.</span>
+ <span class='args identifier id'>args</span> <span class='assign token'>=</span> <span class='arguments identifier id'>arguments</span> <span class='to identifier id'>to</span> <span class='Burp constant id'>Burp</span>
+ <span class='init_args identifier id'>init_args</span> <span class='assign token'>=</span> <span class='arguments identifier id'>arguments</span> <span class='to identifier id'>to</span> <span class='the identifier id'>the</span> <span class='handler identifier id'>handler</span> <span class='constructor identifier id'>constructor</span>
+
+ <span class='Returns constant id'>Returns</span> <span class='the identifier id'>the</span> <span class='handler identifier id'>handler</span> <span class='instance identifier id'>instance</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+683
+684
+685
+686
+687
+688</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 683</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='start_burp identifier id'>start_burp</span><span class='lparen token'>(</span><span class='h_class identifier id'>h_class</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='init_args identifier id'>init_args</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='h_class identifier id'>h_class</span> <span class='opasgn op'>||=</span> <span class='self self kw'>self</span>
+  <span class='init_args identifier id'>init_args</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='args identifier id'>args</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='h_class identifier id'>h_class</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='init_args identifier id'>init_args</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='start_burp identifier id'>start_burp</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>version</h3>
+</div><div id="version-class_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>version</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Returns the version string for the library.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+745
+746
+747</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 745</span>
+
+<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='version identifier id'>version</span>
+  <span class='VERSION constant id'>VERSION</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div><div class="section methoddetails instance public">
+  <h1>Public Instance Method Details</h1>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>_check_and_callback</h3>
+</div><div id="_check_and_callback-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>_check_and_callback</span><span class='args'>(meth, *args)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This method is a <em>send</em> callback gate for the IBurpExtenderCallbacks
+reference. It first checks to see if a method is available before calling
+with the specified arguments, and raises an exception if it is unavailable.
+</p>
+<ul>
+<li>meth = string or symbol name of method
+
+</li>
+<li>args = variable length array of arguments to pass to meth
+
+</li>
+</ul>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+239
+240
+241
+242
+243
+244
+245</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 239</span>
+
+<span class='def def kw'>def</span> <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
+  <span class='cb identifier id'>cb</span> <span class='assign token'>=</span> <span class='_check_cb identifier id'>_check_cb</span>
+  <span class='unless unless kw'>unless</span> <span class='cb identifier id'>cb</span><span class='dot token'>.</span><span class='respond_to? fid id'>respond_to?</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='rparen token'>)</span>
+    <span class='raise identifier id'>raise</span> <span class='dstring node'>&quot;#{meth} is not available in your version of Burp&quot;</span>
+  <span class='end end kw'>end</span>
+  <span class='cb identifier id'>cb</span><span class='dot token'>.</span><span class='__send__ identifier id'>__send__</span> <span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>_check_cb</h3>
+</div><div id="_check_cb-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>_check_cb</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Internal method to check for the existence of the burp_callbacks reference
+before doing anything with it.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+116
+117
+118</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 116</span>
+
+<span class='def def kw'>def</span> <span class='_check_cb identifier id'>_check_cb</span>
+  <span class='@burp_callbacks ivar id'>@burp_callbacks</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='string val'>&quot;Burp callbacks have not been set&quot;</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>activate!</h3>
+</div><div id="activate!-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>activate!</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Makes this handler the active Ruby handler object for the BurpExtender Java
+runtime. (there can be only one!)
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+100
+101
+102</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 100</span>
+
+<span class='def def kw'>def</span> <span class='activate! fid id'>activate!</span>
+  <span class='BurpExtender constant id'>BurpExtender</span><span class='dot token'>.</span><span class='set_handler identifier id'>set_handler</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>burp_callbacks</h3>
+</div><div id="burp_callbacks-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>burp_callbacks</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Returns the internal reference to the IBupExtenderCallbacks instance. This
+reference gets set from Java through the evt_register_callbacks method. It
+is exposed to allow you to access the IBurpExtenderCallbacks instance
+directly if you so choose.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+112</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 112</span>
+
+<span class='def def kw'>def</span> <span class='burp_callbacks identifier id'>burp_callbacks</span><span class='semicolon token'>;</span> <span class='@burp_callbacks ivar id'>@burp_callbacks</span> <span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>burp_extender</h3>
+</div><div id="burp_extender-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>burp_extender</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Returns the internal reference to the BurpExtender instance. This reference
+gets set from Java through the evt_extender_init method.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+106</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 106</span>
+
+<span class='def def kw'>def</span> <span class='burp_extender identifier id'>burp_extender</span><span class='semicolon token'>;</span> <span class='@burp_extender ivar id'>@burp_extender</span> <span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>doActiveScan</h3>
+</div><div id="doActiveScan-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>doActiveScan</span><span class='args'>(host, port, https, req)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="active_scan-instance_method">active_scan</tt>
+  
+    <tt id="do_active_scan-instance_method">do_active_scan</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Send an HTTP request to the Burp Scanner tool to perform an active
+vulnerability scan.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='host identifier id'>host</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='hostname identifier id'>hostname</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='port identifier id'>port</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='https identifier id'>https</span> <span class='assign token'>=</span> <span class='Flags constant id'>Flags</span> <span class='whether identifier id'>whether</span> <span class='the identifier id'>the</span> <span class='protocol identifier id'>protocol</span> <span class='is identifier id'>is</span> <span class='HTTPS constant id'>HTTPS</span> <span class='or or kw'>or</span> <span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='req identifier id'>req</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='full identifier id'>full</span> <span class='HTTP constant id'>HTTP</span> <span class='request identifier id'>request</span><span class='dot token'>.</span> <span class='lparen token'>(</span><span class='String constant id'>String</span> <span class='or or kw'>or</span> <span class='Java constant id'>Java</span> <span class='bytes identifier id'>bytes</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+126
+127
+128
+129</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 126</span>
+
+<span class='def def kw'>def</span> <span class='doActiveScan identifier id'>doActiveScan</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
+  <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='doActiveScan identifier id'>doActiveScan</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>doPassiveScan</h3>
+</div><div id="doPassiveScan-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>doPassiveScan</span><span class='args'>(host, port, https, req, rsp)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="do_passive_scan-instance_method">do_passive_scan</tt>
+  
+    <tt id="passive_scan-instance_method">passive_scan</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Send an HTTP request and response to the Burp Scanner tool to perform a
+passive vulnerability scan.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='host identifier id'>host</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='hostname identifier id'>hostname</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='port identifier id'>port</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='port identifier id'>port</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='https identifier id'>https</span> <span class='assign token'>=</span> <span class='Flags constant id'>Flags</span> <span class='whether identifier id'>whether</span> <span class='the identifier id'>the</span> <span class='protocol identifier id'>protocol</span> <span class='is identifier id'>is</span> <span class='HTTPS constant id'>HTTPS</span> <span class='or or kw'>or</span> <span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='req identifier id'>req</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='full identifier id'>full</span> <span class='HTTP constant id'>HTTP</span> <span class='request identifier id'>request</span><span class='dot token'>.</span> <span class='lparen token'>(</span><span class='String constant id'>String</span> <span class='or or kw'>or</span> <span class='Java constant id'>Java</span> <span class='bytes identifier id'>bytes</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+ <span class='mult op'>*</span> <span class='rsp identifier id'>rsp</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='full identifier id'>full</span> <span class='HTTP constant id'>HTTP</span> <span class='response identifier id'>response</span><span class='dot token'>.</span> <span class='lparen token'>(</span><span class='String constant id'>String</span> <span class='or or kw'>or</span> <span class='Java constant id'>Java</span> <span class='bytes identifier id'>bytes</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+140
+141
+142
+143
+144</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 140</span>
+
+<span class='def def kw'>def</span> <span class='doPassiveScan identifier id'>doPassiveScan</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='comma token'>,</span> <span class='rsp identifier id'>rsp</span><span class='rparen token'>)</span>
+  <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='rsp identifier id'>rsp</span> <span class='assign token'>=</span> <span class='rsp identifier id'>rsp</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='rsp identifier id'>rsp</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='doPassiveScan identifier id'>doPassiveScan</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='comma token'>,</span> <span class='rsp identifier id'>rsp</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_application_closing</h3>
+</div><div id="evt_application_closing-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_application_closing</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This method is called by BurpExtender right before closing the application.
+Implementations can use this method to perform cleanup tasks such as
+closing files or databases before exit.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+567
+568
+569</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 567</span>
+
+<span class='def def kw'>def</span> <span class='evt_application_closing identifier id'>evt_application_closing</span> 
+  <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_app_close</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_command_line_args</h3>
+</div><div id="evt_command_line_args-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_command_line_args</span><span class='args'>(args)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This method is called by the BurpExtender implementation Burp startup. The
+args parameter contains main()&#8217;s argv command-line arguments array.
+</p>
+<p>
+Note: This maps to the &#8216;setCommandLineArgs&#8217; method in the java
+implementation of BurpExtender.
+</p>
+<p>
+The return value is ignored.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+358
+359
+360</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 358</span>
+
+<span class='def def kw'>def</span> <span class='evt_command_line_args identifier id'>evt_command_line_args</span> <span class='args identifier id'>args</span>
+  <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_args</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_extender_init</h3>
+</div><div id="evt_extender_init-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_extender_init</span><span class='args'>(ext)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Event Handlers ### This method is called by the BurpExtender java
+implementation upon initialization of the BurpExtender instance for Burp.
+The args parameter is passed with a instance of the newly initialized
+BurpExtender instance so that implementations can access and extend its
+public interfaces.
+</p>
+<p>
+The return value is ignored.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+346
+347
+348
+349</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 346</span>
+
+<span class='def def kw'>def</span> <span class='evt_extender_init identifier id'>evt_extender_init</span> <span class='ext identifier id'>ext</span>
+  <span class='@burp_extender ivar id'>@burp_extender</span> <span class='assign token'>=</span> <span class='ext identifier id'>ext</span>
+  <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_extender</span><span class='comma token'>,</span> <span class='ext identifier id'>ext</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_http_message</h3>
+</div><div id="evt_http_message-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_http_message</span><span class='args'>(tool_name, is_request, message_info)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This method is invoked whenever any of Burp&#8217;s tools makes an HTTP
+request or receives a response. This is effectively a generalised version
+of the pre-existing evt_proxy_message method, and can be used to intercept
+and modify the HTTP traffic of all Burp tools.
+</p>
+<p>
+IMPORTANT: This event handler is only used in Burp version 1.2.09 and
+higher.
+</p>
+<p>
+Note: this method maps to the processHttpMessage BurpExtender Java method.
+</p>
+<p>
+This method should be overridden if you wish to implement functionality
+relating to generalized requests and responses from any BurpSuite tool.
+</p>
+<p>
+You may want to use evt_proxy_message if you only intend to work on proxied
+messages. Note, however, the IHttpRequestResponse Java object is not used
+in evt_proxy_message and gives evt_http_message a somewhat nicer interface
+to work with.
+</p>
+<p>
+Parameters:
+</p>
+<ul>
+<li>tool_name = a string name of the tool that generated the message
+
+</li>
+<li>is_request = boolean true = request / false = response
+
+</li>
+<li>message_info = an instance of the IHttpRequestResponse Java class with
+methods for accessing and manipulating various attributes of the message.
+
+</li>
+</ul>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+542
+543
+544
+545</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 542</span>
+
+<span class='def def kw'>def</span> <span class='evt_http_message identifier id'>evt_http_message</span><span class='lparen token'>(</span><span class='tool_name identifier id'>tool_name</span><span class='comma token'>,</span> <span class='is_request identifier id'>is_request</span><span class='comma token'>,</span> <span class='message_info identifier id'>message_info</span><span class='rparen token'>)</span>
+  <span class='HttpRequestResponseHelper constant id'>HttpRequestResponseHelper</span><span class='dot token'>.</span><span class='implant identifier id'>implant</span><span class='lparen token'>(</span><span class='message_info identifier id'>message_info</span><span class='rparen token'>)</span>
+  <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_http_message</span><span class='comma token'>,</span> <span class='tool_name identifier id'>tool_name</span><span class='comma token'>,</span> <span class='is_request identifier id'>is_request</span><span class='comma token'>,</span> <span class='message_info identifier id'>message_info</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_proxy_message</h3>
+</div><div id="evt_proxy_message-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_proxy_message</span><span class='args'>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This method is called by BurpExtender while proxying HTTP messages and
+before passing them through the Burp proxy. Implementations can use this
+method to implement arbitrary processing upon HTTP requests and responses
+such as interception, logging, modification, and so on.
+</p>
+<p>
+The &#8216;is_req&#8217; parameter indicates whether it is a response or
+request.
+</p>
+<p>
+Note: This method maps to the &#8216;processProxyMessage&#8217; method in
+the java implementation of BurpExtender.
+</p>
+<p>
+Below are the parameters descriptions based on the IBurpExtender javadoc.
+Where applicable, decriptions have been modified for local parameter naming
+and other ruby-specific details added.
+</p>
+<ul>
+<li>msg_ref: An identifier which is unique to a single request/response pair.
+This can be used to correlate details of requests and responses and perform
+processing on the response message accordingly. This number also
+corresponds to the Burp UI&#8217;s proxy &quot;history&quot; # column.
+
+</li>
+<li>is_req: (true/false) Flags whether the message is a client request or a
+server response.
+
+</li>
+<li>rhost: The hostname of the remote HTTP server.
+
+</li>
+<li>rport: The port of the remote HTTP server.
+
+</li>
+<li>is_https: Flags whether the protocol is HTTPS or HTTP.
+
+</li>
+<li>http_meth: The method verb used in the client request.
+
+</li>
+<li>url: The requested URL. Set in both the request and response.
+
+</li>
+<li>resourceType: The filetype of the requested resource, or nil if the
+resource has no filetype.
+
+</li>
+<li>status: The HTTP status code returned by the server. This value is nil for
+request messages.
+
+</li>
+<li>req_content_type: The content-type string returned by the server. This
+value is nil for request messages.
+
+</li>
+<li>message: The full HTTP message. **Ruby note:
+
+<pre class="code">
+  <span class='For constant id'>For</span> <span class='convenience identifier id'>convenience</span><span class='comma token'>,</span> <span class='the identifier id'>the</span> <span class='message identifier id'>message</span> <span class='is identifier id'>is</span> <span class='received identifier id'>received</span> <span class='and and kw'>and</span> <span class='returned identifier id'>returned</span> <span class='as identifier id'>as</span> <span class='a identifier id'>a</span> <span class='ruby identifier id'>ruby</span>
+  <span class='String constant id'>String</span> <span class='object identifier id'>object</span><span class='dot token'>.</span> <span class='Internally constant id'>Internally</span> <span class='within identifier id'>within</span> <span class='Burp constant id'>Burp</span> <span class='it identifier id'>it</span> <span class='is identifier id'>is</span> <span class='handled identifier id'>handled</span> <span class='as identifier id'>as</span> <span class='a identifier id'>a</span> <span class='java identifier id'>java</span> <span class='byte identifier id'>byte</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='array identifier id'>array</span><span class='dot token'>.</span> <span class='See constant id'>See</span> <span class='also identifier id'>also</span> <span class='the identifier id'>the</span> <span class='notes identifier id'>notes</span> <span class='about identifier id'>about</span> <span class='the identifier id'>the</span> <span class='return return kw'>return</span> <span class='object identifier id'>object</span> <span class='below identifier id'>below</span><span class='dot token'>.</span>
+</pre>
+</li>
+<li>action: An array containing a single integer, allowing the implementation
+to communicate back to Burp Proxy a non-default interception action for the
+message. The default value is ACTION_FOLLOW_RULES (or 0). Possible values
+include:
+
+<pre class="code">
+  <span class='ACTION_FOLLOW_RULES constant id'>ACTION_FOLLOW_RULES</span> <span class='assign token'>=</span> <span class='integer val'>0</span>
+  <span class='ACTION_DO_INTERCEPT constant id'>ACTION_DO_INTERCEPT</span> <span class='assign token'>=</span> <span class='integer val'>1</span>
+  <span class='ACTION_DONT_INTERCEPT constant id'>ACTION_DONT_INTERCEPT</span> <span class='assign token'>=</span> <span class='integer val'>2</span>
+  <span class='ACTION_DROP constant id'>ACTION_DROP</span> <span class='assign token'>=</span> <span class='integer val'>3</span>
+</pre>
+<p>
+Refer to the BurpExtender.java source comments for more details.
+</p>
+</li>
+</ul>
+<p>
+Return Value:
+</p>
+<pre class="code">
+  <span class='Implementations constant id'>Implementations</span> <span class='should identifier id'>should</span> <span class='return return kw'>return</span> <span class='either identifier id'>either</span> <span class='lparen token'>(</span><span class='a identifier id'>a</span><span class='rparen token'>)</span> <span class='the identifier id'>the</span> <span class='same identifier id'>same</span> <span class='object identifier id'>object</span> <span class='received identifier id'>received</span>
+  <span class='in in kw'>in</span> <span class='the identifier id'>the</span> <span class='message identifier id'>message</span> <span class='paramater identifier id'>paramater</span><span class='comma token'>,</span> <span class='or or kw'>or</span> <span class='lparen token'>(</span><span class='b identifier id'>b</span><span class='rparen token'>)</span> <span class='a identifier id'>a</span> <span class='different identifier id'>different</span> <span class='object identifier id'>object</span> <span class='containing identifier id'>containing</span> <span class='a identifier id'>a</span>
+  <span class='modified identifier id'>modified</span> <span class='message identifier id'>message</span><span class='dot token'>.</span>
+</pre>
+<p>
+**IMPORTANT RUBY NOTE: Always be sure to return a new object if making
+modifications to messages.
+</p>
+<p>
+Explanation: The (a) and (b) convention above is followed rather literally
+during type conversion on the return value back into the java BurpExtender.
+</p>
+<p>
+When determining whether a change has been made in the message or not, the
+decision is made based on whether the object returned is the same as the
+object submitted in the call to evt_proxy_message.
+</p>
+<p>
+So, for example, using in-place modification of the message using range
+substring assignments or destructive method variations like String.sub!()
+and String.gsub! alone won&#8217;t work because the same object gets
+returned to BurpExtender.
+</p>
+<p>
+In short, this means that if you want modifications to be made, be sure to
+return a different String than the one you got in your handler.
+</p>
+<p>
+So for example this code won&#8217;t do anything at all:
+</p>
+<pre class="code">
+  <span class='dot3 op'>...</span>
+  <span class='message identifier id'>message</span><span class='dot token'>.</span><span class='sub! fid id'>sub!</span><span class='lparen token'>(</span><span class='regexp val'>/^GET /</span><span class='comma token'>,</span> <span class='string val'>&quot;HEAD &quot;</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='message identifier id'>message</span>
+</pre>
+<p>
+Nor this:
+</p>
+<pre class="code">
+  <span class='message identifier id'>message</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>4</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>&quot;HEAD &quot;</span>
+  <span class='return return kw'>return</span> <span class='message identifier id'>message</span>
+</pre>
+<p>
+But this will
+</p>
+<pre class="code">
+  <span class='dot3 op'>...</span>
+  <span class='return return kw'>return</span> <span class='message identifier id'>message</span><span class='dot token'>.</span><span class='sub identifier id'>sub</span><span class='lparen token'>(</span><span class='regexp val'>/^GET /</span><span class='comma token'>,</span> <span class='string val'>&quot;HEAD &quot;</span><span class='rparen token'>)</span>
+</pre>
+<p>
+And so will this
+</p>
+<pre class="code">
+  <span class='dot3 op'>...</span>
+  <span class='message identifier id'>message</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='dot2 op'>..</span><span class='integer val'>4</span><span class='rbrack token'>]</span> <span class='assign token'>=</span> <span class='string val'>&quot;HEAD &quot;</span>
+  <span class='return return kw'>return</span> <span class='message identifier id'>message</span><span class='dot token'>.</span><span class='dup identifier id'>dup</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 497</span>
+
+<span class='def def kw'>def</span> <span class='evt_proxy_message identifier id'>evt_proxy_message</span> <span class='msg_ref identifier id'>msg_ref</span><span class='comma token'>,</span> <span class='is_req identifier id'>is_req</span><span class='comma token'>,</span> <span class='rhost identifier id'>rhost</span><span class='comma token'>,</span> <span class='rport identifier id'>rport</span><span class='comma token'>,</span> <span class='is_https identifier id'>is_https</span><span class='comma token'>,</span> <span class='http_meth identifier id'>http_meth</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='resourceType identifier id'>resourceType</span><span class='comma token'>,</span> <span class='status identifier id'>status</span><span class='comma token'>,</span> <span class='req_content_type identifier id'>req_content_type</span><span class='comma token'>,</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='action identifier id'>action</span>
+  <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span> <span class='lparen token'>(</span><span class='is_req identifier id'>is_req</span><span class='rparen token'>)</span><span class='question op'>?</span> <span class='symbol val'>:got_proxy_request</span> <span class='colon op'>:</span> <span class='symbol val'>:got_proxy_response</span><span class='comma token'>,</span>
+       <span class='lbrack token'>[</span><span class='symbol val'>:msg_ref</span><span class='comma token'>,</span> <span class='msg_ref identifier id'>msg_ref</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:is_req</span><span class='comma token'>,</span> <span class='is_req identifier id'>is_req</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:rhost</span><span class='comma token'>,</span> <span class='rhost identifier id'>rhost</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:rport</span><span class='comma token'>,</span> <span class='rport identifier id'>rport</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:is_https</span><span class='comma token'>,</span> <span class='is_https identifier id'>is_https</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:http_meth</span><span class='comma token'>,</span> <span class='http_meth identifier id'>http_meth</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:url</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:resourceType</span><span class='comma token'>,</span> <span class='resourceType identifier id'>resourceType</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:status</span><span class='comma token'>,</span> <span class='status identifier id'>status</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:req_content_type</span><span class='comma token'>,</span> <span class='req_content_type identifier id'>req_content_type</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:message</span><span class='comma token'>,</span> <span class='message identifier id'>message</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
+       <span class='lbrack token'>[</span><span class='symbol val'>:action</span><span class='comma token'>,</span> <span class='action identifier id'>action</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+  
+  <span class='return return kw'>return</span> <span class='message identifier id'>message</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_register_callbacks</h3>
+</div><div id="evt_register_callbacks-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_register_callbacks</span><span class='args'>(cb)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This method is called by BurpExtender on startup to register Burp&#8217;s
+IBurpExtenderCallbacks interface object.
+</p>
+<p>
+This maps to the &#8216;registerExtenderCallbacks&#8217; method in the Java
+implementation of BurpExtender.
+</p>
+<p>
+The return value is ignored.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+369
+370
+371
+372
+373</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 369</span>
+
+<span class='def def kw'>def</span> <span class='evt_register_callbacks identifier id'>evt_register_callbacks</span> <span class='cb identifier id'>cb</span>
+  <span class='@burp_callbacks ivar id'>@burp_callbacks</span> <span class='assign token'>=</span> <span class='cb identifier id'>cb</span>
+  <span class='cb identifier id'>cb</span><span class='dot token'>.</span><span class='issueAlert identifier id'>issueAlert</span><span class='lparen token'>(</span><span class='dstring node'>&quot;[JRuby::#{self.class}] registered callback&quot;</span><span class='rparen token'>)</span>
+  <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_callbacks</span><span class='comma token'>,</span> <span class='cb identifier id'>cb</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_scan_issue</h3>
+</div><div id="evt_scan_issue-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_scan_issue</span><span class='args'>(issue)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This method is invoked whenever Burp Scanner discovers a new, unique issue,
+and can be used to perform customised reporting or logging of detected
+issues.
+</p>
+<p>
+IMPORTANT: This event handler is only used in Burp version 1.2.09 and
+higher.
+</p>
+<p>
+Note: this method maps to the BurpExtender Java method.
+</p>
+<p>
+Parameters:
+</p>
+<ul>
+<li>issue = an instance of the IScanIssue Java class with methods for viewing
+information on the scan issue that was generated.
+
+</li>
+</ul>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+559
+560
+561
+562</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 559</span>
+
+<span class='def def kw'>def</span> <span class='evt_scan_issue identifier id'>evt_scan_issue</span><span class='lparen token'>(</span><span class='issue identifier id'>issue</span><span class='rparen token'>)</span>
+  <span class='ScanIssueHelper constant id'>ScanIssueHelper</span><span class='dot token'>.</span><span class='implant identifier id'>implant</span><span class='lparen token'>(</span><span class='issue identifier id'>issue</span><span class='rparen token'>)</span>
+  <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_scan_issue</span><span class='comma token'>,</span> <span class='issue identifier id'>issue</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>excludeFromScope</h3>
+</div><div id="excludeFromScope-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>excludeFromScope</span><span class='args'>(url)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="exclude_from_scope-instance_method">exclude_from_scope</tt>
+  
+    <tt id="exclude_scope-instance_method">exclude_scope</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Exclude the specified URL from the Suite-wide scope.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='URL constant id'>URL</span> <span class='to identifier id'>to</span> <span class='exclude identifier id'>exclude</span> <span class='from identifier id'>from</span> <span class='the identifier id'>the</span> <span class='Suite constant id'>Suite</span><span class='minus op'>-</span><span class='wide identifier id'>wide</span> <span class='scope identifier id'>scope</span><span class='dot token'>.</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+150
+151
+152
+153</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 150</span>
+
+<span class='def def kw'>def</span> <span class='excludeFromScope identifier id'>excludeFromScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+  <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='excludeFromScope identifier id'>excludeFromScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>exitSuite</h3>
+</div><div id="exitSuite-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>exitSuite</span><span class='args'>(prompt_user = false)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="close-instance_method">close</tt>
+  
+    <tt id="exit_suite-instance_method">exit_suite</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Shuts down Burp programatically. If the method returns the user cancelled
+the shutdown prompt.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+332
+333
+334</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 332</span>
+
+<span class='def def kw'>def</span> <span class='exitSuite identifier id'>exitSuite</span><span class='lparen token'>(</span><span class='prompt_user identifier id'>prompt_user</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
+  <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:exitSuite</span><span class='comma token'>,</span> <span class='prompt_user identifier id'>prompt_user</span> <span class='integer val'>? </span><span class='true true kw'>true</span> <span class='colon op'>:</span> <span class='false false kw'>false</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>getHeaders</h3>
+</div><div id="getHeaders-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>getHeaders</span><span class='args'>(msg)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="get_headers-instance_method">get_headers</tt>
+  
+    <tt id="headers-instance_method">headers</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Parses a raw HTTP message (request or response ) and returns an associative
+array containing the headers as they are structured in the
+&#8216;Headers&#8217; tab in the Burp request/response viewer UI.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<p>
+msg = raw request/response (String or Java bytes[])
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+323
+324
+325
+326</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 323</span>
+
+<span class='def def kw'>def</span> <span class='getHeaders identifier id'>getHeaders</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
+  <span class='msg identifier id'>msg</span> <span class='assign token'>=</span> <span class='msg identifier id'>msg</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='msg identifier id'>msg</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getHeaders</span><span class='comma token'>,</span> <span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>getParameters</h3>
+</div><div id="getParameters-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>getParameters</span><span class='args'>(req)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="parameters-instance_method">parameters</tt>
+  
+    <tt id="get_parameters-instance_method">get_parameters</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Parses a raw HTTP request message and returns an associative array
+containing parameters as they are structured in the
+&#8216;Parameters&#8217; tab in the Burp request UI.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<p>
+req = raw request (String or Java bytes[])
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+308
+309
+310
+311</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 308</span>
+
+<span class='def def kw'>def</span> <span class='getParameters identifier id'>getParameters</span><span class='lparen token'>(</span><span class='req identifier id'>req</span><span class='rparen token'>)</span>
+  <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getParameters</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>getProxyHistory</h3>
+</div><div id="getProxyHistory-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>getProxyHistory</span><span class='args'></span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="get_proxy_history-instance_method">get_proxy_history</tt>
+  
+    <tt id="proxy_history-instance_method">proxy_history</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Returns a Java array of IHttpRequestResponse objects pulled directly from
+the Burp proxy history.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+250
+251
+252</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 250</span>
+
+<span class='def def kw'>def</span> <span class='getProxyHistory identifier id'>getProxyHistory</span>
+  <span class='HttpRequestResponseList constant id'>HttpRequestResponseList</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getProxyHistory</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>getScanIssues</h3>
+</div><div id="getScanIssues-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>getScanIssues</span><span class='args'>(urlprefix = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="get_scan_issues-instance_method">get_scan_issues</tt>
+  
+    <tt id="scan_issues-instance_method">scan_issues</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+This method returns all of the current scan issues for URLs matching the
+specified literal prefix. The prefix can be nil to match all issues.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.15 and higher.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+271
+272
+273</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 271</span>
+
+<span class='def def kw'>def</span> <span class='getScanIssues identifier id'>getScanIssues</span><span class='lparen token'>(</span><span class='urlprefix identifier id'>urlprefix</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='ScanIssuesList constant id'>ScanIssuesList</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span> <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getScanIssues</span><span class='comma token'>,</span> <span class='urlprefix identifier id'>urlprefix</span><span class='rparen token'>)</span> <span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>getSiteMap</h3>
+</div><div id="getSiteMap-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>getSiteMap</span><span class='args'>(urlprefix = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="get_site_map-instance_method">get_site_map</tt>
+  
+    <tt id="site_map-instance_method">site_map</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Returns a Java array of IHttpRequestResponse objects pulled directly from
+the Burp site map for all urls matching the specified literal prefix. The
+prefix can be nil to return all objects.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+260
+261
+262</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 260</span>
+
+<span class='def def kw'>def</span> <span class='getSiteMap identifier id'>getSiteMap</span><span class='lparen token'>(</span><span class='urlprefix identifier id'>urlprefix</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='HttpRequestResponseList constant id'>HttpRequestResponseList</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getSiteMap</span><span class='comma token'>,</span> <span class='urlprefix identifier id'>urlprefix</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>harvest_cookies_from_history</h3>
+</div><div id="harvest_cookies_from_history-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>harvest_cookies_from_history</span><span class='args'>(cookie = nil, urlrx = nil, statefile = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Harvest cookies from a session&#8217;s proxy history.
+</p>
+<p>
+Params:
+</p>
+<pre class="code">
+  <span class='cookie identifier id'>cookie</span>    <span class='assign token'>=</span> <span class='optional identifier id'>optional</span><span class='colon op'>:</span> <span class='name identifier id'>name</span> <span class='of identifier id'>of</span> <span class='cookie identifier id'>cookie</span> <span class='to identifier id'>to</span> <span class='harvest identifier id'>harvest</span>
+  <span class='urlrx identifier id'>urlrx</span>     <span class='assign token'>=</span> <span class='optional identifier id'>optional</span><span class='colon op'>:</span> <span class='regular identifier id'>regular</span> <span class='expression identifier id'>expression</span> <span class='to identifier id'>to</span> <span class='match identifier id'>match</span> <span class='urls identifier id'>urls</span> <span class='against identifier id'>against</span>
+  <span class='statefile identifier id'>statefile</span> <span class='assign token'>=</span> <span class='optional identifier id'>optional</span><span class='colon op'>:</span> <span class='filename identifier id'>filename</span> <span class='for for kw'>for</span> <span class='a identifier id'>a</span> <span class='burp identifier id'>burp</span> <span class='session identifier id'>session</span> <span class='file identifier id'>file</span> <span class='to identifier id'>to</span> <span class='temporarily identifier id'>temporarily</span> <span class='load identifier id'>load</span>
+              <span class='and and kw'>and</span> <span class='harvest identifier id'>harvest</span> <span class='from identifier id'>from</span><span class='dot token'>.</span>
+</pre>
+<p>
+Takes an optional block as additional &#8216;select&#8217; criteria for
+cookies. The block return value of true/false will determine whether a
+cookie string is selected.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+655
+656
+657
+658
+659
+660
+661
+662
+663
+664
+665</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 655</span>
+
+<span class='def def kw'>def</span> <span class='harvest_cookies_from_history identifier id'>harvest_cookies_from_history</span><span class='lparen token'>(</span><span class='cookie identifier id'>cookie</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='urlrx identifier id'>urlrx</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='search_proxy_history identifier id'>search_proxy_history</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='comma token'>,</span> <span class='urlrx identifier id'>urlrx</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='hrr identifier id'>hrr</span><span class='bitor op'>|</span>
+    <span class='if if kw'>if</span> <span class='heads identifier id'>heads</span><span class='assign token'>=</span><span class='hrr identifier id'>hrr</span><span class='dot token'>.</span><span class='rsp_headers identifier id'>rsp_headers</span>
+      <span class='ret identifier id'>ret</span> <span class='opasgn op'>+=</span> <span class='heads identifier id'>heads</span><span class='dot token'>.</span><span class='select identifier id'>select</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='h identifier id'>h</span><span class='bitor op'>|</span> 
+        <span class='h identifier id'>h</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='dot token'>.</span><span class='downcase identifier id'>downcase</span> <span class='eq op'>==</span> <span class='string val'>'set-cookie'</span> <span class='and and kw'>and</span> <span class='lparen token'>(</span><span class='not not kw'>not</span> <span class='block_given? fid id'>block_given?</span> <span class='or or kw'>or</span> <span class='yield yield kw'>yield</span><span class='lparen token'>(</span><span class='h identifier id'>h</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+      <span class='end end kw'>end</span><span class='dot token'>.</span><span class='map identifier id'>map</span><span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='h identifier id'>h</span><span class='bitor op'>|</span> <span class='h identifier id'>h</span><span class='lbrack token'>[</span><span class='integer val'>1</span><span class='rbrack token'>]</span><span class='rbrace token'>}</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>includeInScope</h3>
+</div><div id="includeInScope-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>includeInScope</span><span class='args'>(url)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="include_scope-instance_method">include_scope</tt>
+  
+    <tt id="include_in_scope-instance_method">include_in_scope</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Include the specified URL in the Suite-wide scope.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='URL constant id'>URL</span> <span class='to identifier id'>to</span> <span class='exclude identifier id'>exclude</span> <span class='in in kw'>in</span> <span class='the identifier id'>the</span> <span class='Suite constant id'>Suite</span><span class='minus op'>-</span><span class='wide identifier id'>wide</span> <span class='scope identifier id'>scope</span><span class='dot token'>.</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+159
+160
+161
+162</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 159</span>
+
+<span class='def def kw'>def</span> <span class='includeInScope identifier id'>includeInScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+  <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='includeInScope identifier id'>includeInScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>isInScope</h3>
+</div><div id="isInScope-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>isInScope</span><span class='args'>(url)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="in_scope?-instance_method">in_scope?</tt>
+  
+    <tt id="is_in_scope-instance_method">is_in_scope</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Query whether a specified URL is within the current Suite-wide scope.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='URL constant id'>URL</span> <span class='to identifier id'>to</span> <span class='query identifier id'>query</span>
+</pre>
+<p>
+Returns: true / false
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+170
+171
+172
+173</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 170</span>
+
+<span class='def def kw'>def</span> <span class='isInScope identifier id'>isInScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+  <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='isInScope identifier id'>isInScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>issueAlert</h3>
+</div><div id="issueAlert-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>issueAlert</span><span class='args'>(msg)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="alert-instance_method">alert</tt>
+  
+    <tt id="issue_alert-instance_method">issue_alert</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Display a message in the Burp Suite alerts tab.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='msg identifier id'>msg</span> <span class='assign token'>=</span>  <span class='The constant id'>The</span> <span class='alert identifier id'>alert</span> <span class='message identifier id'>message</span> <span class='to identifier id'>to</span> <span class='display identifier id'>display</span><span class='dot token'>.</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+179
+180
+181</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 179</span>
+
+<span class='def def kw'>def</span> <span class='issueAlert identifier id'>issueAlert</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='issueAlert identifier id'>issueAlert</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>makeHttpRequest</h3>
+</div><div id="makeHttpRequest-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>makeHttpRequest</span><span class='args'>(host, port, https, req)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="make_http_request-instance_method">make_http_request</tt>
+  
+    <tt id="make_request-instance_method">make_request</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Issue an arbitrary HTTP request and retrieve its response
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='host identifier id'>host</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='hostname identifier id'>hostname</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='port identifier id'>port</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='port identifier id'>port</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='https identifier id'>https</span> <span class='assign token'>=</span> <span class='Flags constant id'>Flags</span> <span class='whether identifier id'>whether</span> <span class='the identifier id'>the</span> <span class='protocol identifier id'>protocol</span> <span class='is identifier id'>is</span> <span class='HTTPS constant id'>HTTPS</span> <span class='or or kw'>or</span> <span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='req identifier id'>req</span>   <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='full identifier id'>full</span> <span class='HTTP constant id'>HTTP</span> <span class='request identifier id'>request</span><span class='dot token'>.</span> <span class='lparen token'>(</span><span class='String constant id'>String</span> <span class='or or kw'>or</span> <span class='Java constant id'>Java</span> <span class='bytes identifier id'>bytes</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+</pre>
+<p>
+Returns: The full response retrieved from the remote server.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+192
+193
+194
+195</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 192</span>
+
+<span class='def def kw'>def</span> <span class='makeHttpRequest identifier id'>makeHttpRequest</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
+  <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='String constant id'>String</span><span class='dot token'>.</span><span class='from_java_bytes identifier id'>from_java_bytes</span><span class='lparen token'>(</span> <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='makeHttpRequest identifier id'>makeHttpRequest</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span> <span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>restoreState</h3>
+</div><div id="restoreState-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>restoreState</span><span class='args'>(filename)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="restore_state-instance_method">restore_state</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Restores Burp session state from a previously saved state file. See also:
+saveState
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<ul>
+<li>filename = path and filename of the file to restore from
+
+</li>
+</ul>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+284
+285
+286</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 284</span>
+
+<span class='def def kw'>def</span> <span class='restoreState identifier id'>restoreState</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
+  <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:restoreState</span><span class='comma token'>,</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='io identifier id'>io</span><span class='dot token'>.</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>saveState</h3>
+</div><div id="saveState-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>saveState</span><span class='args'>(filename)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="save_state-instance_method">save_state</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Saves the current Burp session to a state file. See also restoreState.
+</p>
+<p>
+IMPORTANT: This method is only available with Burp 1.2.09 and higher.
+</p>
+<ul>
+<li>filename = path and filename of the file to save to
+
+</li>
+</ul>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+295
+296
+297</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 295</span>
+
+<span class='def def kw'>def</span> <span class='saveState identifier id'>saveState</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
+  <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:saveState</span><span class='comma token'>,</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='io identifier id'>io</span><span class='dot token'>.</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>search_proxy_history</h3>
+</div><div id="search_proxy_history-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>search_proxy_history</span><span class='args'>(statefile = nil, urlrx = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Searches the proxy history for the url&#8217;s matched by the specified
+regular expression (returns them all if urlrx is nil).
+</p>
+<p>
+A statefile to search in can optionally be specified or the existing state
+will be used if statefile is nil.
+</p>
+<p>
+This method also accepts an optional block which is passed each of the
+matched history members.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+634
+635
+636
+637
+638
+639
+640
+641
+642</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 634</span>
+
+<span class='def def kw'>def</span> <span class='search_proxy_history identifier id'>search_proxy_history</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='urlrx identifier id'>urlrx</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
+  <span class='with_proxy_history identifier id'>with_proxy_history</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='r identifier id'>r</span><span class='bitor op'>|</span>
+    <span class='if if kw'>if</span> <span class='lparen token'>(</span><span class='not not kw'>not</span> <span class='urlrx identifier id'>urlrx</span><span class='rparen token'>)</span> <span class='or or kw'>or</span> <span class='r identifier id'>r</span><span class='dot token'>.</span><span class='url identifier id'>url</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span> <span class='match op'>=~</span> <span class='urlrx identifier id'>urlrx</span>
+      <span class='ret identifier id'>ret</span> <span class='lshft op'>&lt;&lt;</span> <span class='r identifier id'>r</span> <span class='if if_mod kw'>if</span> <span class='lparen token'>(</span><span class='not not kw'>not</span> <span class='block_given? fid id'>block_given?</span><span class='rparen token'>)</span> <span class='or or kw'>or</span> <span class='yield yield kw'>yield</span><span class='lparen token'>(</span><span class='r identifier id'>r</span><span class='rparen token'>)</span>
+    <span class='end end kw'>end</span>
+  <span class='end end kw'>end</span>
+  <span class='return return kw'>return</span> <span class='ret identifier id'>ret</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>sendToIntruder</h3>
+</div><div id="sendToIntruder-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>sendToIntruder</span><span class='args'>(host, port, https, req)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="intruder-instance_method">intruder</tt>
+  
+    <tt id="send_to_intruder-instance_method">send_to_intruder</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Send an HTTP request to the Burp Intruder tool
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='host identifier id'>host</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='hostname identifier id'>hostname</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='port identifier id'>port</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='port identifier id'>port</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='https identifier id'>https</span> <span class='assign token'>=</span> <span class='Flags constant id'>Flags</span> <span class='whether identifier id'>whether</span> <span class='the identifier id'>the</span> <span class='protocol identifier id'>protocol</span> <span class='is identifier id'>is</span> <span class='HTTPS constant id'>HTTPS</span> <span class='or or kw'>or</span> <span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='req identifier id'>req</span>   <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='full identifier id'>full</span> <span class='HTTP constant id'>HTTP</span> <span class='request identifier id'>request</span><span class='dot token'>.</span>  <span class='lparen token'>(</span><span class='String constant id'>String</span> <span class='or or kw'>or</span> <span class='Java constant id'>Java</span> <span class='bytes identifier id'>bytes</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+204
+205
+206
+207</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 204</span>
+
+<span class='def def kw'>def</span> <span class='sendToIntruder identifier id'>sendToIntruder</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
+  <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='sendToIntruder identifier id'>sendToIntruder</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>sendToRepeater</h3>
+</div><div id="sendToRepeater-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>sendToRepeater</span><span class='args'>(host, port, https, req, tab = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="repeater-instance_method">repeater</tt>
+  
+    <tt id="send_to_repeater-instance_method">send_to_repeater</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Send an HTTP request to the Burp Repeater tool.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='host identifier id'>host</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='hostname identifier id'>hostname</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='port identifier id'>port</span>  <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='port identifier id'>port</span> <span class='of identifier id'>of</span> <span class='the identifier id'>the</span> <span class='remote identifier id'>remote</span> <span class='HTTP constant id'>HTTP</span> <span class='server identifier id'>server</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='https identifier id'>https</span> <span class='assign token'>=</span> <span class='Flags constant id'>Flags</span> <span class='whether identifier id'>whether</span> <span class='the identifier id'>the</span> <span class='protocol identifier id'>protocol</span> <span class='is identifier id'>is</span> <span class='HTTPS constant id'>HTTPS</span> <span class='or or kw'>or</span> <span class='HTTP constant id'>HTTP</span><span class='dot token'>.</span>
+ <span class='mult op'>*</span> <span class='req identifier id'>req</span>   <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='full identifier id'>full</span> <span class='HTTP constant id'>HTTP</span> <span class='request identifier id'>request</span><span class='dot token'>.</span> <span class='lparen token'>(</span><span class='String constant id'>String</span> <span class='or or kw'>or</span> <span class='Java constant id'>Java</span> <span class='bytes identifier id'>bytes</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+ <span class='mult op'>*</span> <span class='tab identifier id'>tab</span>   <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='tab identifier id'>tab</span> <span class='caption identifier id'>caption</span> <span class='displayed identifier id'>displayed</span> <span class='in in kw'>in</span> <span class='Repeater constant id'>Repeater</span><span class='dot token'>.</span> <span class='lparen token'>(</span><span class='default identifier id'>default</span><span class='colon op'>:</span> <span class='auto identifier id'>auto</span><span class='minus op'>-</span><span class='generated identifier id'>generated</span><span class='rparen token'>)</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+217
+218
+219
+220</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 217</span>
+
+<span class='def def kw'>def</span> <span class='sendToRepeater identifier id'>sendToRepeater</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='comma token'>,</span> <span class='tab identifier id'>tab</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='sendToRepeater identifier id'>sendToRepeater</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='comma token'>,</span> <span class='tab identifier id'>tab</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>sendToSpider</h3>
+</div><div id="sendToSpider-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>sendToSpider</span><span class='args'>(url)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+<p class="aliases">
+  <span class="aka">Also known as:</span>
+  
+    <tt id="send_to_spider-instance_method">send_to_spider</tt>
+  
+    <tt id="spider-instance_method">spider</tt>
+  
+</p>
+</div><div class="section docstring">
+  <p>
+Send a seed URL to the Burp Spider tool.
+</p>
+<pre class="code">
+ <span class='mult op'>*</span> <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='The constant id'>The</span> <span class='new identifier id'>new</span> <span class='seed identifier id'>seed</span> <span class='URL constant id'>URL</span> <span class='to identifier id'>to</span> <span class='begin begin kw'>begin</span> <span class='spidering identifier id'>spidering</span> <span class='from identifier id'>from</span><span class='dot token'>.</span>
+</pre>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+226
+227
+228
+229</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 226</span>
+
+<span class='def def kw'>def</span> <span class='sendToSpider identifier id'>sendToSpider</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+  <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
+  <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='includeInScope identifier id'>includeInScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>start_burp</h3>
+</div><div id="start_burp-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>start_burp</span><span class='args'>(args = [])</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Startup stuff Prepares the java BurpExtender implementation with a
+reference to self as the module handler and launches burp suite.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+671
+672
+673
+674
+675</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 671</span>
+
+<span class='def def kw'>def</span> <span class='start_burp identifier id'>start_burp</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='assign token'>=</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
+  <span class='activate! fid id'>activate!</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
+  <span class='Java constant id'>Java</span><span class='colon2 op'>::</span><span class='Burp constant id'>Burp</span><span class='colon2 op'>::</span><span class='StartBurp constant id'>StartBurp</span><span class='dot token'>.</span><span class='main identifier id'>main</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='dot token'>.</span><span class='to_java identifier id'>to_java</span><span class='lparen token'>(</span><span class='symbol val'>:string</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
+  <span class='return return kw'>return</span> <span class='self self kw'>self</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>with_proxy_history</h3>
+</div><div id="with_proxy_history-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>with_proxy_history</span><span class='args'>(statefile = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This is a convenience wrapper which can load a given burp state file and
+lets its caller to perform actions inside of a block on the proxy history
+contained in the loaded session.
+</p>
+<p>
+If a statefile argument isn&#8217;t specified current burp session state is
+used.
+</p>
+<p>
+Yields each entry in the proxy history to a block.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+593
+594
+595
+596
+597</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 593</span>
+
+<span class='def def kw'>def</span> <span class='with_proxy_history identifier id'>with_proxy_history</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='with_statefile identifier id'>with_statefile</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='this identifier id'>this</span><span class='bitor op'>|</span>
+    <span class='this identifier id'>this</span><span class='dot token'>.</span><span class='proxy_history identifier id'>proxy_history</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='h identifier id'>h</span><span class='bitor op'>|</span> <span class='yield yield kw'>yield</span> <span class='h identifier id'>h</span> <span class='rbrace token'>}</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>with_site_map</h3>
+</div><div id="with_site_map-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>with_site_map</span><span class='args'>(urlprefix = nil, statefile = nil)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Sugar/Convenience methods This is a convenience wrapper which can load a
+given burp state file and lets its caller to perform actions inside of a
+block on the site map contained in the loaded session.
+</p>
+<p>
+If a statefile argument isn&#8217;t specified current burp session state is
+used.
+</p>
+<p>
+Yields each entry in the site map to a block.
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+580
+581
+582
+583
+584</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 580</span>
+
+<span class='def def kw'>def</span> <span class='with_site_map identifier id'>with_site_map</span><span class='lparen token'>(</span><span class='urlprefix identifier id'>urlprefix</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='with_statefile identifier id'>with_statefile</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='this identifier id'>this</span><span class='bitor op'>|</span>
+    <span class='this identifier id'>this</span><span class='dot token'>.</span><span class='site_map identifier id'>site_map</span><span class='lparen token'>(</span><span class='urlprefix identifier id'>urlprefix</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='each identifier id'>each</span> <span class='lbrace token'>{</span><span class='bitor op'>|</span><span class='h identifier id'>h</span><span class='bitor op'>|</span> <span class='yield yield kw'>yield</span> <span class='h identifier id'>h</span> <span class='rbrace token'>}</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>with_statefile</h3>
+</div><div id="with_statefile-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>with_statefile</span><span class='args'>(statefile = nil)</span>
+      <span class='block'>{|_self| ... }</span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+This is a convenience wrapper which loads a given burp statefile and lets
+its caller perform actions via burp while its loaded on it inside of a
+block. The old state is restored after the block completes.
+</p>
+<p>
+It can safely be run with a nil statefile argument in which the current
+burp session state is used.
+</p>
+
+</div><div class="section tags">
+  <h2>Meta Tags</h2>
+  <div class="yield">
+  <h3>Yields:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt>_self</tt>]</span>
+      
+      
+        <span class='name'></span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'></span>
+    </dd>
+  
+  </dl>
+</div>
+<div class="yieldparam">
+  <h3>Yield Parameters:</h3>
+  <dl>
+  
+    <dt>
+      
+        <span class='type'>[<tt><a href="" title="Buby">Buby</a></tt>]</span>
+      
+      
+        <span class='name'>_self</span>
+      
+      
+    </dt>
+    <dd>
+      <span class='desc'><p>
+the object that the method was called on
+</p>
+</span>
+    </dd>
+  
+  </dl>
+</div>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+605
+606
+607
+608
+609
+610
+611
+612
+613
+614
+615
+616
+617
+618
+619
+620
+621
+622
+623
+624</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 605</span>
+
+<span class='def def kw'>def</span> <span class='with_statefile identifier id'>with_statefile</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
+  <span class='if if kw'>if</span> <span class='statefile identifier id'>statefile</span>
+    <span class='comment val'># save current state:</span>
+    <span class='old_state identifier id'>old_state</span><span class='assign token'>=</span><span class='dstring node'>&quot;.#{$$}.#{Time.now.to_i}.state.bak&quot;</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='alert identifier id'>alert</span> <span class='dstring node'>&quot;Saving current state to temp statefile: #{old_state}&quot;</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='save_state identifier id'>save_state</span><span class='lparen token'>(</span><span class='old_state identifier id'>old_state</span><span class='rparen token'>)</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='alert identifier id'>alert</span> <span class='dstring node'>&quot;Restoring state: #{statefile}&quot;</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='restore_state identifier id'>restore_state</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='rparen token'>)</span>
+  <span class='end end kw'>end</span>
+
+  <span class='yield yield kw'>yield</span> <span class='self self kw'>self</span>
+
+  <span class='if if kw'>if</span> <span class='statefile identifier id'>statefile</span>
+    <span class='comment val'># restore original state</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='alert identifier id'>alert</span> <span class='dstring node'>&quot;Restoring temp statefile: #{old_state}&quot;</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='restore_state identifier id'>restore_state</span> <span class='old_state identifier id'>old_state</span>
+    <span class='self self kw'>self</span><span class='dot token'>.</span><span class='alert identifier id'>alert</span> <span class='dstring node'>&quot;Deleting temp state file: #{old_state}&quot;</span>
+    <span class='File constant id'>File</span><span class='dot token'>.</span><span class='unlink identifier id'>unlink</span> <span class='old_state identifier id'>old_state</span>
+  <span class='end end kw'>end</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+</div>
+  </div>
+
+</div>
+    </div>
+    <div id="yard_info">
+  Generated on Thursday, October 15 2009 at 11:19:56 AM by 
+  <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
+  0.2.3.5 (ruby-1.8.6).
+</div>
+
+  </body>
+</html>
