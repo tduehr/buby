@@ -201,4 +201,8 @@ public interface IBurpExtenderCallbacks
      */
     public String[] getHeaders(byte[] message) throws Exception;
 
+    /**
+     * Shuts down burp programatically (available in v1.2.17+)
+     */
+    public void exitSuite(boolean promptUser); 
 }
