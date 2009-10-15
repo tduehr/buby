@@ -53,6 +53,9 @@ include_class 'BurpExtender'
 # Available since Burp 1.2.15:
 # * getScanIssues
 #
+# Available since Burp 1.2.17:
+# * exitSuite
+#
 # If you wish to access any of the IBurpExtenderCallbacks methods directly. 
 # You can use 'burp_callbacks' to obtain a reference.
 #
@@ -79,7 +82,7 @@ include_class 'BurpExtender'
 class Buby
 
   # :stopdoc:
-  VERSION = '1.1.4'
+  VERSION = '1.1.5'
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
@@ -324,6 +327,13 @@ class Buby
   alias headers getHeaders
   alias get_headers getHeaders
 
+  # Shuts down Burp programatically. If the method returns the user cancelled
+  # the shutdown prompt.
+  def exitSuite(prompt_user=false)
+    _check_and_callback(:exitSuite, prompt_user ? true : false)
+  end
+  alias exit_suite exitSuite
+  alias close exitSuite
 
   ### Event Handlers ###
 

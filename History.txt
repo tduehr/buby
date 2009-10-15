@@ -1,3 +1,8 @@
+== 1.1.5 / 2009-10-15
+* enhancements
+  * added support for exitSuite in burp v 1.2.17+
+  * added samples/poc_generator.rb
+
 == 1.1.4.1 / 2009-09-22
 * fix
   * Buby.harvest_cookies_from_history() was broken. 

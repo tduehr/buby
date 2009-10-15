@@ -102,7 +102,7 @@ if args[:irb]
     end
   end
   puts "Global $burp is set to #{$burp.inspect}",
-       " Important Note: You'll need to exit by closing the burp window."
+       " Important Note: exit with $burp.close"
   IRB.start()
 end
 
