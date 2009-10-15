@@ -23,3 +23,5 @@ reference
 lib/burp.jar
 *.class
 *.gem
+.DS_Store 
+
