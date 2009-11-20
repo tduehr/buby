@@ -86,7 +86,7 @@ module PocGenerator
       uri.host = host
       uri.scheme = scheme if scheme
     elsif host.nil? and hhost = headers.grep(/host: (.*)$/i){|h| $1 }.first
-      uri.host = hhost
+      uri.host, uri.port = hhost.split(':', 2)
       uri.scheme = scheme || 'http'
     else
       uri.scheme = scheme if scheme
