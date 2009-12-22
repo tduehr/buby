@@ -19,7 +19,7 @@ import org.jruby.runtime.builtin.IRubyObject;
  */
 public class BurpExtender implements IBurpExtender { 
     public final static String INIT_METH =      "evt_extender_init";
-    public final static String PROXYMSG_METH =  "evt_proxy_message";
+    public final static String PROXYMSG_METH =  "evt_proxy_message_raw";
     public final static String HTTPMSG_METH =   "evt_http_message";
     public final static String SCANISSUE_METH = "evt_scan_issue";
     public final static String MAINARGS_METH =  "evt_commandline_args";
@@ -165,8 +165,9 @@ public class BurpExtender implements IBurpExtender {
         // prepare an alternate action value to present to ruby
         IRubyObject r_action = to_ruby(rt, action);
 
-        // prepare an alternate message value to present to ruby
-        IRubyObject r_msg = to_ruby(rt, RubyString.bytesToString(message));
+        // prepare an alternate String message value to present to ruby
+        //String message_str = new String(message);
+        //IRubyObject r_msg = to_ruby(rt, message_str);
 
         IRubyObject pxy_msg[] = {
           to_ruby(rt, messageReference),
@@ -179,7 +180,8 @@ public class BurpExtender implements IBurpExtender {
           to_ruby(rt, resourceType),
           to_ruby(rt, statusCode),
           to_ruby(rt, responseContentType),
-          r_msg,
+          //r_msg,
+          to_ruby(rt, message),
           r_action
         };
 
@@ -187,8 +189,8 @@ public class BurpExtender implements IBurpExtender {
         action[0] = ((int[]) JavaUtil.convertRubyToJava(r_action))[0];
 
         IRubyObject ret = r_obj.callMethod(ctx(r_obj), PROXYMSG_METH, pxy_msg);
-        if(ret != r_msg)
-          return ((RubyString) ret).getBytes();
+        //if(ret != r_msg)
+        //  return ((RubyString) ret).getBytes();
       }
 
       return message;

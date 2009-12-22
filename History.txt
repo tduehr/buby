@@ -1,3 +1,8 @@
+== 1.1.6 / 2009-11-19
+* fix
+  * poc_generator.rb example fixed to properly parse port in Host header
+  * fix evt_proxy_message bridge to deal correctly with binary content data
+
 == 1.1.5 / 2009-10-15
 * enhancements
   * added support for exitSuite in burp v 1.2.17+

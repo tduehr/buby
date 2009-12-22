@@ -82,7 +82,7 @@ include_class 'BurpExtender'
 class Buby
 
   # :stopdoc:
-  VERSION = '1.1.5'
+  VERSION = '1.1.6'
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
@@ -376,6 +376,20 @@ class Buby
   ACTION_DO_INTERCEPT   = BurpExtender::ACTION_DO_INTERCEPT
   ACTION_DONT_INTERCEPT = BurpExtender::ACTION_DONT_INTERCEPT
   ACTION_DROP           = BurpExtender::ACTION_DROP
+
+  # seems we need to specifically render our 'message' to a string here in
+  # java. Otherwise there's flakiness when converting certain binary non-ascii
+  # sequences. As long as we do it here, it should be fine.
+  #
+  # This method just handles the conversion to and from evt_proxy_message
+  # which expects a message string 
+  def evt_proxy_message_raw msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action
+    pp [:evt_proxy_message_raw_hit, msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action ] if $DEBUG
+    str_msg = String.from_java_bytes(message)
+    ret = evt_proxy_message(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, str_msg, action)
+    message = ret.to_java_bytes unless ret == str_msg
+    return message
+  end
 
   # This method is called by BurpExtender while proxying HTTP messages and
   # before passing them through the Burp proxy. Implementations can use this

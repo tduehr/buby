@@ -27,6 +27,7 @@ PROJ.version = Buby::VERSION
 PROJ.rubyforge.name = 'buby'
 PROJ.readme_file = 'README.rdoc'
 PROJ.libs << "java"
+PROJ.platform = 'java'
 
 PROJ.spec.opts << '--color'
 
