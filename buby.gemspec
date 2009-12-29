@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
      "bin/buby"
   ]
   s.files = [
-    ".bnsignore",
+    ".gitignore",
      "History.txt",
      "README.rdoc",
      "Rakefile",
