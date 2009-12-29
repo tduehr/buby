@@ -44,8 +44,7 @@ You should be able to get up and running with just the gem and a copy of Burp.
 I've packaged up a pre-built buby.jar file containing the required classes 
 minus ofcourse, Burp itself. 
 
-  jruby -S gem sources -a http://gems.github.com # only have to do this once
-  jruby -S gem install emonti-buby
+  (sudo)? jruby -S gem install buby --source=http://gemcutter.org
 
 * IMPORTANT: The buby gem doesn't include a copy of Burp!  See manual step #5 
   below. For best results, you'll still want to make your burp.jar available 

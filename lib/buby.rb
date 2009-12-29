@@ -376,9 +376,12 @@ class Buby
   ACTION_DONT_INTERCEPT = BurpExtender::ACTION_DONT_INTERCEPT
   ACTION_DROP           = BurpExtender::ACTION_DROP
 
-  # seems we need to specifically render our 'message' to a string here in
-  # java. Otherwise there's flakiness when converting certain binary non-ascii
+  # Seems we need to specifically render our 'message' to a string here in
+  # ruby. Otherwise there's flakiness when converting certain binary non-ascii
   # sequences. As long as we do it here, it should be fine.
+  #
+  # Note: This method maps to the 'processProxyMessage' method in the java 
+  # implementation of BurpExtender.
   #
   # This method just handles the conversion to and from evt_proxy_message
   # which expects a message string 
@@ -401,6 +404,9 @@ class Buby
   #
   # Note: This method maps to the 'processProxyMessage' method in the java 
   # implementation of BurpExtender.
+  # 
+  # See also, evt_proxy_message_raw which is actually called before this
+  # in the BurpExtender processProxyMessage handler.
   #
   # Below are the parameters descriptions based on the IBurpExtender 
   # javadoc. Where applicable, decriptions have been modified for 
