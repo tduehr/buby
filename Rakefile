@@ -1,34 +1,50 @@
-# Look in the tasks/setup.rb file for the various options that can be
-# configured in this Rakefile. The .rake files in the tasks directory
-# are where the options are used.
+require 'rubygems'
+require 'rake'
+require 'rake/clean'
 
 begin
-  require 'bones'
-  Bones.setup
-rescue LoadError
-  begin
-    load 'tasks/setup.rb'
-  rescue LoadError
-    raise RuntimeError, '### please install the "bones" gem ###'
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "buby"
+    gem.summary = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger}
+    gem.description = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.}
+    gem.email = "emonti@matasano.com"
+    gem.homepage = "http://emonti.github.com/buby"
+    gem.authors = ["Eric Monti - Matasano Security"]
+    gem.platform = "java"
+    gem.test_files = ["test/buby_test.rb"]
+    gem.require_paths << 'java'
+    gem.rdoc_options = ["--main", "README.rdoc"]
+    gem.extra_rdoc_files = ["History.txt", "README.rdoc", "bin/buby"]
   end
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-ensure_in_path 'lib'
-ensure_in_path 'java'
-require 'buby'
+require 'rake/testtask'
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test' << 'java'
+  test.pattern = 'test/**/*_test.rb'
+  test.verbose = true
+end
 
-task :default => 'spec:run'
+task :test => :check_dependencies
 
-PROJ.name = 'buby'
-PROJ.authors = 'Eric Monti - Matasano Security'
-PROJ.email = 'emonti@matasano.com'
-PROJ.url = 'http://emonti.github.com/buby'
-PROJ.version = Buby::VERSION
-PROJ.rubyforge.name = 'buby'
-PROJ.readme_file = 'README.rdoc'
-PROJ.libs << "java"
-PROJ.platform = 'java'
+task :default => :test
 
-PROJ.spec.opts << '--color'
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  if File.exist?('VERSION')
+    version = File.read('VERSION')
+  else
+    version = ""
+  end
 
-# EOF
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "buby #{version}"
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('History.txt')
+  rdoc.rdoc_files.include('bin/buby')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
