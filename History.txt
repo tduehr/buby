@@ -1,3 +1,6 @@
+== 1.1.7 / 2009-12-29
+  * fix evt_proxy_message_raw bridge to modify proxy messages (broken in 1.1.6)
+
 == 1.1.6 / 2009-11-19
 * fix
   * poc_generator.rb example fixed to properly parse port in Host header

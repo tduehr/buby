@@ -82,7 +82,7 @@ include_class 'BurpExtender'
 class Buby
 
   # :stopdoc:
-  VERSION = '1.1.6'
+  VERSION = '1.1.7'
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
@@ -385,9 +385,11 @@ class Buby
   # which expects a message string 
   def evt_proxy_message_raw msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action
     pp [:evt_proxy_message_raw_hit, msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action ] if $DEBUG
+
     str_msg = String.from_java_bytes(message)
     ret = evt_proxy_message(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, str_msg, action)
-    message = ret.to_java_bytes unless ret == str_msg
+
+    message = ret.to_java_bytes if ret.object_id != str_msg.object_id
     return message
   end
 

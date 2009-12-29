@@ -167,7 +167,7 @@ public class BurpExtender implements IBurpExtender {
 
         // prepare an alternate String message value to present to ruby
         //String message_str = new String(message);
-        //IRubyObject r_msg = to_ruby(rt, message_str);
+        IRubyObject r_msg = to_ruby(rt, message);
 
         IRubyObject pxy_msg[] = {
           to_ruby(rt, messageReference),
@@ -180,8 +180,7 @@ public class BurpExtender implements IBurpExtender {
           to_ruby(rt, resourceType),
           to_ruby(rt, statusCode),
           to_ruby(rt, responseContentType),
-          //r_msg,
-          to_ruby(rt, message),
+          r_msg,
           r_action
         };
 
@@ -189,8 +188,9 @@ public class BurpExtender implements IBurpExtender {
         action[0] = ((int[]) JavaUtil.convertRubyToJava(r_action))[0];
 
         IRubyObject ret = r_obj.callMethod(ctx(r_obj), PROXYMSG_METH, pxy_msg);
-        //if(ret != r_msg)
-        //  return ((RubyString) ret).getBytes();
+        if(ret != r_msg) {
+          return (byte[]) JavaUtil.convertRubyToJava(ret);
+        }
       }
 
       return message;
