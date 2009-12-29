@@ -82,8 +82,7 @@ Burp. I&#8217;ve packaged up a pre-built buby.jar file containing the
 required classes minus ofcourse, Burp itself.
 </p>
 <pre class="code">
-  <span class='jruby identifier id'>jruby</span> <span class='minus op'>-</span><span class='S constant id'>S</span> <span class='gem identifier id'>gem</span> <span class='sources identifier id'>sources</span> <span class='minus op'>-</span><span class='a identifier id'>a</span> <span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/gems.github.com # only have to do this once
-  jruby -S gem install emonti-buby
+  <span class='lparen token'>(</span><span class='sudo identifier id'>sudo</span><span class='rparen token'>)</span><span class='question op'>?</span> <span class='jruby identifier id'>jruby</span> <span class='minus op'>-</span><span class='S constant id'>S</span> <span class='gem identifier id'>gem</span> <span class='install identifier id'>install</span> <span class='buby identifier id'>buby</span> <span class='minus op'>-</span><span class='minus op'>-</span><span class='source identifier id'>source</span><span class='assign token'>=</span><span class='http identifier id'>http</span><span class='symbol val'>:/</span><span class='regexp val'>/gemcutter.org
 </span></pre>
 <ul>
 <li>IMPORTANT: The buby gem doesn&#8217;t include a copy of Burp! See manual
@@ -390,7 +389,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
       </div>
     </div>
     <div id="yard_info">
-  Generated on Thursday, October 15 2009 at 11:19:54 AM by 
+  Generated on Tuesday, December 29 2009 at 05:13:29 PM by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.5 (ruby-1.8.6).
 </div>

@@ -198,9 +198,6 @@ Buby
       <dt id="PATH-constant">PATH</dt>
       <dd>::File.dirname(LIBPATH) + ::File::SEPARATOR</dd>
     
-      <dt id="VERSION-constant">VERSION</dt>
-      <dd>'1.1.5'</dd>
-    
   </dl>
 </div>
 
@@ -231,16 +228,16 @@ Buby
           <pre class="lines">
 
 
+89
 90
 91
 92
 93
 94
-95
-96</pre>
+95</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 90</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 89</span>
 
 <span class='def def kw'>def</span> <span class='initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='other identifier id'>other</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='other identifier id'>other</span>
@@ -375,25 +372,6 @@ Starts burp using a supplied handler class,
 <pre class="code">
  <span class='h_class identifier id'>h_class</span> <span class='assign token'>=</span> <span class='Buby constant id'>Buby</span> <span class='or or kw'>or</span> <span class='a identifier id'>a</span> <span class='derived identifier id'>derived</span> <span class='class class kw'>class</span><span class='dot token'>.</span>
 </pre>
-
-        
-      </td>
-    </tr>
-  
-    <tr>
-      <th class="signature">
-        
-          <span class='overload'>
-            <span class='name'><a href="#version-class_method" title="version">version</a></span><span class='args'></span>
-            <span class='block'></span>
-          </span>
-        
-        
-      </th>
-      <td class="docstring">
-        <p>
-Returns the version string for the library.
-</p>
 
         
       </td>
@@ -654,6 +632,26 @@ before passing them through the Burp proxy.
       <th class="signature">
         
           <span class='overload'>
+            <span class='name'><a href="#evt_proxy_message_raw-instance_method" title="#evt_proxy_message_raw">#evt_proxy_message_raw</a></span><span class='args'>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action)</span>
+            <span class='block'></span>
+          </span>
+        
+        
+      </th>
+      <td class="docstring">
+        <p>
+Seems we need to specifically render our &#8216;message&#8217; to a string
+here in ruby.
+</p>
+
+        
+      </td>
+    </tr>
+  
+    <tr>
+      <th class="signature">
+        
+          <span class='overload'>
             <span class='name'><a href="#evt_register_callbacks-instance_method" title="#evt_register_callbacks">#evt_register_callbacks</a></span><span class='args'>(cb)</span>
             <span class='block'></span>
           </span>
@@ -700,9 +698,9 @@ issues.
           </span>
         
         
-          <span class='alias'>#exclude_from_scope</span>
-        
           <span class='alias'>#exclude_scope</span>
+        
+          <span class='alias'>#exclude_from_scope</span>
         
       </th>
       <td class="docstring">
@@ -723,9 +721,9 @@ Exclude the specified URL from the Suite-wide scope.
           </span>
         
         
-          <span class='alias'>#close</span>
-        
           <span class='alias'>#exit_suite</span>
+        
+          <span class='alias'>#close</span>
         
       </th>
       <td class="docstring">
@@ -796,9 +794,9 @@ containing parameters as they are structured in the
           </span>
         
         
-          <span class='alias'>#get_proxy_history</span>
-        
           <span class='alias'>#proxy_history</span>
+        
+          <span class='alias'>#get_proxy_history</span>
         
       </th>
       <td class="docstring">
@@ -844,9 +842,9 @@ specified literal prefix.
           </span>
         
         
-          <span class='alias'>#get_site_map</span>
-        
           <span class='alias'>#site_map</span>
+        
+          <span class='alias'>#get_site_map</span>
         
       </th>
       <td class="docstring">
@@ -910,9 +908,9 @@ Include the specified URL in the Suite-wide scope.
           </span>
         
         
-          <span class='alias'>#in_scope?</span>
-        
           <span class='alias'>#is_in_scope</span>
+        
+          <span class='alias'>#in_scope?</span>
         
       </th>
       <td class="docstring">
@@ -956,9 +954,9 @@ Display a message in the Burp Suite alerts tab.
           </span>
         
         
-          <span class='alias'>#make_http_request</span>
-        
           <span class='alias'>#make_request</span>
+        
+          <span class='alias'>#make_http_request</span>
         
       </th>
       <td class="docstring">
@@ -1044,9 +1042,9 @@ regular expression (returns them all if urlrx is nil).
           </span>
         
         
-          <span class='alias'>#intruder</span>
-        
           <span class='alias'>#send_to_intruder</span>
+        
+          <span class='alias'>#intruder</span>
         
       </th>
       <td class="docstring">
@@ -1093,9 +1091,9 @@ Send an HTTP request to the Burp Repeater tool.
           </span>
         
         
-          <span class='alias'>#send_to_spider</span>
-        
           <span class='alias'>#spider</span>
+        
+          <span class='alias'>#send_to_spider</span>
         
       </th>
       <td class="docstring">
@@ -1224,17 +1222,17 @@ Checks the Java namespace to see if Burp has been loaded.
           <pre class="lines">
 
 
-703
-704
-705
-706
-707
-708
-709
-710</pre>
+724
+725
+726
+727
+728
+729
+730
+731</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 703</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 724</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='burp_loaded? fid id'>burp_loaded?</span>
   <span class='begin begin kw'>begin</span> 
@@ -1283,12 +1281,12 @@ using <tt>File.join</tt>.
           <pre class="lines">
 
 
-718
-719
-720</pre>
+739
+740
+741</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 718</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 739</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='libpath identifier id'>libpath</span><span class='lparen token'>(</span> <span class='mult op'>*</span><span class='args identifier id'>args</span> <span class='rparen token'>)</span>
   <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='integer val'>? </span><span class='LIBPATH constant id'>LIBPATH</span> <span class='colon op'>:</span> <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='LIBPATH constant id'>LIBPATH</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='rparen token'>)</span>
@@ -1338,13 +1336,13 @@ Raises: may raise the usual require exceptions if jar_path is bad.
           <pre class="lines">
 
 
-697
-698
-699
-700</pre>
+718
+719
+720
+721</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 697</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 718</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='load_burp identifier id'>load_burp</span><span class='lparen token'>(</span><span class='jar_path identifier id'>jar_path</span><span class='rparen token'>)</span>
   <span class='require identifier id'>require</span> <span class='jar_path identifier id'>jar_path</span>
@@ -1388,12 +1386,12 @@ joined to the end of the path using <tt>File.join</tt>.
           <pre class="lines">
 
 
-726
-727
-728</pre>
+747
+748
+749</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 726</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 747</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='path identifier id'>path</span><span class='lparen token'>(</span> <span class='mult op'>*</span><span class='args identifier id'>args</span> <span class='rparen token'>)</span>
   <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='empty? fid id'>empty?</span> <span class='integer val'>? </span><span class='PATH constant id'>PATH</span> <span class='colon op'>:</span> <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='join identifier id'>join</span><span class='lparen token'>(</span><span class='PATH constant id'>PATH</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='dot token'>.</span><span class='flatten identifier id'>flatten</span><span class='rparen token'>)</span>
@@ -1438,16 +1436,16 @@ the <em>filename</em> does not have to be equivalent to the directory.
           <pre class="lines">
 
 
-735
-736
-737
-738
-739
-740
-741</pre>
+756
+757
+758
+759
+760
+761
+762</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 735</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 756</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='require_all_libs_relative_to identifier id'>require_all_libs_relative_to</span><span class='lparen token'>(</span> <span class='fname identifier id'>fname</span><span class='comma token'>,</span> <span class='dir identifier id'>dir</span> <span class='assign token'>=</span> <span class='nil nil kw'>nil</span> <span class='rparen token'>)</span>
   <span class='dir identifier id'>dir</span> <span class='opasgn op'>||=</span> <span class='colon3 op'>::</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='basename identifier id'>basename</span><span class='lparen token'>(</span><span class='fname identifier id'>fname</span><span class='comma token'>,</span> <span class='string val'>'.*'</span><span class='rparen token'>)</span>
@@ -1500,68 +1498,21 @@ Starts burp using a supplied handler class,
           <pre class="lines">
 
 
-683
-684
-685
-686
-687
-688</pre>
+704
+705
+706
+707
+708
+709</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 683</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 704</span>
 
 <span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='start_burp identifier id'>start_burp</span><span class='lparen token'>(</span><span class='h_class identifier id'>h_class</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='init_args identifier id'>init_args</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='h_class identifier id'>h_class</span> <span class='opasgn op'>||=</span> <span class='self self kw'>self</span>
   <span class='init_args identifier id'>init_args</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
   <span class='args identifier id'>args</span> <span class='opasgn op'>||=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
   <span class='h_class identifier id'>h_class</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='mult op'>*</span><span class='init_args identifier id'>init_args</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='start_burp identifier id'>start_burp</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
-<span class='end end kw'>end</span>
-</pre>
-        </td>
-      </tr>
-    </table>
-  </div>
-</div>
-</div>
-    </div>
-  
-    <div class="method">
-      <div class="method_header">
-  <h3>version</h3>
-</div><div id="version-class_method" class="section method">
-  <div class="details_title">
-    <div class='section methodsignature'>
-    <tt class='def'>
-      <span class='visibility'>public</span>
-      <span class='return_types'></span>
-      <span class='name'>version</span><span class='args'></span>
-      <span class='block'></span>
-    </tt>
-  </div>
-
-</div><div class="section docstring">
-  <p>
-Returns the version string for the library.
-</p>
-
-</div><div class="section source">
-  <span>[<a class="source_link" href="#">View source</a>]</span>
-  <div class="source_code">
-    <table>
-      <tr>
-        <td>
-          <pre class="lines">
-
-
-745
-746
-747</pre>
-        </td>
-        <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 745</span>
-
-<span class='def def kw'>def</span> <span class='self self kw'>self</span><span class='dot token'>.</span><span class='version identifier id'>version</span>
-  <span class='VERSION constant id'>VERSION</span>
 <span class='end end kw'>end</span>
 </pre>
         </td>
@@ -1613,16 +1564,16 @@ with the specified arguments, and raises an exception if it is unavailable.
           <pre class="lines">
 
 
+238
 239
 240
 241
 242
 243
-244
-245</pre>
+244</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 239</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 238</span>
 
 <span class='def def kw'>def</span> <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='meth identifier id'>meth</span><span class='comma token'>,</span> <span class='mult op'>*</span><span class='args identifier id'>args</span><span class='rparen token'>)</span>
   <span class='cb identifier id'>cb</span> <span class='assign token'>=</span> <span class='_check_cb identifier id'>_check_cb</span>
@@ -1669,12 +1620,12 @@ before doing anything with it.
           <pre class="lines">
 
 
+115
 116
-117
-118</pre>
+117</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 116</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 115</span>
 
 <span class='def def kw'>def</span> <span class='_check_cb identifier id'>_check_cb</span>
   <span class='@burp_callbacks ivar id'>@burp_callbacks</span> <span class='or or kw'>or</span> <span class='raise identifier id'>raise</span> <span class='string val'>&quot;Burp callbacks have not been set&quot;</span>
@@ -1717,12 +1668,12 @@ runtime. (there can be only one!)
           <pre class="lines">
 
 
+99
 100
-101
-102</pre>
+101</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 100</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 99</span>
 
 <span class='def def kw'>def</span> <span class='activate! fid id'>activate!</span>
   <span class='BurpExtender constant id'>BurpExtender</span><span class='dot token'>.</span><span class='set_handler identifier id'>set_handler</span><span class='lparen token'>(</span><span class='self self kw'>self</span><span class='rparen token'>)</span>
@@ -1767,10 +1718,10 @@ directly if you so choose.
           <pre class="lines">
 
 
-112</pre>
+111</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 112</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 111</span>
 
 <span class='def def kw'>def</span> <span class='burp_callbacks identifier id'>burp_callbacks</span><span class='semicolon token'>;</span> <span class='@burp_callbacks ivar id'>@burp_callbacks</span> <span class='end end kw'>end</span>
 </pre>
@@ -1811,10 +1762,10 @@ gets set from Java through the evt_extender_init method.
           <pre class="lines">
 
 
-106</pre>
+105</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 106</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 105</span>
 
 <span class='def def kw'>def</span> <span class='burp_extender identifier id'>burp_extender</span><span class='semicolon token'>;</span> <span class='@burp_extender ivar id'>@burp_extender</span> <span class='end end kw'>end</span>
 </pre>
@@ -1868,13 +1819,13 @@ vulnerability scan.
           <pre class="lines">
 
 
+125
 126
 127
-128
-129</pre>
+128</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 126</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 125</span>
 
 <span class='def def kw'>def</span> <span class='doActiveScan identifier id'>doActiveScan</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
   <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -1932,14 +1883,14 @@ passive vulnerability scan.
           <pre class="lines">
 
 
+139
 140
 141
 142
-143
-144</pre>
+143</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 140</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 139</span>
 
 <span class='def def kw'>def</span> <span class='doPassiveScan identifier id'>doPassiveScan</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='comma token'>,</span> <span class='rsp identifier id'>rsp</span><span class='rparen token'>)</span>
   <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -1985,12 +1936,12 @@ closing files or databases before exit.
           <pre class="lines">
 
 
-567
-568
-569</pre>
+588
+589
+590</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 567</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 588</span>
 
 <span class='def def kw'>def</span> <span class='evt_application_closing identifier id'>evt_application_closing</span> 
   <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_app_close</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
@@ -2040,12 +1991,12 @@ The return value is ignored.
           <pre class="lines">
 
 
+357
 358
-359
-360</pre>
+359</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 358</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 357</span>
 
 <span class='def def kw'>def</span> <span class='evt_command_line_args identifier id'>evt_command_line_args</span> <span class='args identifier id'>args</span>
   <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span><span class='symbol val'>:got_args</span><span class='comma token'>,</span> <span class='args identifier id'>args</span><span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
@@ -2094,13 +2045,13 @@ The return value is ignored.
           <pre class="lines">
 
 
+345
 346
 347
-348
-349</pre>
+348</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 346</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 345</span>
 
 <span class='def def kw'>def</span> <span class='evt_extender_init identifier id'>evt_extender_init</span> <span class='ext identifier id'>ext</span>
   <span class='@burp_extender ivar id'>@burp_extender</span> <span class='assign token'>=</span> <span class='ext identifier id'>ext</span>
@@ -2178,13 +2129,13 @@ methods for accessing and manipulating various attributes of the message.
           <pre class="lines">
 
 
-542
-543
-544
-545</pre>
+563
+564
+565
+566</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 542</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 563</span>
 
 <span class='def def kw'>def</span> <span class='evt_http_message identifier id'>evt_http_message</span><span class='lparen token'>(</span><span class='tool_name identifier id'>tool_name</span><span class='comma token'>,</span> <span class='is_request identifier id'>is_request</span><span class='comma token'>,</span> <span class='message_info identifier id'>message_info</span><span class='rparen token'>)</span>
   <span class='HttpRequestResponseHelper constant id'>HttpRequestResponseHelper</span><span class='dot token'>.</span><span class='implant identifier id'>implant</span><span class='lparen token'>(</span><span class='message_info identifier id'>message_info</span><span class='rparen token'>)</span>
@@ -2227,6 +2178,10 @@ request.
 <p>
 Note: This method maps to the &#8216;processProxyMessage&#8217; method in
 the java implementation of BurpExtender.
+</p>
+<p>
+See also, evt_proxy_message_raw which is actually called before this in the
+BurpExtender processProxyMessage handler.
 </p>
 <p>
 Below are the parameters descriptions based on the IBurpExtender javadoc.
@@ -2366,26 +2321,26 @@ And so will this
           <pre class="lines">
 
 
-497
-498
-499
-500
-501
-502
-503
-504
-505
-506
-507
-508
-509
-510
-511
-512
-513</pre>
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 497</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 518</span>
 
 <span class='def def kw'>def</span> <span class='evt_proxy_message identifier id'>evt_proxy_message</span> <span class='msg_ref identifier id'>msg_ref</span><span class='comma token'>,</span> <span class='is_req identifier id'>is_req</span><span class='comma token'>,</span> <span class='rhost identifier id'>rhost</span><span class='comma token'>,</span> <span class='rport identifier id'>rport</span><span class='comma token'>,</span> <span class='is_https identifier id'>is_https</span><span class='comma token'>,</span> <span class='http_meth identifier id'>http_meth</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='resourceType identifier id'>resourceType</span><span class='comma token'>,</span> <span class='status identifier id'>status</span><span class='comma token'>,</span> <span class='req_content_type identifier id'>req_content_type</span><span class='comma token'>,</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='action identifier id'>action</span>
   <span class='pp identifier id'>pp</span><span class='lparen token'>(</span><span class='lbrack token'>[</span> <span class='lparen token'>(</span><span class='is_req identifier id'>is_req</span><span class='rparen token'>)</span><span class='question op'>?</span> <span class='symbol val'>:got_proxy_request</span> <span class='colon op'>:</span> <span class='symbol val'>:got_proxy_response</span><span class='comma token'>,</span>
@@ -2402,6 +2357,75 @@ And so will this
        <span class='lbrack token'>[</span><span class='symbol val'>:message</span><span class='comma token'>,</span> <span class='message identifier id'>message</span><span class='rbrack token'>]</span><span class='comma token'>,</span> 
        <span class='lbrack token'>[</span><span class='symbol val'>:action</span><span class='comma token'>,</span> <span class='action identifier id'>action</span><span class='lbrack token'>[</span><span class='integer val'>0</span><span class='rbrack token'>]</span><span class='rbrack token'>]</span> <span class='rbrack token'>]</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
   
+  <span class='return return kw'>return</span> <span class='message identifier id'>message</span>
+<span class='end end kw'>end</span>
+</pre>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+    </div>
+  
+    <div class="method">
+      <div class="method_header">
+  <h3>evt_proxy_message_raw</h3>
+</div><div id="evt_proxy_message_raw-instance_method" class="section method">
+  <div class="details_title">
+    <div class='section methodsignature'>
+    <tt class='def'>
+      <span class='visibility'>public</span>
+      <span class='return_types'></span>
+      <span class='name'>evt_proxy_message_raw</span><span class='args'>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action)</span>
+      <span class='block'></span>
+    </tt>
+  </div>
+
+</div><div class="section docstring">
+  <p>
+Seems we need to specifically render our &#8216;message&#8217; to a string
+here in ruby. Otherwise there&#8217;s flakiness when converting certain
+binary non-ascii sequences. As long as we do it here, it should be fine.
+</p>
+<p>
+Note: This method maps to the &#8216;processProxyMessage&#8217; method in
+the java implementation of BurpExtender.
+</p>
+<p>
+This method just handles the conversion to and from evt_proxy_message which
+expects a message string
+</p>
+
+</div><div class="section source">
+  <span>[<a class="source_link" href="#">View source</a>]</span>
+  <div class="source_code">
+    <table>
+      <tr>
+        <td>
+          <pre class="lines">
+
+
+388
+389
+390
+391
+392
+393
+394
+395
+396</pre>
+        </td>
+        <td>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 388</span>
+
+<span class='def def kw'>def</span> <span class='evt_proxy_message_raw identifier id'>evt_proxy_message_raw</span> <span class='msg_ref identifier id'>msg_ref</span><span class='comma token'>,</span> <span class='is_req identifier id'>is_req</span><span class='comma token'>,</span> <span class='rhost identifier id'>rhost</span><span class='comma token'>,</span> <span class='rport identifier id'>rport</span><span class='comma token'>,</span> <span class='is_https identifier id'>is_https</span><span class='comma token'>,</span> <span class='http_meth identifier id'>http_meth</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='resourceType identifier id'>resourceType</span><span class='comma token'>,</span> <span class='status identifier id'>status</span><span class='comma token'>,</span> <span class='req_content_type identifier id'>req_content_type</span><span class='comma token'>,</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='action identifier id'>action</span>
+  <span class='pp identifier id'>pp</span> <span class='lbrack token'>[</span><span class='symbol val'>:evt_proxy_message_raw_hit</span><span class='comma token'>,</span> <span class='msg_ref identifier id'>msg_ref</span><span class='comma token'>,</span> <span class='is_req identifier id'>is_req</span><span class='comma token'>,</span> <span class='rhost identifier id'>rhost</span><span class='comma token'>,</span> <span class='rport identifier id'>rport</span><span class='comma token'>,</span> <span class='is_https identifier id'>is_https</span><span class='comma token'>,</span> <span class='http_meth identifier id'>http_meth</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='resourceType identifier id'>resourceType</span><span class='comma token'>,</span> <span class='status identifier id'>status</span><span class='comma token'>,</span> <span class='req_content_type identifier id'>req_content_type</span><span class='comma token'>,</span> <span class='message identifier id'>message</span><span class='comma token'>,</span> <span class='action identifier id'>action</span> <span class='rbrack token'>]</span> <span class='if if_mod kw'>if</span> <span class='$DEBUG gvar id'>$DEBUG</span>
+
+  <span class='str_msg identifier id'>str_msg</span> <span class='assign token'>=</span> <span class='String constant id'>String</span><span class='dot token'>.</span><span class='from_java_bytes identifier id'>from_java_bytes</span><span class='lparen token'>(</span><span class='message identifier id'>message</span><span class='rparen token'>)</span>
+  <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='evt_proxy_message identifier id'>evt_proxy_message</span><span class='lparen token'>(</span><span class='msg_ref identifier id'>msg_ref</span><span class='comma token'>,</span> <span class='is_req identifier id'>is_req</span><span class='comma token'>,</span> <span class='rhost identifier id'>rhost</span><span class='comma token'>,</span> <span class='rport identifier id'>rport</span><span class='comma token'>,</span> <span class='is_https identifier id'>is_https</span><span class='comma token'>,</span> <span class='http_meth identifier id'>http_meth</span><span class='comma token'>,</span> <span class='url identifier id'>url</span><span class='comma token'>,</span> <span class='resourceType identifier id'>resourceType</span><span class='comma token'>,</span> <span class='status identifier id'>status</span><span class='comma token'>,</span> <span class='req_content_type identifier id'>req_content_type</span><span class='comma token'>,</span> <span class='str_msg identifier id'>str_msg</span><span class='comma token'>,</span> <span class='action identifier id'>action</span><span class='rparen token'>)</span>
+
+  <span class='message identifier id'>message</span> <span class='assign token'>=</span> <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='ret identifier id'>ret</span><span class='dot token'>.</span><span class='object_id identifier id'>object_id</span> <span class='neq op'>!=</span> <span class='str_msg identifier id'>str_msg</span><span class='dot token'>.</span><span class='object_id identifier id'>object_id</span>
   <span class='return return kw'>return</span> <span class='message identifier id'>message</span>
 <span class='end end kw'>end</span>
 </pre>
@@ -2449,14 +2473,14 @@ The return value is ignored.
           <pre class="lines">
 
 
+368
 369
 370
 371
-372
-373</pre>
+372</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 369</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 368</span>
 
 <span class='def def kw'>def</span> <span class='evt_register_callbacks identifier id'>evt_register_callbacks</span> <span class='cb identifier id'>cb</span>
   <span class='@burp_callbacks ivar id'>@burp_callbacks</span> <span class='assign token'>=</span> <span class='cb identifier id'>cb</span>
@@ -2518,13 +2542,13 @@ information on the scan issue that was generated.
           <pre class="lines">
 
 
-559
-560
-561
-562</pre>
+580
+581
+582
+583</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 559</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 580</span>
 
 <span class='def def kw'>def</span> <span class='evt_scan_issue identifier id'>evt_scan_issue</span><span class='lparen token'>(</span><span class='issue identifier id'>issue</span><span class='rparen token'>)</span>
   <span class='ScanIssueHelper constant id'>ScanIssueHelper</span><span class='dot token'>.</span><span class='implant identifier id'>implant</span><span class='lparen token'>(</span><span class='issue identifier id'>issue</span><span class='rparen token'>)</span>
@@ -2555,9 +2579,9 @@ information on the scan issue that was generated.
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="exclude_from_scope-instance_method">exclude_from_scope</tt>
-  
     <tt id="exclude_scope-instance_method">exclude_scope</tt>
+  
+    <tt id="exclude_from_scope-instance_method">exclude_from_scope</tt>
   
 </p>
 </div><div class="section docstring">
@@ -2577,13 +2601,13 @@ Exclude the specified URL from the Suite-wide scope.
           <pre class="lines">
 
 
+149
 150
 151
-152
-153</pre>
+152</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 150</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 149</span>
 
 <span class='def def kw'>def</span> <span class='excludeFromScope identifier id'>excludeFromScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
   <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -2614,9 +2638,9 @@ Exclude the specified URL from the Suite-wide scope.
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="close-instance_method">close</tt>
-  
     <tt id="exit_suite-instance_method">exit_suite</tt>
+  
+    <tt id="close-instance_method">close</tt>
   
 </p>
 </div><div class="section docstring">
@@ -2634,12 +2658,12 @@ the shutdown prompt.
           <pre class="lines">
 
 
+331
 332
-333
-334</pre>
+333</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 332</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 331</span>
 
 <span class='def def kw'>def</span> <span class='exitSuite identifier id'>exitSuite</span><span class='lparen token'>(</span><span class='prompt_user identifier id'>prompt_user</span><span class='assign token'>=</span><span class='false false kw'>false</span><span class='rparen token'>)</span>
   <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:exitSuite</span><span class='comma token'>,</span> <span class='prompt_user identifier id'>prompt_user</span> <span class='integer val'>? </span><span class='true true kw'>true</span> <span class='colon op'>:</span> <span class='false false kw'>false</span><span class='rparen token'>)</span>
@@ -2696,13 +2720,13 @@ msg = raw request/response (String or Java bytes[])
           <pre class="lines">
 
 
+322
 323
 324
-325
-326</pre>
+325</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 323</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 322</span>
 
 <span class='def def kw'>def</span> <span class='getHeaders identifier id'>getHeaders</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
   <span class='msg identifier id'>msg</span> <span class='assign token'>=</span> <span class='msg identifier id'>msg</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='msg identifier id'>msg</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -2760,13 +2784,13 @@ req = raw request (String or Java bytes[])
           <pre class="lines">
 
 
+307
 308
 309
-310
-311</pre>
+310</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 308</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 307</span>
 
 <span class='def def kw'>def</span> <span class='getParameters identifier id'>getParameters</span><span class='lparen token'>(</span><span class='req identifier id'>req</span><span class='rparen token'>)</span>
   <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -2797,9 +2821,9 @@ req = raw request (String or Java bytes[])
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="get_proxy_history-instance_method">get_proxy_history</tt>
-  
     <tt id="proxy_history-instance_method">proxy_history</tt>
+  
+    <tt id="get_proxy_history-instance_method">get_proxy_history</tt>
   
 </p>
 </div><div class="section docstring">
@@ -2817,12 +2841,12 @@ the Burp proxy history.
           <pre class="lines">
 
 
+249
 250
-251
-252</pre>
+251</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 250</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 249</span>
 
 <span class='def def kw'>def</span> <span class='getProxyHistory identifier id'>getProxyHistory</span>
   <span class='HttpRequestResponseList constant id'>HttpRequestResponseList</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getProxyHistory</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -2875,12 +2899,12 @@ IMPORTANT: This method is only available with Burp 1.2.15 and higher.
           <pre class="lines">
 
 
+270
 271
-272
-273</pre>
+272</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 271</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 270</span>
 
 <span class='def def kw'>def</span> <span class='getScanIssues identifier id'>getScanIssues</span><span class='lparen token'>(</span><span class='urlprefix identifier id'>urlprefix</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='ScanIssuesList constant id'>ScanIssuesList</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span> <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getScanIssues</span><span class='comma token'>,</span> <span class='urlprefix identifier id'>urlprefix</span><span class='rparen token'>)</span> <span class='rparen token'>)</span>
@@ -2910,9 +2934,9 @@ IMPORTANT: This method is only available with Burp 1.2.15 and higher.
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="get_site_map-instance_method">get_site_map</tt>
-  
     <tt id="site_map-instance_method">site_map</tt>
+  
+    <tt id="get_site_map-instance_method">get_site_map</tt>
   
 </p>
 </div><div class="section docstring">
@@ -2931,12 +2955,12 @@ prefix can be nil to return all objects.
           <pre class="lines">
 
 
+259
 260
-261
-262</pre>
+261</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 260</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 259</span>
 
 <span class='def def kw'>def</span> <span class='getSiteMap identifier id'>getSiteMap</span><span class='lparen token'>(</span><span class='urlprefix identifier id'>urlprefix</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='HttpRequestResponseList constant id'>HttpRequestResponseList</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:getSiteMap</span><span class='comma token'>,</span> <span class='urlprefix identifier id'>urlprefix</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -2992,20 +3016,20 @@ cookie string is selected.
           <pre class="lines">
 
 
-655
-656
-657
-658
-659
-660
-661
-662
-663
-664
-665</pre>
+676
+677
+678
+679
+680
+681
+682
+683
+684
+685
+686</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 655</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 676</span>
 
 <span class='def def kw'>def</span> <span class='harvest_cookies_from_history identifier id'>harvest_cookies_from_history</span><span class='lparen token'>(</span><span class='cookie identifier id'>cookie</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='urlrx identifier id'>urlrx</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -3065,13 +3089,13 @@ Include the specified URL in the Suite-wide scope.
           <pre class="lines">
 
 
+158
 159
 160
-161
-162</pre>
+161</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 159</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 158</span>
 
 <span class='def def kw'>def</span> <span class='includeInScope identifier id'>includeInScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
   <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -3102,9 +3126,9 @@ Include the specified URL in the Suite-wide scope.
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="in_scope?-instance_method">in_scope?</tt>
-  
     <tt id="is_in_scope-instance_method">is_in_scope</tt>
+  
+    <tt id="in_scope?-instance_method">in_scope?</tt>
   
 </p>
 </div><div class="section docstring">
@@ -3127,13 +3151,13 @@ Returns: true / false
           <pre class="lines">
 
 
+169
 170
 171
-172
-173</pre>
+172</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 170</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 169</span>
 
 <span class='def def kw'>def</span> <span class='isInScope identifier id'>isInScope</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
   <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -3186,12 +3210,12 @@ Display a message in the Burp Suite alerts tab.
           <pre class="lines">
 
 
+178
 179
-180
-181</pre>
+180</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 179</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 178</span>
 
 <span class='def def kw'>def</span> <span class='issueAlert identifier id'>issueAlert</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='rparen token'>)</span>
   <span class='_check_cb identifier id'>_check_cb</span><span class='dot token'>.</span><span class='issueAlert identifier id'>issueAlert</span><span class='lparen token'>(</span><span class='msg identifier id'>msg</span><span class='dot token'>.</span><span class='to_s identifier id'>to_s</span><span class='rparen token'>)</span>
@@ -3221,9 +3245,9 @@ Display a message in the Burp Suite alerts tab.
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="make_http_request-instance_method">make_http_request</tt>
-  
     <tt id="make_request-instance_method">make_request</tt>
+  
+    <tt id="make_http_request-instance_method">make_http_request</tt>
   
 </p>
 </div><div class="section docstring">
@@ -3249,13 +3273,13 @@ Returns: The full response retrieved from the remote server.
           <pre class="lines">
 
 
+191
 192
 193
-194
-195</pre>
+194</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 192</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 191</span>
 
 <span class='def def kw'>def</span> <span class='makeHttpRequest identifier id'>makeHttpRequest</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
   <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -3312,12 +3336,12 @@ IMPORTANT: This method is only available with Burp 1.2.09 and higher.
           <pre class="lines">
 
 
+283
 284
-285
-286</pre>
+285</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 284</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 283</span>
 
 <span class='def def kw'>def</span> <span class='restoreState identifier id'>restoreState</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
   <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:restoreState</span><span class='comma token'>,</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='io identifier id'>io</span><span class='dot token'>.</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -3372,12 +3396,12 @@ IMPORTANT: This method is only available with Burp 1.2.09 and higher.
           <pre class="lines">
 
 
+294
 295
-296
-297</pre>
+296</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 295</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 294</span>
 
 <span class='def def kw'>def</span> <span class='saveState identifier id'>saveState</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span>
   <span class='_check_and_callback identifier id'>_check_and_callback</span><span class='lparen token'>(</span><span class='symbol val'>:saveState</span><span class='comma token'>,</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='io identifier id'>io</span><span class='dot token'>.</span><span class='File constant id'>File</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='filename identifier id'>filename</span><span class='rparen token'>)</span><span class='rparen token'>)</span>
@@ -3428,18 +3452,18 @@ matched history members.
           <pre class="lines">
 
 
-634
-635
-636
-637
-638
-639
-640
-641
-642</pre>
+655
+656
+657
+658
+659
+660
+661
+662
+663</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 634</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 655</span>
 
 <span class='def def kw'>def</span> <span class='search_proxy_history identifier id'>search_proxy_history</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='urlrx identifier id'>urlrx</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='ret identifier id'>ret</span> <span class='assign token'>=</span> <span class='lbrack token'>[</span><span class='rbrack token'>]</span>
@@ -3475,9 +3499,9 @@ matched history members.
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="intruder-instance_method">intruder</tt>
-  
     <tt id="send_to_intruder-instance_method">send_to_intruder</tt>
+  
+    <tt id="intruder-instance_method">intruder</tt>
   
 </p>
 </div><div class="section docstring">
@@ -3500,13 +3524,13 @@ Send an HTTP request to the Burp Intruder tool
           <pre class="lines">
 
 
+203
 204
 205
-206
-207</pre>
+206</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 204</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 203</span>
 
 <span class='def def kw'>def</span> <span class='sendToIntruder identifier id'>sendToIntruder</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='rparen token'>)</span>
   <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -3563,13 +3587,13 @@ Send an HTTP request to the Burp Repeater tool.
           <pre class="lines">
 
 
+216
 217
 218
-219
-220</pre>
+219</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 217</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 216</span>
 
 <span class='def def kw'>def</span> <span class='sendToRepeater identifier id'>sendToRepeater</span><span class='lparen token'>(</span><span class='host identifier id'>host</span><span class='comma token'>,</span> <span class='port identifier id'>port</span><span class='comma token'>,</span> <span class='https identifier id'>https</span><span class='comma token'>,</span> <span class='req identifier id'>req</span><span class='comma token'>,</span> <span class='tab identifier id'>tab</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='req identifier id'>req</span> <span class='assign token'>=</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='to_java_bytes identifier id'>to_java_bytes</span> <span class='if if_mod kw'>if</span> <span class='req identifier id'>req</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -3600,9 +3624,9 @@ Send an HTTP request to the Burp Repeater tool.
 <p class="aliases">
   <span class="aka">Also known as:</span>
   
-    <tt id="send_to_spider-instance_method">send_to_spider</tt>
-  
     <tt id="spider-instance_method">spider</tt>
+  
+    <tt id="send_to_spider-instance_method">send_to_spider</tt>
   
 </p>
 </div><div class="section docstring">
@@ -3622,13 +3646,13 @@ Send a seed URL to the Burp Spider tool.
           <pre class="lines">
 
 
+225
 226
 227
-228
-229</pre>
+228</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 226</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 225</span>
 
 <span class='def def kw'>def</span> <span class='sendToSpider identifier id'>sendToSpider</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span>
   <span class='url identifier id'>url</span> <span class='assign token'>=</span> <span class='java identifier id'>java</span><span class='dot token'>.</span><span class='net identifier id'>net</span><span class='dot token'>.</span><span class='URL constant id'>URL</span><span class='dot token'>.</span><span class='new identifier id'>new</span><span class='lparen token'>(</span><span class='url identifier id'>url</span><span class='rparen token'>)</span> <span class='if if_mod kw'>if</span> <span class='url identifier id'>url</span><span class='dot token'>.</span><span class='is_a? fid id'>is_a?</span> <span class='String constant id'>String</span>
@@ -3672,14 +3696,14 @@ reference to self as the module handler and launches burp suite.
           <pre class="lines">
 
 
-671
-672
-673
-674
-675</pre>
+692
+693
+694
+695
+696</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 671</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 692</span>
 
 <span class='def def kw'>def</span> <span class='start_burp identifier id'>start_burp</span><span class='lparen token'>(</span><span class='args identifier id'>args</span><span class='assign token'>=</span><span class='lbrack token'>[</span><span class='rbrack token'>]</span><span class='rparen token'>)</span>
   <span class='activate! fid id'>activate!</span><span class='lparen token'>(</span><span class='rparen token'>)</span>
@@ -3732,14 +3756,14 @@ Yields each entry in the proxy history to a block.
           <pre class="lines">
 
 
-593
-594
-595
-596
-597</pre>
+614
+615
+616
+617
+618</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 593</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 614</span>
 
 <span class='def def kw'>def</span> <span class='with_proxy_history identifier id'>with_proxy_history</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='with_statefile identifier id'>with_statefile</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='this identifier id'>this</span><span class='bitor op'>|</span>
@@ -3792,14 +3816,14 @@ Yields each entry in the site map to a block.
           <pre class="lines">
 
 
-580
-581
-582
-583
-584</pre>
+601
+602
+603
+604
+605</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 580</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 601</span>
 
 <span class='def def kw'>def</span> <span class='with_site_map identifier id'>with_site_map</span><span class='lparen token'>(</span><span class='urlprefix identifier id'>urlprefix</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='comma token'>,</span> <span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='with_statefile identifier id'>with_statefile</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='rparen token'>)</span> <span class='do do kw'>do</span> <span class='bitor op'>|</span><span class='this identifier id'>this</span><span class='bitor op'>|</span>
@@ -3893,29 +3917,29 @@ the object that the method was called on
           <pre class="lines">
 
 
-605
-606
-607
-608
-609
-610
-611
-612
-613
-614
-615
-616
-617
-618
-619
-620
-621
-622
-623
-624</pre>
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641
+642
+643
+644
+645</pre>
         </td>
         <td>
-          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 605</span>
+          <pre class="code"><span class="info file"># File 'lib/buby.rb', line 626</span>
 
 <span class='def def kw'>def</span> <span class='with_statefile identifier id'>with_statefile</span><span class='lparen token'>(</span><span class='statefile identifier id'>statefile</span><span class='assign token'>=</span><span class='nil nil kw'>nil</span><span class='rparen token'>)</span>
   <span class='if if kw'>if</span> <span class='statefile identifier id'>statefile</span>
@@ -3952,7 +3976,7 @@ the object that the method was called on
 </div>
     </div>
     <div id="yard_info">
-  Generated on Thursday, October 15 2009 at 11:19:56 AM by 
+  Generated on Tuesday, December 29 2009 at 05:13:30 PM by 
   <abbr class="yard" title="Yay! A Ruby Documentation Tool"><a href="http://yard.soen.ca">YARD</a></abbr> 
   0.2.3.5 (ruby-1.8.6).
 </div>
