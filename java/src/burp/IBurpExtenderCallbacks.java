@@ -3,8 +3,11 @@ package burp;
 /*
  * @(#)IBurpExtenderCallbacks.java
  *
- * Copyright 2008 PortSwigger Ltd. All rights reserved.
- * Use is subject to license terms - see http://portswigger.net/
+ * Copyright PortSwigger Ltd. All rights reserved.
+ * 
+ * This code may be used to extend the functionality of Burp Suite and Burp
+ * Suite Professional, provided that this usage does not violate the 
+ * license terms for those products. 
  */
 
 /**
@@ -31,6 +34,7 @@ public interface IBurpExtenderCallbacks
      * @param useHttps Flags whether the protocol is HTTPS or HTTP.
      * @param request The full HTTP request.
      * @return The full response retrieved from the remote server.
+     * @throws java.lang.Exception
      */
     public byte[] makeHttpRequest(
             String host,
@@ -50,6 +54,7 @@ public interface IBurpExtenderCallbacks
      * @param tabCaption An optional caption which will appear on the Repeater 
      * tab containing the request. If this value is <code>null</code> then a 
      * default tab index will be displayed.
+     * @throws java.lang.Exception
      */
     public void sendToRepeater(
             String host,
@@ -68,6 +73,7 @@ public interface IBurpExtenderCallbacks
      * @param port The port of the remote HTTP server.
      * @param useHttps Flags whether the protocol is HTTPS or HTTP.
      * @param request The full HTTP request.
+     * @throws java.lang.Exception
      */
     public void sendToIntruder(
             String host,
@@ -83,6 +89,7 @@ public interface IBurpExtenderCallbacks
      * Spider will process the application's response in the normal way.
      * 
      * @param url The new seed URL to begin spidering from.
+     * @throws java.lang.Exception
      */
     public void sendToSpider(
             java.net.URL url) throws Exception;
@@ -97,8 +104,10 @@ public interface IBurpExtenderCallbacks
      * @param port The port of the remote HTTP server.
      * @param useHttps Flags whether the protocol is HTTPS or HTTP.
      * @param request The full HTTP request.
+     * @return The resulting scan queue item.
+     * @throws java.lang.Exception
      */
-    public void doActiveScan(
+    public IScanQueueItem doActiveScan(
             String host,
             int port,
             boolean useHttps,
@@ -113,6 +122,7 @@ public interface IBurpExtenderCallbacks
      * @param useHttps Flags whether the protocol is HTTPS or HTTP.
      * @param request The full HTTP request.
      * @param response The full HTTP response.
+     * @throws java.lang.Exception
      */
     public void doPassiveScan(
             String host,
@@ -128,6 +138,7 @@ public interface IBurpExtenderCallbacks
      * @param url The URL to query.
      * @return Returns <code>true</code> if the URL is within the current 
      * Suite-wide scope.
+     * @throws java.lang.Exception
      */
     boolean isInScope(java.net.URL url) throws Exception;
     
@@ -136,6 +147,7 @@ public interface IBurpExtenderCallbacks
      * scope.
      * 
      * @param url The URL to include in the Suite-wide scope.
+     * @throws java.lang.Exception
      */
     void includeInScope(java.net.URL url) throws Exception;
     
@@ -144,6 +156,7 @@ public interface IBurpExtenderCallbacks
      * scope.
      * 
      * @param url The URL to exclude from the Suite-wide scope.
+     * @throws java.lang.Exception
      */
     void excludeFromScope(java.net.URL url) throws Exception;
 
@@ -154,58 +167,102 @@ public interface IBurpExtenderCallbacks
      * @param message The alert message to display.
      */
     public void issueAlert(String message);
-
+    
     /**
-     * New stuff added as of v1.2.11.
-     * The new IBurpExtenderCallbacks interface adds several new methods 
-     * which you can invoke to query and update Burp's state, and to parse raw 
-     * HTTP messages for parameters and headers.
-     */
-
-    /**
-     * no javadoc yet from PortSwigger
+     * This method returns details of all items in the proxy history.
+     * 
+     * @return The contents of the proxy history.
      */
     public IHttpRequestResponse[] getProxyHistory();
-
+    
     /**
-     * no javadoc yet from PortSwigger
+     * This method returns details of items in the site map.
+     * 
+     * @param urlPrefix This parameter can be used to specify a URL prefix, in 
+     * order to extract a specific subset of the site map. The method performs 
+     * a simple case-sensitive text match, returning all site 
+     * map items whose URL begins with the specified prefix. If this parameter 
+     * is null, the entire site map is returned.
+     * @return Details of items in the site map.
      */
     public IHttpRequestResponse[] getSiteMap(String urlPrefix);
-
-    /** 
-     * This method returns all of the current scan issues for URLs matching 
-     * the specified literal prefix. 
-     * The prefix can be null to match all issues.
-     *
-     * Added in v1.2.15.
-     */
-    public IScanIssue[] getScanIssues(String urlPrefix);
-
+    
     /**
-     * no javadoc yet from PortSwigger
+     * This method can be used to restore Burp's state from a specified 
+     * saved state file. This method blocks until the restore operation is 
+     * completed, and must not be called from the event thread.
+     * 
+     * @param file The file containing Burp's saved state.
+     * @throws java.lang.Exception
      */
     public void restoreState(java.io.File file) throws Exception;
-
+    
     /**
-     * no javadoc yet from PortSwigger
+     * This method can be used to save Burp's state to a specified file. 
+     * This method blocks until the save operation is completed, and must not be 
+     * called from the event thread.
+     * 
+     * @param file The file to save Burp's state in.
+     * @throws java.lang.Exception
      */
     public void saveState(java.io.File file) throws Exception;
-
+    
     /**
-     * no javadoc yet from PortSwigger
+     * This method parses the specified request and returns details of each
+     * request parameter.
+     * 
+     * @param request The request to be parsed.
+     * @return An array of:
+     * <code>String[] { name, value, type }</code> 
+     * containing details of the parameters contained within the request.
+     * @throws java.lang.Exception
      */
     public String[][] getParameters(byte[] request) throws Exception;
-
+    
     /**
-     * no javadoc yet from PortSwigger
+     * This method parses the specified request and returns details of each
+     * HTTP header.
+     * 
+     * @param message The request to be parsed.
+     * @return An array of HTTP headers.
+     * @throws java.lang.Exception
      */
     public String[] getHeaders(byte[] message) throws Exception;
+    
+    /**
+     * This method returns all of the current scan issues for URLs matching the 
+     * specified literal prefix. 
+     * 
+     * @param urlPrefix This parameter can be used to specify a URL prefix, in 
+     * order to extract a specific subset of scan issues. The method performs 
+     * a simple case-sensitive text match, returning all scan issues whose URL 
+     * begins with the specified prefix. If this parameter is null, all issues 
+     * are returned.
+     * @return Details of the scan issues.
+     */
+    public IScanIssue[] getScanIssues(String urlPrefix);
+    
+    /**
+     * 
+     * This method can be used to register a new menu item which will appear 
+     * on the various context menus that are used throughout Burp Suite to 
+     * handle user-driven actions.
+     * 
+     * @param menuItemCaption The caption to be displayed on the menu item.
+     * @param menuItemHandler The handler to be invoked when the user clicks
+     * on the menu item.
+     */
+    public void registerMenuItem(
+            String menuItemCaption,
+            IMenuItemHandler menuItemHandler);
 
     /**
-     * Shuts down burp programatically. If the method returns, the user
-     * cancelled the shutdown prompt.
-     *
-     * Available in v1.2.17+.
+     * This method can be used to shut down Burp programmatically, with an 
+     * optional prompt to the user. If the method returns, the user cancelled 
+     * the shutdown prompt.
+     * 
+     * @param promptUser Indicates whether to prompt the user to confirm the 
+     * shutdown.
      */
-    public void exitSuite(boolean promptUser); 
+    public void exitSuite(boolean promptUser);
 }

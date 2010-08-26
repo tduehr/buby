@@ -3,8 +3,11 @@ package burp;
 /*
  * @(#)IBurpExtender.java
  *
- * Copyright 2008 PortSwigger Ltd. All rights reserved.
- * Use is subject to license terms - see http://portswigger.net/
+ * Copyright PortSwigger Ltd. All rights reserved.
+ * 
+ * This code may be used to extend the functionality of Burp Suite and Burp
+ * Suite Professional, provided that this usage does not violate the 
+ * license terms for those products. 
  */
 
 /**
@@ -27,9 +30,10 @@ package burp;
  * class burp.BurpExtender, use the following command to launch Burp Suite and 
  * load the IBurpExtender implementation:<p>
  *
- * <PRE>
- *    java -classpath burp.jar;BurpProxyExtender.jar burp.StartBurp
- * </PRE>
+ * <PRE>    java -classpath burp.jar;BurpProxyExtender.jar burp.StartBurp</PRE>
+ * 
+ * (On Linux-based platforms, use a colon character instead of the semi-colon 
+ * as the classpath separator.)
  */
 
 public interface IBurpExtender
@@ -43,7 +47,6 @@ public interface IBurpExtender
      * @param args The command-line arguments passed to Burp Suite on startup.
      */
     public void setCommandLineArgs(String[] args);
-    
     
     /**
      * This method is invoked by Burp Proxy whenever a client request or server
@@ -108,10 +111,25 @@ public interface IBurpExtender
     /** 
      * Causes Burp Proxy to drop the message and close the client connection.
      */
-    public final static int ACTION_DROP = 3;    
-    
-    
-    
+    public final static int ACTION_DROP = 3;
+    /**
+     * Causes Burp Proxy to follow the current interception rules to determine
+     * the appropriate action to take for the message, and then make a second
+     * call to processProxyMessage.
+     */
+    public final static int ACTION_FOLLOW_RULES_AND_REHOOK = 0x10;
+    /**
+     * Causes Burp Proxy to present the message to the user for manual
+     * review or modification, and then make a second call to
+     * processProxyMessage.
+     */
+    public final static int ACTION_DO_INTERCEPT_AND_REHOOK = 0x11;
+    /**
+     * Causes Burp Proxy to skip user interception, and then make a second call
+     * to processProxyMessage.
+     */
+    public final static int ACTION_DONT_INTERCEPT_AND_REHOOK = 0x12;
+
     /**
      * This method is invoked on startup. It registers an instance of the 
      * <code>IBurpExtenderCallbacks</code> interface, providing methods that 
@@ -125,12 +143,38 @@ public interface IBurpExtender
      */
     public void registerExtenderCallbacks(burp.IBurpExtenderCallbacks callbacks);
     
-    
-    
     /**
      * This method is invoked immediately before Burp Suite exits. 
      * It allows implementations to carry out any clean-up actions necessary
      * (e.g. flushing log files or closing database resources).
      */
     public void applicationClosing();
+    
+    /**
+     * This method is invoked whenever any of Burp's tools makes an HTTP request 
+     * or receives a response. It allows extensions to intercept and modify the 
+     * HTTP traffic of all Burp tools. For each request, the method is invoked 
+     * after the request has been fully processed by the invoking tool and is 
+     * about to be made on the network. For each response, the method is invoked
+     * after the response has been received from the network and before any 
+     * processing is performed by the invoking tool.
+     * 
+     * @param toolName The name of the Burp tool which is making the request.
+     * @param messageIsRequest Indicates whether the message is a request or 
+     * response.
+     * @param messageInfo Details of the HTTP message.
+     */
+    public void processHttpMessage(
+            String toolName, 
+            boolean messageIsRequest, 
+            IHttpRequestResponse messageInfo);
+    
+    /** 
+     * This method is invoked whenever Burp Scanner discovers a new, unique 
+     * issue, and can be used to perform customised reporting or logging of issues. 
+     * 
+     * @param issue Details of the new scan issue.
+     */
+    public void newScanIssue(IScanIssue issue);
+    
 }
