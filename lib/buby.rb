@@ -334,6 +334,19 @@ class Buby
   alias exit_suite exitSuite
   alias close exitSuite
 
+  # This method can be used to register a new menu item which will appear 
+  # on the various context menus that are used throughout Burp Suite to 
+  # handle user-driven actions.
+  # 
+  # @param menuItemCaption The caption to be displayed on the menu item.
+  # @param menuItemHandler The handler to be invoked when the user clicks
+  # on the menu item.
+  # 
+  def registerMenuItem(menuItemCaption, menuItemHandler)
+    _check_and_callback(:registerMenuItem, menuItemCaption, menuItemHandler)
+    issueAlert("Handler #{menuItemHandler} registered for \"#{menuItemCaption}\"")
+  end
+
   ### Event Handlers ###
 
   # This method is called by the BurpExtender java implementation upon 
@@ -371,10 +384,13 @@ class Buby
     pp([:got_callbacks, cb]) if $DEBUG
   end
 
-  ACTION_FOLLOW_RULES   = BurpExtender::ACTION_FOLLOW_RULES
-  ACTION_DO_INTERCEPT   = BurpExtender::ACTION_DO_INTERCEPT
-  ACTION_DONT_INTERCEPT = BurpExtender::ACTION_DONT_INTERCEPT
-  ACTION_DROP           = BurpExtender::ACTION_DROP
+  ACTION_FOLLOW_RULES              = BurpExtender::ACTION_FOLLOW_RULES
+  ACTION_DO_INTERCEPT              = BurpExtender::ACTION_DO_INTERCEPT
+  ACTION_DONT_INTERCEPT            = BurpExtender::ACTION_DONT_INTERCEPT
+  ACTION_DROP                      = BurpExtender::ACTION_DROP
+  ACTION_FOLLOW_RULES_AND_REHOOK   = BurpExtender::ACTION_FOLLOW_RULES_AND_REHOOK
+  ACTION_DO_INTERCEPT_AND_REHOOK   = BurpExtender::ACTION_DO_INTERCEPT_AND_REHOOK
+  ACTION_DONT_INTERCEPT_AND_REHOOK = BurpExtender::ACTION_DONT_INTERCEPT_AND_REHOOK
 
   # Seems we need to specifically render our 'message' to a string here in
   # ruby. Otherwise there's flakiness when converting certain binary non-ascii

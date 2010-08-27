@@ -291,5 +291,22 @@ public class BurpExtender implements IBurpExtender {
      */
     public final static int ACTION_DROP = 3;    
 
+    /**
+     * Causes Burp Proxy to follow the current interception rules to determine
+     * the appropriate action to take for the message, and then make a second
+     * call to processProxyMessage.
+     */
+    public final static int ACTION_FOLLOW_RULES_AND_REHOOK = 0x10;
+    /**
+     * Causes Burp Proxy to present the message to the user for manual
+     * review or modification, and then make a second call to
+     * processProxyMessage.
+     */
+    public final static int ACTION_DO_INTERCEPT_AND_REHOOK = 0x11;
+    /**
+     * Causes Burp Proxy to skip user interception, and then make a second call
+     * to processProxyMessage.
+     */
+    public final static int ACTION_DONT_INTERCEPT_AND_REHOOK = 0x12;
 }
 
