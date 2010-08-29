@@ -1,3 +1,7 @@
+== 1.2.0 / 2010-08-29
+  * added menu item support from 1.3
+  * added some additional processing constants from 1.3
+
 == 1.1.7 / 2009-12-29
   * fix evt_proxy_message_raw bridge to modify proxy messages (broken in 1.1.6)
   * switched from bones to jeweler for project mgmt
