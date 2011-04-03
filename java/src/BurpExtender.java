@@ -185,11 +185,11 @@ public class BurpExtender implements IBurpExtender {
         };
 
         // slurp back in the action value in-case it's been changed
-        action[0] = ((int[]) JavaUtil.convertRubyToJava(r_action))[0];
+        action[0] = ((int[])r_action.toJava(int[].class))[0];
 
         IRubyObject ret = r_obj.callMethod(ctx(r_obj), PROXYMSG_METH, pxy_msg);
         if(ret != r_msg) {
-          return (byte[]) JavaUtil.convertRubyToJava(ret);
+          return (byte []) ret.toJava(byte[].class);
         }
       }
 
