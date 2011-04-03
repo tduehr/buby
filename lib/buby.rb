@@ -347,10 +347,12 @@ class Buby
   # @param menuItemHandler The handler to be invoked when the user clicks
   # on the menu item.
   # 
+  # This method is only available with Burp 1.3.07 and higher.
   def registerMenuItem(menuItemCaption, menuItemHandler)
     _check_and_callback(:registerMenuItem, menuItemCaption, menuItemHandler)
     issueAlert("Handler #{menuItemHandler} registered for \"#{menuItemCaption}\"")
   end
+  alias register_menu_item registerMenuItem
 
   ### Event Handlers ###
 
