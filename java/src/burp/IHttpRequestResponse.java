@@ -122,4 +122,20 @@ public interface IHttpRequestResponse
      * @throws java.lang.Exception
      */
     short getStatusCode() throws Exception;
+
+    /**
+     * Returns the user-annotated comment for this item, if applicable.
+     *
+     * @return The user-annotated comment for this item, or null if none is set.
+     */
+    String getComment() throws Exception;
+
+    /**
+     * Sets the user-annotated comment for this item.
+     *
+     * @param comment The comment to be associated with this item.
+     * @throws Exception
+     */
+    void setComment(String comment) throws Exception;
+
 }

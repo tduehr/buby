@@ -1,5 +1,7 @@
 package burp;
 
+import java.util.Map;
+
 /*
  * @(#)IBurpExtenderCallbacks.java
  *
@@ -186,7 +188,17 @@ public interface IBurpExtenderCallbacks
      * @return Details of items in the site map.
      */
     public IHttpRequestResponse[] getSiteMap(String urlPrefix);
-    
+
+
+    /**
+     * This method can be used to add an item to Burp's site map with the
+     * specified request/response details. This will overwrite the details
+     * of any existing matching item in the site map.
+     *
+     * @param item Details of the item to be added to the site map
+     */
+    public void addToSiteMap(IHttpRequestResponse item);
+
     /**
      * This method can be used to restore Burp's state from a specified 
      * saved state file. This method blocks until the restore operation is 
@@ -255,6 +267,32 @@ public interface IBurpExtenderCallbacks
     public void registerMenuItem(
             String menuItemCaption,
             IMenuItemHandler menuItemHandler);
+
+    /**
+     *
+     * This method causes Burp to save all of its current configuration as a
+     * Map of name/value Strings.
+     *
+     * @return A Map of name/value Strings reflecting Burp's current
+     * configuration.
+     */
+    public Map saveConfig();
+
+    /**
+     *
+     * This method causes Burp to load a new configuration from the Map of
+     * name/value Strings provided. Any settings not specified in the Map will
+     * be restored to their default values. To selectively update only some
+     * settings and leave the rest unchanged, you should first call
+     * <code>saveConfig</code> to obtain Burp's current configuration, modify
+     * the relevant items in the Map, and then call <code>loadConfig</code>
+     * with the same Map.
+     *
+     * @param config A map of name/value Strings to use as Burp's new
+     * configuration.
+     */
+    public void loadConfig(Map config);
+
 
     /**
      * This method can be used to shut down Burp programmatically, with an 
