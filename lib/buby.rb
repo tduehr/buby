@@ -354,6 +354,47 @@ class Buby
   end
   alias register_menu_item registerMenuItem
 
+  ### 1.3.09 methods ###
+
+  # This method can be used to add an item to Burp's site map with the
+  # specified request/response details. This will overwrite the details
+  # of any existing matching item in the site map.
+  # 
+  # @param item Details of the item to be added to the site map
+  #
+  # This method is only available with Burp 1.3.09+
+  def addToSiteMap(item)
+    _check_and_callback(:addToSiteMap, item)
+  end
+  alias add_to_site_map addToSiteMap
+
+  # This method causes Burp to save all of its current configuration as a
+  # Map of name/value Strings.
+  #
+  # @return A Map of name/value Strings reflecting Burp's current
+  # configuration.
+  #
+  # This method is only available with Burp 1.3.09+
+  def saveConfig
+    _check_and_callback(:saveConfig)
+  end
+
+  # This method causes Burp to load a new configuration from the Map of
+  # name/value Strings provided. Any settings not specified in the Map will
+  # be restored to their default values. To selectively update only some
+  # settings and leave the rest unchanged, you should first call
+  # <code>saveConfig</code> to obtain Burp's current configuration, modify
+  # the relevant items in the Map, and then call <code>loadConfig</code>
+  # with the same Map.
+  #
+  # @param config A map of name/value Strings to use as Burp's new
+  # configuration.
+  #
+  # This method is only available with Burp 1.3.09+
+  def loadConfig(conf)
+    _check_and_callback(:loadConfig, conf)
+  end
+
   ### Event Handlers ###
 
   # This method is called by the BurpExtender java implementation upon 
