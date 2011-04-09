@@ -376,7 +376,7 @@ class Buby
   #
   # This method is only available with Burp 1.3.09+
   def saveConfig
-    _check_and_callback(:saveConfig)
+    _check_and_callback(:saveConfig).to_hash
   end
 
   # This method causes Burp to load a new configuration from the Map of
