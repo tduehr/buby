@@ -378,6 +378,8 @@ class Buby
   def saveConfig
     _check_and_callback(:saveConfig).to_hash
   end
+  alias save_config saveConfig
+  alias config saveConfig
 
   # This method causes Burp to load a new configuration from the Map of
   # name/value Strings provided. Any settings not specified in the Map will
@@ -394,6 +396,8 @@ class Buby
   def loadConfig(conf)
     _check_and_callback(:loadConfig, conf)
   end
+  alias load_config loadConfig
+  alias config= loadConfig
 
   ### Event Handlers ###
 
