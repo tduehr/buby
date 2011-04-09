@@ -229,7 +229,7 @@ class Buby
   #  * url = The new seed URL to begin spidering from.
   def sendToSpider(url)
     url = java.net.URL.new(url) if url.is_a? String
-    _check_cb.includeInScope(url)
+    _check_cb.sendToSpider(url)
   end
   alias send_to_spider sendToSpider
   alias spider sendToSpider
