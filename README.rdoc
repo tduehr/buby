@@ -1,6 +1,6 @@
 buby
-  by Eric Monti
-  http://emonti.github.com/buby
+  by Eric Monti, Timur Duehr
+  http://tduehr.github.com/buby
 
 == DESCRIPTION:
 
@@ -55,7 +55,7 @@ minus ofcourse, Burp itself.
 Here are manual instructions if you want or need to build things yourself:
 
 ==== Step 1. Download buby from github
-  git clone git://github.com/emonti/buby.git
+  git clone git://github.com/tduehr/buby.git
 
 ==== Step 2. Compile BurpExtender.java. Include jruby.jar in the classpath:
 
@@ -253,14 +253,15 @@ And, assuming 'www.example.com' checks for valid request verbs, you should see s
 
 == CREDIT:
 * Burp and Burp Suite are trademarks of PortSwigger(ltd) 
-  Copyright 2008 PortSwigger Ltd. All rights reserved.
+  Copyright 2011 PortSwigger Ltd. All rights reserved.
   See http://portswigger.net for license terms.
 
-* This ruby library and the accompanying BurpExtender.java implementation are 
-  written by Eric Monti @ Matasano Security. Matasano Security claims no 
+* This ruby library and the accompanying BurpExtender.java implementation was 
+  originally written by Eric Monti @ Matasano Security. This ruby library is 
+  currently maintained by Timur Duehr @ Matasano Security.Matasano Security claims no 
   professional or legal affiliation with PortSwigger LTD.
 
-  However, the author would like to express his personal and professional 
+  However, the authors would like to express their personal and professional 
   respect and admiration to Burp's authors and appreciation to PortSwigger for 
   the availability of the IBurpExtender extension API.
 
@@ -270,7 +271,7 @@ And, assuming 'www.example.com' checks for valid request verbs, you should see s
 == LICENSE:
 
 * Burp and Burp Suite are trademarks of PortSwigger Ltd.
-  Copyright 2008 PortSwigger Ltd. All rights reserved.
+  Copyright 2011 PortSwigger Ltd. All rights reserved.
   See http://portswigger.net for license terms.
 
 * The Buby Ruby library and its accompanying BurpExtender implementation are
@@ -279,6 +280,7 @@ And, assuming 'www.example.com' checks for valid request verbs, you should see s
 (The MIT License)
 
 Copyright (C) 2009 Eric Monti, Matasano Security
+Copyright (C) 2010-2011 Timur Duehr, Matasano Security
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

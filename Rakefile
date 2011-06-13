@@ -9,7 +9,7 @@ begin
     gem.summary = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger}
     gem.description = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.}
     gem.email = "emonti@matasano.com, td@matasano.com"
-    gem.homepage = "http://emonti.github.com/buby"
+    gem.homepage = "http://tduehr.github.com/buby"
     gem.authors = ["Eric Monti, tduehr"]
     gem.platform = "java"
     gem.test_files = ["test/buby_test.rb"]
