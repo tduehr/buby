@@ -61,7 +61,7 @@ include_class 'BurpExtender'
 #
 # Credit:
 # * Burp and Burp Suite are trade-marks of PortSwigger Ltd.
-#     Copyright 2008 PortSwigger Ltd. All rights reserved.
+#     Copyright 2011 PortSwigger Ltd. All rights reserved.
 #     See http://portswigger.net for license terms.
 #
 # * This ruby library and the accompanying BurpExtender.java implementation 
@@ -127,9 +127,14 @@ class Buby
   #  * port = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
   #  * req  = The full HTTP request. (String or Java bytes[])
-  def doActiveScan(host, port, https, req)
+  #  * insertionPointOffsets = A list of index pairs representing the
+  #  * positions of the insertion points that should be scanned. Each item in
+  #  * the list must be an int[2] array containing the start and end offsets
+  #  * for the insertion point. *1.4+* only
+  
+  def doActiveScan(host, port, https, req, ip_off)
     req = req.to_java_bytes if req.is_a? String
-    _check_cb.doActiveScan(host, port, https, req)
+    getBurpVersion ? _check_cb.doActiveScan(host, port, https, req, ip_off) : _check_cb.doActiveScan(host, port, https, req)
   end
   alias do_active_scan doActiveScan
   alias active_scan doActiveScan
@@ -398,6 +403,30 @@ class Buby
   end
   alias load_config loadConfig
   alias config= loadConfig
+
+  ## 1.4 methods ##
+
+  # This method sets the interception mode for Burp Proxy.
+  # 
+  # @param enabled Indicates whether interception of proxy messages should 
+  # be enabled.
+  # 
+  def setProxyInterceptionEnabled(enabled)
+    _check_and_callback(:setProxyInterceptionEnabled, enabled)
+  end
+  alias proxy_interception_enabled setProxyInterceptionEnabled
+
+  # This method can be used to determine the version of the loaded burp at runtime.
+  # This is included in the Javadoc for the extension interfaces but not the supplied interface files.
+  # @return String array containing the product name, major version, and minor version.
+  def getBurpVersion
+    begin
+      _check_and_callback(:getBurpVersion)
+    rescue
+      nil
+    end
+  end
+  alias burp_version getBurpVersion
 
   ### Event Handlers ###
 

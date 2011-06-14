@@ -1,5 +1,6 @@
 package burp;
 
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -97,9 +98,9 @@ public interface IBurpExtenderCallbacks
             java.net.URL url) throws Exception;
 
     /**
-     * This method can be used to send an HTTP request to the Burp Scanner 
-     * tool to perform an active vulnerability scan. If the request is not 
-     * within the current active scanning scope, the user will be asked if 
+     * This method can be used to send an HTTP request to the Burp Scanner
+     * tool to perform an active vulnerability scan. If the request is not
+     * within the current active scanning scope, the user will be asked if
      * they wish to proceed with the scan.
      *
      * @param host The hostname of the remote HTTP server.
@@ -114,7 +115,32 @@ public interface IBurpExtenderCallbacks
             int port,
             boolean useHttps,
             byte[] request) throws Exception;
-    
+
+    /**
+     * This method can be used to send an HTTP request to the Burp Scanner
+     * tool to perform an active vulnerability scan, based on a custom list
+     * of insertion points that are to be scanned. If the request is not
+     * within the current active scanning scope, the user will be asked if
+     * they wish to proceed with the scan.
+     *
+     * @param host The hostname of the remote HTTP server.
+     * @param port The port of the remote HTTP server.
+     * @param useHttps Flags whether the protocol is HTTPS or HTTP.
+     * @param request The full HTTP request.
+     * @param insertionPointOffsets A list of index pairs representing the
+     * positions of the insertion points that should be scanned. Each item in
+     * the list must be an int[2] array containing the start and end offsets
+     * for the insertion point.
+     * @return The resulting scan queue item.
+     * @throws java.lang.Exception
+     */
+    public IScanQueueItem doActiveScan(
+            String host,
+            int port,
+            boolean useHttps,
+            byte[] request,
+            List<int[]> insertionPointOffsets) throws Exception;
+
     /**
      * This method can be used to send an HTTP request to the Burp Scanner 
      * tool to perform a passive vulnerability scan.
@@ -295,6 +321,16 @@ public interface IBurpExtenderCallbacks
 
 
     /**
+     * 
+     * This method sets the interception mode for Burp Proxy.
+     * 
+     * @param enabled Indicates whether interception of proxy messages should 
+     * be enabled.
+     */
+    public void setProxyInterceptionEnabled(boolean enabled);
+
+
+    /**
      * This method can be used to shut down Burp programmatically, with an 
      * optional prompt to the user. If the method returns, the user cancelled 
      * the shutdown prompt.
@@ -303,4 +339,12 @@ public interface IBurpExtenderCallbacks
      * shutdown.
      */
     public void exitSuite(boolean promptUser);
+    
+    /**
+     *  This method can be used to determine the version of the loaded burp at runtime.
+     *  This is included in the Javadoc for the extension interfaces but not the supplied interface files.
+     *  @return String array containing the product name, major version, and minor version.
+     */
+     public String[] getBurpVersion();
+
 }

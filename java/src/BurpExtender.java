@@ -15,7 +15,7 @@ import org.jruby.runtime.builtin.IRubyObject;
  * for Burp Suite which provides glue between a Ruby runtime and Burp.
  *
  * This is a complete implementation of the Burp Extender interfaces available
- * as of Burp Suite 1.2/1.2.05
+ * as of Burp Suite 1.4
  */
 public class BurpExtender implements IBurpExtender { 
     public final static String INIT_METH =      "evt_extender_init";
