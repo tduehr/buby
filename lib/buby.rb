@@ -127,7 +127,7 @@ class Buby
   #  * port = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
   #  * req  = The full HTTP request. (String or Java bytes[])
-  #  * insertionPointOffsets = A list of index pairs representing the
+  #  * ip_off = A list of index pairs representing the
   #  * positions of the insertion points that should be scanned. Each item in
   #  * the list must be an int[2] array containing the start and end offsets
   #  * for the insertion point. *1.4+* only
@@ -210,9 +210,18 @@ class Buby
   #  * port  = The port of the remote HTTP server.
   #  * https = Flags whether the protocol is HTTPS or HTTP.
   #  * req   = The full HTTP request.  (String or Java bytes[])
-  def sendToIntruder(host, port, https, req)
+  #  * ip_off = A list of index pairs representing the
+  #  * positions of the insertion points that should be scanned. Each item in
+  #  * the list must be an int[2] array containing the start and end offsets
+  #  * for the insertion point. *1.4.04+* only
+  #  * 
+  def sendToIntruder(host, port, https, req, ip_off)
     req = req.to_java_bytes if req.is_a? String
-    _check_cb.sendToIntruder(host, port, https, req)
+    if self.getBurpVersion.to_a[1..-1].join(".") < "1.4.04"
+      _check_cb.sendToIntruder(host, port, https, req)
+    else
+      _check_cb.sendToIntruder(host, port, https, req, ip_off)
+    end
   end
   alias send_to_intruder sendToIntruder
   alias intruder sendToIntruder
