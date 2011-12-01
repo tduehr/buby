@@ -138,4 +138,19 @@ public interface IHttpRequestResponse
      */
     void setComment(String comment) throws Exception;
 
+    /**
+     * Returns the user-annotated highlight for this item, if applicable.
+     *
+     * @return The highlight color for this item, or null if none is set.
+     */
+    String getHighlight() throws Exception;
+
+    /**
+     * Sets the user-annotated highlight for this item.
+     *
+     * @param color The highlight color to be assigned to this item. Accepted
+     * values are: red, orange, yellow, green, cyan, blue, pink, magenta, gray.
+     * @throws Exception
+     */
+    void setHighlight(String color) throws Exception;
 }

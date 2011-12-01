@@ -84,6 +84,29 @@ public interface IBurpExtenderCallbacks
             boolean useHttps,
             byte[] request) throws Exception;
 
+
+    /**
+    * This method can be used to send an HTTP request to the Burp Intruder
+    * tool. The request will be displayed in the user interface, and markers
+    * for attack payloads will be placed into the specified locations within
+    * the request.
+    *
+    * @param host The hostname of the remote HTTP server.
+    * @param port The port of the remote HTTP server.
+    * @param useHttps Flags whether the protocol is HTTPS or HTTP.
+    * @param request The full HTTP request.
+    * @param payloadPositionOffsets A list of index pairs representing the
+    * payload positions to be used. Each item in the list must be an int[2]
+    * array containing the start and end offset for the payload position.
+    * @throws java.lang.Exception
+    */
+    public void sendToIntruder(
+        String host,
+        int port,
+        boolean useHttps,
+        byte[] request,
+        List payloadPositionOffsets) throws Exception;
+
     /**
      * This method can be used to send a seed URL to the Burp Spider tool. If 
      * the URL is not within the current Spider scope, the user will be asked 
