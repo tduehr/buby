@@ -5,16 +5,15 @@
 
 Gem::Specification.new do |s|
   s.name = %q{buby}
-  s.version = "1.3.0"
+  s.version = "1.3.1"
   s.platform = %q{java}
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Eric Monti, tduehr"]
-  s.date = %q{2011-06-14}
-  s.default_executable = %q{buby}
+  s.authors = [%q{Eric Monti, tduehr}]
+  s.date = %q{2011-12-05}
   s.description = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.}
   s.email = %q{emonti@matasano.com, td@matasano.com}
-  s.executables = ["buby"]
+  s.executables = [%q{buby}]
   s.extra_rdoc_files = [
     "History.txt",
     "README.rdoc",
@@ -50,11 +49,11 @@ Gem::Specification.new do |s|
     "test/buby_test.rb"
   ]
   s.homepage = %q{http://tduehr.github.com/buby}
-  s.rdoc_options = ["--main", "README.rdoc"]
-  s.require_paths = ["lib", "java", "java"]
-  s.rubygems_version = %q{1.5.1}
+  s.rdoc_options = [%q{--main}, %q{README.rdoc}]
+  s.require_paths = [%q{lib}, %q{java}, %q{java}]
+  s.rubygems_version = %q{1.8.6}
   s.summary = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger}
-  s.test_files = ["test/buby_test.rb"]
+  s.test_files = [%q{test/buby_test.rb}]
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
