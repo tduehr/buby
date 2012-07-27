@@ -2,6 +2,8 @@ require 'rubygems'
 require 'rake'
 require 'rake/clean'
 
+CLOBBER.add '**/*.class', '**/*.jar'
+
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
