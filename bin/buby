@@ -14,7 +14,9 @@ begin
       raise opts.to_s
     end
 
-    o.on("-i", "--interactive", "Start IRB") { args[:irb] = true }
+    o.on("-i", "--interactive", "Start IRB") { args[:interactive] = :irb }
+
+    o.on("-p", "--pry", "Start pry") { args[:interactive] = :pry }
 
     o.on("-d", "--debug", "Debug info") { args[:debug] = true }
 
@@ -96,7 +98,8 @@ end
 
 $burp.proxy_interception = false unless args[:proxy_interception]
 
-if args[:irb]
+case args[:interactive]
+when :irb
   # yucky hack...
   IRB.setup(nil)
   IRB.conf[:IRB_NAME] = File.basename($0, ".rb")
@@ -105,8 +108,13 @@ if args[:irb]
       def setup(*args); end
     end
   end
-  puts "Global $burp is set to #{$burp.inspect}",
+  puts "Starting IRB: Global $burp is set to #{$burp.inspect}",
        " Important Note: exit with $burp.close"
   IRB.start()
+when :pry
+  require 'pry'
+  puts "Starting Pry: Global $burp is set to #{$burp.inspect}",
+       " Important Note: exit with $burp.close"
+  Pry.start
 end
 
