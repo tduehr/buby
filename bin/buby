@@ -22,6 +22,8 @@ begin
       args[:load_burp] = b
     end
 
+    o.on("-P", "--proxy-interception", "Enable intercept on load") {args[:proxy_interception] = true}
+
     o.on('-s', '--state=FILE', "Restore burp state file on startup") do |r|
       args[:restore] = r
     end
@@ -91,6 +93,8 @@ if f=args[:restore]
   STDERR.puts "Restoring burp state from: #{f.inspect}"
   $burp.restore_state(f)
 end
+
+$burp.proxy_interception = false unless args[:proxy_interception]
 
 if args[:irb]
   # yucky hack...

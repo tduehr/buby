@@ -424,6 +424,7 @@ class Buby
     _check_and_callback(:setProxyInterceptionEnabled, enabled)
   end
   alias proxy_interception_enabled setProxyInterceptionEnabled
+  alias proxy_interception= setProxyInterceptionEnabled
 
   # This method can be used to determine the version of the loaded burp at runtime.
   # This is included in the Javadoc for the extension interfaces but not the supplied interface files.
