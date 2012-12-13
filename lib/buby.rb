@@ -828,11 +828,11 @@ class Buby
 
   # Checks the Java namespace to see if Burp has been loaded.
   def self.burp_loaded?
-    begin 
-      include_class 'burp.StartBurp'
-      return true
+    @burp_loaded ||= begin
+      java_import 'burp.StartBurp'
+      true
     rescue NameError
-      return false
+      false
     end
   end
 
