@@ -59,16 +59,15 @@ Here are manual instructions if you want or need to build things yourself:
 
 ==== Step 2. Compile BurpExtender.java. Include jruby.jar in the classpath:
 
-  cd buby/java/src
-  javac -classpath (.../jruby/root)/lib/jruby.jar:. BurpExtender.java
+Install the development dependencies:
+  jruby -S gem install jeweler rake-compile
 
-==== Step 3. Create a new java/buby.jar
+==== Step 3. Build with rake
 
-  jar cvf ../buby.jar .
+  jruby -S rake build
 
 ==== Step 4. Build a local gem and install it
 
-  cd ../../
   jruby -S gem build buby.gemspec
   jruby -S gem install --local buby-*.gem
 
@@ -91,8 +90,7 @@ though the actual directory may need to be created.
 Here's how I do it. I have my jruby installation under my home directory.
 Your configuration details can be substituted below. 
 
-  mkdir ~/jruby-1.1.5/lib/ruby/1.8/java
-  ln -s ~/tools/burp.jar ~/jruby-1.1.5/lib/ruby/1.8/java/burp.jar
+  ln -s ~/tools/burp.jar ~/jruby-1.7.1/lib/ruby/1.9/java/burp.jar
 
 Now everything should be ready to go. Try at least the first few parts of the 
 test below to confirm everything is set up. 
@@ -259,10 +257,7 @@ And, assuming 'www.example.com' checks for valid request verbs, you should see s
   Copyright 2011 PortSwigger Ltd. All rights reserved.
   See http://portswigger.net for license terms.
 
-* This ruby library and the accompanying BurpExtender.java implementation was 
-  originally written by Eric Monti @ Matasano Security. This ruby library is 
-  currently maintained by Timur Duehr @ Matasano Security.Matasano Security claims no 
-  professional or legal affiliation with PortSwigger LTD.
+* This ruby library and the accompanying BurpExtender.java implementation was originally written by Timur Duehr @ Matasano Security. The original version of this library and BurpExtender.java implementation was written my Eric Monti @ Matasano Security.Matasano Security claims no professional or legal affiliation with PortSwigger LTD.
 
   However, the authors would like to express their personal and professional 
   respect and admiration to Burp's authors and appreciation to PortSwigger for 
@@ -274,7 +269,7 @@ And, assuming 'www.example.com' checks for valid request verbs, you should see s
 == LICENSE:
 
 * Burp and Burp Suite are trademarks of PortSwigger Ltd.
-  Copyright 2011 PortSwigger Ltd. All rights reserved.
+  Copyright 2012 PortSwigger Ltd. All rights reserved.
   See http://portswigger.net for license terms.
 
 * The Buby Ruby library and its accompanying BurpExtender implementation are
@@ -283,7 +278,7 @@ And, assuming 'www.example.com' checks for valid request verbs, you should see s
 (The MIT License)
 
 Copyright (C) 2009 Eric Monti, Matasano Security
-Copyright (C) 2010-2011 Timur Duehr, Matasano Security
+Copyright (C) 2010-2012 Timur Duehr, Matasano Security
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
