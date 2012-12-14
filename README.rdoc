@@ -104,13 +104,16 @@ test your Buby set-up and try out a few features.
 
   $ buby -h
   Usage: buby [options]
-      -i, --interactive          Start IRB
-      -d, --debug                Debug info
-      -B, --load-burp=PATH       Load Burp Jar from PATH
-      -s, --state=FILE           Restore burp state file on startup
-      -r, --require=LIB          load a ruby lib (or jar) after Burp loads
-      -e, --extend=MOD           Extend Buby with a module (loaded via -r?)
-      -h, --help                 Show this help message
+      -i, --interactive                Start IRB
+      -p, --pry                        Start pry
+      -d, --debug                      Debug info
+      -B, --load-burp=PATH             Load Burp Jar from PATH
+      -P, --proxy-interception         Enable intercept on load
+      -s, --state=FILE                 Restore burp state file on startup
+      -r, --require=LIB                load a ruby lib (or jar) after Burp loads
+      -e, --extend=MOD                 Extend Buby with a module (loaded via -r?)
+      -v, --version                    Prints version and exits.
+      -h, --help                       Show this help message
 
   $ buby -i -d
   [:got_extender, #<Java::Default::BurpExtender:0x80 ...>]

@@ -2,7 +2,7 @@ require 'rubygems'
 require 'rake'
 require 'rake/clean'
 
-CLOBBER.add '**/*.class', '**/*.jar'
+CLOBBER.add '**/*.class', '**/*.jar', "doc", '.yardoc'
 
 begin
   require 'jeweler'
@@ -35,19 +35,28 @@ task :test => :check_dependencies
 
 task :default => :test
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  if File.exist?('VERSION')
-    version = File.read('VERSION')
-  else
-    version = ""
-  end
+begin
+  require 'rdoc/task'
+  Rake::RDocTask.new do |rdoc|
+    if File.exist?('VERSION')
+      version = File.read('VERSION')
+    else
+      version = ""
+    end
 
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "buby #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('History.txt')
-  rdoc.rdoc_files.include('bin/buby')
-  rdoc.rdoc_files.include('lib/**/*.rb')
+    rdoc.rdoc_dir = 'rdoc'
+    rdoc.title = "buby #{version}"
+    rdoc.rdoc_files.include('README*')
+    rdoc.rdoc_files.include('History.txt')
+    rdoc.rdoc_files.include('bin/buby')
+    rdoc.rdoc_files.include('lib/**/*.rb')
+  end
+rescue LoadError
+end
+
+begin
+  require 'yard'
+  YARD::Rake::YardocTask.new
+rescue LoadError
 end
 

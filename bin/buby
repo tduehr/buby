@@ -63,6 +63,11 @@ $DEBUG=true if args[:debug]
 
 $burp = Buby.start_burp()
 
+until $burp.burp_callbacks
+  puts 'Waiting for burp callbacks...' if $DEBUG
+  sleep 0.1
+end
+
 if libs=args[:requires]
   libs.each {|lib| STDERR.puts "Loading: #{lib.inspect}"; require(lib)}
 end
@@ -117,4 +122,3 @@ when :pry
        " Important Note: exit with $burp.close"
   Pry.start
 end
-
