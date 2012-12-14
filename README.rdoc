@@ -26,6 +26,23 @@ Buby is implemented using an abstract Ruby event handler and interface class. Th
 
 The java BurpExtender included with Buby is an implementation of IBurpExtender which is the interface API supplied by PortSwigger for writing extensions to Burp Suite. It mostly acts as a method proxy between Ruby and Java, doing very little except event handler proxying between the java and ruby runtimes with run-time type conversion as needed.
 
+== Caveat
+
+Burp's extension interfaces have changed significantly in 1.5.01. I don't yet know how compatible this will be with Burp versions 1.5.0 and lower going forward. If you want compatibility with Burp Suite versions 1.5.0 and earlier stick with Buby version 1.3.3 or prior.
+
+I will keep the API provided by earlier Buby versions and mark methods deprecated as required. Hopefully, I'll be able to keep them around for a while so old buby scripts will continue to work for a while.
+
+Methods removed/deprecated in 1.5.01 interfaces:
+* IBurpExtenderCallbacks.setCommandLineArgs (removed no replacement)
+* IBurpExtenderCallbacks.applicationClosing (removed use IExtensionStateListener instead))
+* IBurpExtenderCallbacks.getParameters (deprecated)
+* IBurpExtenderCallbacks.getHeaders (deprecated)
+* IBurpExtenderCallbacks.registerMenuItem (deprecated)
+* IMenuItemHandler (deprecated)
+
+For now, extensionUnloaded will fail over to applicationClosing. The deprecated methods will, for now call the equivalent methods on IBurpExtenderCallbacks. At some point soon they'll forward the calls to the correct interface before being removed entirely in favor of the new interfaces.
+
+... And one more thing. The next version of buby will require JRuby 1.7.0+. It won't use 1.9 syntax for a few releases. So, extensions that require 1.8 will still work for a while. Just don't forget to add the `--1.8` switch to JRuby when starting buby.
 
 == REQUIREMENTS:
 
