@@ -271,10 +271,10 @@ And, assuming 'www.example.com' checks for valid request verbs, you should see s
 
 == CREDIT:
 * Burp and Burp Suite are trademarks of PortSwigger(ltd) 
-  Copyright 2011 PortSwigger Ltd. All rights reserved.
+  Copyright 2012 PortSwigger Ltd. All rights reserved.
   See http://portswigger.net for license terms.
 
-* This ruby library and the accompanying BurpExtender.java implementation was originally written by Timur Duehr @ Matasano Security. The original version of this library and BurpExtender.java implementation was written my Eric Monti @ Matasano Security.Matasano Security claims no professional or legal affiliation with PortSwigger LTD.
+* This ruby library and the accompanying BurpExtender.java implementation was written by Timur Duehr @ Matasano Security. The original version of this library and BurpExtender.java implementation was written my Eric Monti @ Matasano Security. Matasano Security claims no professional or legal affiliation with PortSwigger LTD.
 
   However, the authors would like to express their personal and professional 
   respect and admiration to Burp's authors and appreciation to PortSwigger for 
