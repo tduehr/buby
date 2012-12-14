@@ -14,6 +14,7 @@ begin
     gem.homepage = "http://tduehr.github.com/buby"
     gem.authors = ["Eric Monti, tduehr"]
     gem.platform = "java"
+    gem.files.include "**/*.jar"
     gem.test_files = ["test/buby_test.rb"]
     gem.require_paths << 'java'
     gem.rdoc_options = ["--main", "README.rdoc"]
