@@ -4,7 +4,7 @@ require 'pp'
 require "buby.jar"
 require 'buby/extends.rb'
 
-include_class 'BurpExtender'
+java_import 'BurpExtender'
 
 # Buby is a mash-up of the commercial security testing web proxy PortSwigger 
 # Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from 
@@ -15,9 +15,10 @@ include_class 'BurpExtender'
 # java implementation:
 # * evt_extender_init
 # * evt_proxy_message
-# * evt_command_line_args
+# * evt_command_line_args (removed in 1.5.01)
 # * evt_register_callbacks
-# * evt_application_closing
+# * evt_application_closing (deprecated)
+# * evt_extension_unloaded
 #
 # Buby also supports the newer event handlers available in Burp 1.2.09 and up:
 # * evt_http_message
@@ -694,6 +695,13 @@ class Buby
   # tasks such as closing files or databases before exit.
   def evt_application_closing 
     pp([:got_app_close]) if $DEBUG
+  end
+
+  # This method is called by BurpExtender right before unloading the
+  # extension. Implementations can use this method to perform cleanup
+  # tasks such as closing files or databases before exit.
+  def evt_extension_unloaded 
+    pp([:got_ext_unload]) if $DEBUG
   end
 
   ### Sugar/Convenience methods

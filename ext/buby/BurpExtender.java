@@ -2,6 +2,7 @@
 
 import burp.IBurpExtender;
 import burp.IBurpExtenderCallbacks;
+import burp.IExtensionStateListener;
 import burp.IScanIssue;
 import burp.IHttpRequestResponse;
 
@@ -17,7 +18,7 @@ import org.jruby.runtime.builtin.IRubyObject;
  * This is a complete implementation of the Burp Extender interfaces available
  * as of Burp Suite 1.4
  */
-public class BurpExtender implements IBurpExtender { 
+public class BurpExtender implements IBurpExtender, IExtensionStateListener { 
     public final static String INIT_METH =      "evt_extender_init";
     public final static String PROXYMSG_METH =  "evt_proxy_message_raw";
     public final static String HTTPMSG_METH =   "evt_http_message";
@@ -25,6 +26,7 @@ public class BurpExtender implements IBurpExtender {
     public final static String MAINARGS_METH =  "evt_commandline_args";
     public final static String REG_METH =       "evt_register_callbacks";
     public final static String CLOSE_METH =     "evt_application_closing";
+    public final static String UNLOAD_METH =    "evt_extension_unloaded";
 
     // Internal reference to hold the ruby Burp handler
     private static IRubyObject r_obj = null;
@@ -308,5 +310,21 @@ public class BurpExtender implements IBurpExtender {
      * to processProxyMessage.
      */
     public final static int ACTION_DONT_INTERCEPT_AND_REHOOK = 0x12;
+
+    /**
+     * Extensions can implement this interface and then call
+     * <code>IBurpExtenderCallbacks.registerExtensionStateListener()</code> to
+     * register an extension state listener. The listener will be notified of
+     * changes to the extension's state. <b>Note:</b> Any extensions that start
+     * background threads or open system resources (such as files or database
+     * connections) should register a listener and terminate threads / close
+     * resources when the extension is unloaded.
+     */
+    public void extensionUnloaded() {
+      if (r_obj != null && r_obj.respondsTo(UNLOAD_METH))
+        r_obj.callMethod(ctx(r_obj), UNLOAD_METH);
+      else 
+        applicationClosing();
+    }
 }
 
