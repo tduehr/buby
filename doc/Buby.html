@@ -1,0 +1,4518 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Class: Buby
+  
+    &mdash; Documentation by YARD 0.8.3
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (B)</a> &raquo;
+    
+    
+    <span class="title">Buby</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Class: Buby
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+    <dt class="r1">Inherits:</dt>
+    <dd class="r1">
+      <span class="inheritName">Object</span>
+      
+        <ul class="fullTree">
+          <li>Object</li>
+          
+            <li class="next">Buby</li>
+          
+        </ul>
+        <a href="#" class="inheritanceTree">show all</a>
+      
+      </dd>
+    
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/buby.rb<span class="defines">,<br />
+  lib/buby/extends/scan_issue.rb,<br /> lib/buby/extends/buby_array_wrapper.rb,<br /> lib/buby/extends/http_request_response.rb</span>
+</dd>
+  
+</dl>
+<div class="clear"></div>
+
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>Buby is a mash-up of the commercial security testing web proxy PortSwigger 
+Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from 
+and tied to JRuby with a Java extension using the BurpExtender API.</p>
+
+<p>The Buby class is an abstract implementation of a BurpExtender ruby
+handler.  Included are several abstract event handlers used from the
+BurpExtender java implementation:</p>
+<ul><li>
+<p>evt_extender_init</p>
+</li><li>
+<p>evt_proxy_message</p>
+</li><li>
+<p>evt_command_line_args</p>
+</li><li>
+<p>evt_register_callbacks</p>
+</li><li>
+<p>evt_application_closing</p>
+</li></ul>
+
+<p>Buby also supports the newer event handlers available in Burp 1.2.09 and
+up:</p>
+<ul><li>
+<p>evt_http_message</p>
+</li><li>
+<p>evt_scan_issue</p>
+</li></ul>
+
+<p>This class also exposes several methods to access Burp functionality  and
+user interfaces through the IBurpExtenderCallbacks interface  (note,
+several abbreviated aliases also exist for each):</p>
+<ul><li>
+<p>doActiveScan</p>
+</li><li>
+<p>doPassiveScan</p>
+</li><li>
+<p>excludeFromScope</p>
+</li><li>
+<p>includeInScope</p>
+</li><li>
+<p>isInScope</p>
+</li><li>
+<p>issueAlert</p>
+</li><li>
+<p>makeHttpRequest</p>
+</li><li>
+<p>sendToIntruder</p>
+</li><li>
+<p>sendToRepeater</p>
+</li><li>
+<p>sendToSpider</p>
+</li></ul>
+
+<p>Buby also provides front-end ruby methods for the various callback methods 
+supported by Burp. New callbacks have been cropping up in newer Burp
+versions frequently.</p>
+
+<p>Available since Burp 1.2.09:</p>
+<ul><li>
+<p>getProxyHistory</p>
+</li><li>
+<p>getSiteMap</p>
+</li><li>
+<p>restoreState</p>
+</li><li>
+<p>saveState</p>
+</li><li>
+<p>getParameters</p>
+</li><li>
+<p>getHeaders</p>
+</li></ul>
+
+<p>Available since Burp 1.2.15:</p>
+<ul><li>
+<p>getScanIssues</p>
+</li></ul>
+
+<p>Available since Burp 1.2.17:</p>
+<ul><li>
+<p>exitSuite</p>
+</li></ul>
+
+<p>If you wish to access any of the IBurpExtenderCallbacks methods directly. 
+You can use 'burp_callbacks' to obtain a reference.</p>
+
+<p>Credit:</p>
+<ul><li>
+<p>Burp and Burp Suite are trade-marks of PortSwigger Ltd.</p>
+
+<pre class="code ruby"><code>Copyright 2011 PortSwigger Ltd. All rights reserved.
+See http://portswigger.net for license terms.</code></pre>
+</li><li>
+<p>This ruby library and the accompanying BurpExtender.java implementation 
+were written by Eric Monti @ Matasano Security.</p>
+
+<p>Matasano claims no professional or legal affiliation with PortSwigger LTD. 
+nor do we sell or officially endorse any of their products.</p>
+
+<p>However, this author would like to express his personal and professional 
+respect and appreciation for their making available the BurpExtender 
+extension API. The availability of this interface in an already great tool
+goes a long way to make Burp Suite a truly first-class application.</p>
+</li><li>
+<p>Forgive the name. It won out over "Burb" and "BurpRub". It's just easier 
+to type and say out-loud. Mike Tracy gets full credit as official 
+Buby-namer.</p>
+</li></ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
+<p class="children">
+  
+    
+      <strong class="modules">Modules:</strong> <span class='object_link'><a href="Buby/HttpRequestResponseHelper.html" title="Buby::HttpRequestResponseHelper (module)">HttpRequestResponseHelper</a></span>, <span class='object_link'><a href="Buby/ScanIssueHelper.html" title="Buby::ScanIssueHelper (module)">ScanIssueHelper</a></span>
+    
+  
+    
+      <strong class="classes">Classes:</strong> <span class='object_link'><a href="Buby/BubyArrayWrapper.html" title="Buby::BubyArrayWrapper (class)">BubyArrayWrapper</a></span>, <span class='object_link'><a href="Buby/HttpRequestResponseList.html" title="Buby::HttpRequestResponseList (class)">HttpRequestResponseList</a></span>, <span class='object_link'><a href="Buby/ScanIssuesList.html" title="Buby::ScanIssuesList (class)">ScanIssuesList</a></span>
+    
+  
+</p>
+
+  <h2>Constant Summary</h2>
+  
+    <dl class="constants">
+      
+        <dt id="VERSION-constant" class="">VERSION =
+          
+        </dt>
+        <dd><pre class="code"><span class='kw'>if</span> <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_file?'>file?</span><span class='lparen'>(</span><span class='id identifier rubyid_f'>f</span><span class='op'>=</span><span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_expand_path'>expand_path</span><span class='lparen'>(</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='kw'>__FILE__</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>../VERSION</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_read'>read</span><span class='lparen'>(</span><span class='id identifier rubyid_f'>f</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_chomp'>chomp</span>
+<span class='kw'>end</span></pre></dd>
+      
+        <dt id="LIBPATH-constant" class="">LIBPATH =
+          <div class="docstring">
+  <div class="discussion">
+    
+<p>:stopdoc:</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
+        </dt>
+        <dd><pre class="code"><span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_expand_path'>expand_path</span><span class='lparen'>(</span><span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='kw'>__FILE__</span><span class='rparen'>)</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='op'>::</span><span class='const'>File</span><span class='op'>::</span><span class='const'>SEPARATOR</span></pre></dd>
+      
+        <dt id="PATH-constant" class="">PATH =
+          
+        </dt>
+        <dd><pre class="code"><span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='const'>LIBPATH</span><span class='rparen'>)</span> <span class='op'>+</span> <span class='op'>::</span><span class='const'>File</span><span class='op'>::</span><span class='const'>SEPARATOR</span></pre></dd>
+      
+        <dt id="ACTION_FOLLOW_RULES-constant" class="">ACTION_FOLLOW_RULES =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>BurpExtender</span><span class='op'>::</span><span class='const'>ACTION_FOLLOW_RULES</span></pre></dd>
+      
+        <dt id="ACTION_DO_INTERCEPT-constant" class="">ACTION_DO_INTERCEPT =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>BurpExtender</span><span class='op'>::</span><span class='const'>ACTION_DO_INTERCEPT</span></pre></dd>
+      
+        <dt id="ACTION_DONT_INTERCEPT-constant" class="">ACTION_DONT_INTERCEPT =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>BurpExtender</span><span class='op'>::</span><span class='const'>ACTION_DONT_INTERCEPT</span></pre></dd>
+      
+        <dt id="ACTION_DROP-constant" class="">ACTION_DROP =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>BurpExtender</span><span class='op'>::</span><span class='const'>ACTION_DROP</span></pre></dd>
+      
+        <dt id="ACTION_FOLLOW_RULES_AND_REHOOK-constant" class="">ACTION_FOLLOW_RULES_AND_REHOOK =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>BurpExtender</span><span class='op'>::</span><span class='const'>ACTION_FOLLOW_RULES_AND_REHOOK</span></pre></dd>
+      
+        <dt id="ACTION_DO_INTERCEPT_AND_REHOOK-constant" class="">ACTION_DO_INTERCEPT_AND_REHOOK =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>BurpExtender</span><span class='op'>::</span><span class='const'>ACTION_DO_INTERCEPT_AND_REHOOK</span></pre></dd>
+      
+        <dt id="ACTION_DONT_INTERCEPT_AND_REHOOK-constant" class="">ACTION_DONT_INTERCEPT_AND_REHOOK =
+          
+        </dt>
+        <dd><pre class="code"><span class='const'>BurpExtender</span><span class='op'>::</span><span class='const'>ACTION_DONT_INTERCEPT_AND_REHOOK</span></pre></dd>
+      
+    </dl>
+  
+
+
+
+
+
+
+
+  
+    <h2>
+      Class Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#burp_loaded%3F-class_method" title="burp_loaded? (class method)">+ (Boolean) <strong>burp_loaded?</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Checks the Java namespace to see if Burp has been loaded.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#libpath-class_method" title="libpath (class method)">+ (Object) <strong>libpath</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the library path for the module.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#load_burp-class_method" title="load_burp (class method)">+ (Object) <strong>load_burp</strong>(jar_path) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Attempts to load burp with require and confirm it provides the required 
+class in the Java namespace.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#path-class_method" title="path (class method)">+ (Object) <strong>path</strong>(*args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the lpath for the module.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#require_all_libs_relative_to-class_method" title="require_all_libs_relative_to (class method)">+ (Object) <strong>require_all_libs_relative_to</strong>(fname, dir = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Utility method used to require all files ending in .rb that lie in the
+directory below this file that has the same name as the filename passed in.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#start_burp-class_method" title="start_burp (class method)">+ (Object) <strong>start_burp</strong>(h_class = nil, init_args = nil, args = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Starts burp using a supplied handler class, .</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#_check_and_callback-instance_method" title="#_check_and_callback (instance method)">- (Object) <strong>_check_and_callback</strong>(meth, *args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is a __send__ callback gate for the IBurpExtenderCallbacks
+reference.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#_check_cb-instance_method" title="#_check_cb (instance method)">- (Object) <strong>_check_cb</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Internal method to check for the existence of the burp_callbacks reference
+before doing anything with it.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#activate%21-instance_method" title="#activate! (instance method)">- (Object) <strong>activate!</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Makes this handler the active Ruby handler object for the BurpExtender Java
+runtime.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#addToSiteMap-instance_method" title="#addToSiteMap (instance method)">- (Object) <strong>addToSiteMap</strong>(item) </a>
+    
+
+    
+      (also: #add_to_site_map)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method can be used to add an item to Burp's site map with the
+specified request/response details.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#burp_callbacks-instance_method" title="#burp_callbacks (instance method)">- (Object) <strong>burp_callbacks</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the internal reference to the IBupExtenderCallbacks instance.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#burp_extender-instance_method" title="#burp_extender (instance method)">- (Object) <strong>burp_extender</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the internal reference to the BurpExtender instance.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#doActiveScan-instance_method" title="#doActiveScan (instance method)">- (Object) <strong>doActiveScan</strong>(host, port, https, req, ip_off) </a>
+    
+
+    
+      (also: #do_active_scan, #active_scan)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Send an HTTP request to the Burp Scanner tool to perform an active 
+vulnerability scan.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#doPassiveScan-instance_method" title="#doPassiveScan (instance method)">- (Object) <strong>doPassiveScan</strong>(host, port, https, req, rsp) </a>
+    
+
+    
+      (also: #do_passive_scan, #passive_scan)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Send an HTTP request and response to the Burp Scanner tool to perform a 
+passive vulnerability scan.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_application_closing-instance_method" title="#evt_application_closing (instance method)">- (Object) <strong>evt_application_closing</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is called by BurpExtender right before closing the application.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_command_line_args-instance_method" title="#evt_command_line_args (instance method)">- (Object) <strong>evt_command_line_args</strong>(args) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is called by the BurpExtender implementation Burp startup.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_extender_init-instance_method" title="#evt_extender_init (instance method)">- (Object) <strong>evt_extender_init</strong>(ext) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is called by the BurpExtender java implementation upon 
+initialization of the BurpExtender instance for Burp.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_http_message-instance_method" title="#evt_http_message (instance method)">- (Object) <strong>evt_http_message</strong>(tool_name, is_request, message_info) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is invoked whenever any of Burp's tools makes an HTTP request 
+or receives a response.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_proxy_message-instance_method" title="#evt_proxy_message (instance method)">- (Object) <strong>evt_proxy_message</strong>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is called by BurpExtender while proxying HTTP messages and
+before passing them through the Burp proxy.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_proxy_message_raw-instance_method" title="#evt_proxy_message_raw (instance method)">- (Object) <strong>evt_proxy_message_raw</strong>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Seems we need to specifically render our 'message' to a string here in
+ruby.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_register_callbacks-instance_method" title="#evt_register_callbacks (instance method)">- (Object) <strong>evt_register_callbacks</strong>(cb) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is called by BurpExtender on startup to register Burp's 
+IBurpExtenderCallbacks interface object.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#evt_scan_issue-instance_method" title="#evt_scan_issue (instance method)">- (Object) <strong>evt_scan_issue</strong>(issue) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method is invoked whenever Burp Scanner discovers a new, unique 
+issue, and can be used to perform customised reporting or logging of 
+detected issues.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#excludeFromScope-instance_method" title="#excludeFromScope (instance method)">- (Object) <strong>excludeFromScope</strong>(url) </a>
+    
+
+    
+      (also: #exclude_from_scope, #exclude_scope)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Exclude the specified URL from the Suite-wide scope.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#exitSuite-instance_method" title="#exitSuite (instance method)">- (Object) <strong>exitSuite</strong>(prompt_user = false) </a>
+    
+
+    
+      (also: #exit_suite, #close)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Shuts down Burp programatically.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#getBurpVersion-instance_method" title="#getBurpVersion (instance method)">- (Object) <strong>getBurpVersion</strong> </a>
+    
+
+    
+      (also: #burp_version)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method can be used to determine the version of the loaded burp at
+runtime.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#getHeaders-instance_method" title="#getHeaders (instance method)">- (Object) <strong>getHeaders</strong>(msg) </a>
+    
+
+    
+      (also: #headers, #get_headers)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Parses a raw HTTP message (request or response ) and returns an associative
+array containing the headers as they are structured in the 'Headers' tab 
+in the Burp request/response viewer UI.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#getParameters-instance_method" title="#getParameters (instance method)">- (Object) <strong>getParameters</strong>(req) </a>
+    
+
+    
+      (also: #parameters, #get_parameters)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Parses a raw HTTP request message and returns an associative array 
+containing parameters as they are structured in the 'Parameters' tab in the
+Burp request UI.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#getProxyHistory-instance_method" title="#getProxyHistory (instance method)">- (Object) <strong>getProxyHistory</strong> </a>
+    
+
+    
+      (also: #proxy_history, #get_proxy_history)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a Java array of IHttpRequestResponse objects pulled directly from 
+the Burp proxy history.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#getScanIssues-instance_method" title="#getScanIssues (instance method)">- (Object) <strong>getScanIssues</strong>(urlprefix = nil) </a>
+    
+
+    
+      (also: #scan_issues, #get_scan_issues)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method returns all of the current scan issues for URLs matching the 
+specified literal prefix.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#getSiteMap-instance_method" title="#getSiteMap (instance method)">- (Object) <strong>getSiteMap</strong>(urlprefix = nil) </a>
+    
+
+    
+      (also: #site_map, #get_site_map)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Returns a Java array of IHttpRequestResponse objects pulled directly from 
+the Burp site map for all urls matching the specified literal prefix.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#harvest_cookies_from_history-instance_method" title="#harvest_cookies_from_history (instance method)">- (Object) <strong>harvest_cookies_from_history</strong>(cookie = nil, urlrx = nil, statefile = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Harvest cookies from a session's proxy history.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#includeInScope-instance_method" title="#includeInScope (instance method)">- (Object) <strong>includeInScope</strong>(url) </a>
+    
+
+    
+      (also: #include_in_scope, #include_scope)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Include the specified URL in the Suite-wide scope.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#initialize-instance_method" title="#initialize (instance method)">- (Buby) <strong>initialize</strong>(other = nil) </a>
+    
+
+    
+  </span>
+  
+  
+    <span class="note title constructor">constructor</span>
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>:startdoc:.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#isInScope-instance_method" title="#isInScope (instance method)">- (Object) <strong>isInScope</strong>(url) </a>
+    
+
+    
+      (also: #is_in_scope, #in_scope?)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Query whether a specified URL is within the current Suite-wide scope.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#issueAlert-instance_method" title="#issueAlert (instance method)">- (Object) <strong>issueAlert</strong>(msg) </a>
+    
+
+    
+      (also: #issue_alert, #alert)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Display a message in the Burp Suite alerts tab.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#loadConfig-instance_method" title="#loadConfig (instance method)">- (Object) <strong>loadConfig</strong>(conf) </a>
+    
+
+    
+      (also: #load_config, #config=)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method causes Burp to load a new configuration from the Map of
+name/value Strings provided.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#makeHttpRequest-instance_method" title="#makeHttpRequest (instance method)">- (Object) <strong>makeHttpRequest</strong>(host, port, https, req) </a>
+    
+
+    
+      (also: #make_http_request, #make_request)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Issue an arbitrary HTTP request and retrieve its response.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#registerMenuItem-instance_method" title="#registerMenuItem (instance method)">- (Object) <strong>registerMenuItem</strong>(menuItemCaption, menuItemHandler) </a>
+    
+
+    
+      (also: #register_menu_item)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method can be used to register a new menu item which will appear  on
+the various context menus that are used throughout Burp Suite to  handle
+user-driven actions.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#restoreState-instance_method" title="#restoreState (instance method)">- (Object) <strong>restoreState</strong>(filename) </a>
+    
+
+    
+      (also: #restore_state)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Restores Burp session state from a previously saved state file.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#saveConfig-instance_method" title="#saveConfig (instance method)">- (Object) <strong>saveConfig</strong> </a>
+    
+
+    
+      (also: #save_config, #config)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method causes Burp to save all of its current configuration as a Map
+of name/value Strings.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#saveState-instance_method" title="#saveState (instance method)">- (Object) <strong>saveState</strong>(filename) </a>
+    
+
+    
+      (also: #save_state)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Saves the current Burp session to a state file.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#search_proxy_history-instance_method" title="#search_proxy_history (instance method)">- (Object) <strong>search_proxy_history</strong>(statefile = nil, urlrx = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Searches the proxy history for the url's matched by the specified  regular
+expression (returns them all if urlrx is nil).</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sendToIntruder-instance_method" title="#sendToIntruder (instance method)">- (Object) <strong>sendToIntruder</strong>(host, port, https, req, ip_off) </a>
+    
+
+    
+      (also: #send_to_intruder, #intruder)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Send an HTTP request to the Burp Intruder tool.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sendToRepeater-instance_method" title="#sendToRepeater (instance method)">- (Object) <strong>sendToRepeater</strong>(host, port, https, req, tab = nil) </a>
+    
+
+    
+      (also: #send_to_repeater, #repeater)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Send an HTTP request to the Burp Repeater tool.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#sendToSpider-instance_method" title="#sendToSpider (instance method)">- (Object) <strong>sendToSpider</strong>(url) </a>
+    
+
+    
+      (also: #send_to_spider, #spider)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Send a seed URL to the Burp Spider tool.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#setProxyInterceptionEnabled-instance_method" title="#setProxyInterceptionEnabled (instance method)">- (Object) <strong>setProxyInterceptionEnabled</strong>(enabled) </a>
+    
+
+    
+      (also: #proxy_interception_enabled, #proxy_interception=)
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This method sets the interception mode for Burp Proxy.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#start_burp-instance_method" title="#start_burp (instance method)">- (Object) <strong>start_burp</strong>(args = []) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Prepares the java BurpExtender implementation with a reference to self as
+the module handler and launches burp suite.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#with_proxy_history-instance_method" title="#with_proxy_history (instance method)">- (Object) <strong>with_proxy_history</strong>(statefile = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This is a convenience wrapper which can load a given burp state file and 
+lets its caller to perform actions inside of a block on the proxy history 
+contained in the loaded session.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#with_site_map-instance_method" title="#with_site_map (instance method)">- (Object) <strong>with_site_map</strong>(urlprefix = nil, statefile = nil) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This is a convenience wrapper which can load a given burp state file and 
+lets its caller to perform actions inside of a block on the site map 
+contained in the loaded session.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#with_statefile-instance_method" title="#with_statefile (instance method)">- (Object) <strong>with_statefile</strong>(statefile = nil) {|_self| ... }</a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>This is a convenience wrapper which loads a given burp statefile and lets
+its caller perform actions via burp while its loaded on it inside of a 
+block.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+<div id="constructor_details" class="method_details_list">
+  <h2>Constructor Details</h2>
+  
+    <div class="method_details first">
+  <h3 class="signature first" id="initialize-instance_method">
+  
+    - (<tt><span class='object_link'><a href="" title="Buby (class)">Buby</a></span></tt>) <strong>initialize</strong>(other = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>:startdoc:</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+94
+95
+96
+97
+98
+99
+100</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 94</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_other'>other</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_other'>other</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>arg 0 must be another kind of Buby</span><span class='tstring_end'>&quot;</span></span> <span class='kw'>unless</span> <span class='id identifier rubyid_other'>other</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>Buby</span>
+    <span class='ivar'>@burp_extender</span> <span class='op'>=</span> <span class='id identifier rubyid_other'>other</span><span class='period'>.</span><span class='id identifier rubyid_burp_extender'>burp_extender</span>
+    <span class='ivar'>@burp_callbacks</span> <span class='op'>=</span> <span class='id identifier rubyid_other'>other</span><span class='period'>.</span><span class='id identifier rubyid_burp_callbacks'>burp_callbacks</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+  
+</div>
+
+
+  <div id="class_method_details" class="method_details_list">
+    <h2>Class Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="burp_loaded?-class_method">
+  
+    + (<tt>Boolean</tt>) <strong>burp_loaded?</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Checks the Java namespace to see if Burp has been loaded.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+831
+832
+833
+834
+835
+836
+837
+838</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 831</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_burp_loaded?'>burp_loaded?</span>
+  <span class='ivar'>@burp_loaded</span> <span class='op'>||=</span> <span class='kw'>begin</span>
+    <span class='id identifier rubyid_java_import'>java_import</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>burp.StartBurp</span><span class='tstring_end'>'</span></span>
+    <span class='kw'>true</span>
+  <span class='kw'>rescue</span> <span class='const'>NameError</span>
+    <span class='kw'>false</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="libpath-class_method">
+  
+    + (<tt>Object</tt>) <strong>libpath</strong>(*args) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the library path for the module. If any arguments are given, they
+will be joined to the end of the libray path using <code>File.join</code>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+846
+847
+848</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 846</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_libpath'>libpath</span><span class='lparen'>(</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span> <span class='rparen'>)</span>
+  <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>?</span> <span class='const'>LIBPATH</span> <span class='op'>:</span> <span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='const'>LIBPATH</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="load_burp-class_method">
+  
+    + (<tt>Object</tt>) <strong>load_burp</strong>(jar_path) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Attempts to load burp with require and confirm it provides the required 
+class in the Java namespace.</p>
+
+<p>Returns: true/false depending on whether the required jar provides us the
+required class</p>
+
+<p>Raises: may raise the usual require exceptions if jar_path is bad.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+825
+826
+827
+828</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 825</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_load_burp'>load_burp</span><span class='lparen'>(</span><span class='id identifier rubyid_jar_path'>jar_path</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_require'>require</span> <span class='id identifier rubyid_jar_path'>jar_path</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_burp_loaded?'>burp_loaded?</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="path-class_method">
+  
+    + (<tt>Object</tt>) <strong>path</strong>(*args) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the lpath for the module. If any arguments are given, they will be
+joined to the end of the path using <code>File.join</code>.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+854
+855
+856</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 854</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='lparen'>(</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span> <span class='rparen'>)</span>
+  <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_empty?'>empty?</span> <span class='op'>?</span> <span class='const'>PATH</span> <span class='op'>:</span> <span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='const'>PATH</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_flatten'>flatten</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="require_all_libs_relative_to-class_method">
+  
+    + (<tt>Object</tt>) <strong>require_all_libs_relative_to</strong>(fname, dir = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Utility method used to require all files ending in .rb that lie in the
+directory below this file that has the same name as the filename passed in.
+Optionally, a specific <em>directory</em> name can be passed in such that
+the <em>filename</em> does not have to be equivalent to the directory.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+863
+864
+865
+866
+867
+868
+869</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 863</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_require_all_libs_relative_to'>require_all_libs_relative_to</span><span class='lparen'>(</span> <span class='id identifier rubyid_fname'>fname</span><span class='comma'>,</span> <span class='id identifier rubyid_dir'>dir</span> <span class='op'>=</span> <span class='kw'>nil</span> <span class='rparen'>)</span>
+  <span class='id identifier rubyid_dir'>dir</span> <span class='op'>||=</span> <span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_basename'>basename</span><span class='lparen'>(</span><span class='id identifier rubyid_fname'>fname</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>.*</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_search_me'>search_me</span> <span class='op'>=</span> <span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_expand_path'>expand_path</span><span class='lparen'>(</span>
+      <span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='op'>::</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span><span class='lparen'>(</span><span class='id identifier rubyid_fname'>fname</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_dir'>dir</span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>**</span><span class='tstring_end'>'</span></span><span class='comma'>,</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>*.rb</span><span class='tstring_end'>'</span></span><span class='rparen'>)</span><span class='rparen'>)</span>
+
+  <span class='const'>Dir</span><span class='period'>.</span><span class='id identifier rubyid_glob'>glob</span><span class='lparen'>(</span><span class='id identifier rubyid_search_me'>search_me</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_sort'>sort</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_rb'>rb</span><span class='op'>|</span> <span class='id identifier rubyid_require'>require</span> <span class='id identifier rubyid_rb'>rb</span><span class='rbrace'>}</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="start_burp-class_method">
+  
+    + (<tt>Object</tt>) <strong>start_burp</strong>(h_class = nil, init_args = nil, args = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Starts burp using a supplied handler class,</p>
+
+<pre class="ruby"><span class="ruby-identifier">h_class</span> = <span class="ruby-constant">Buby</span> <span class="ruby-keyword">or</span> <span class="ruby-identifier">a</span> <span class="ruby-identifier">derived</span> <span class="ruby-keyword">class</span>. <span class="ruby-identifier">instance</span> <span class="ruby-identifier">of</span> <span class="ruby-identifier">which</span> <span class="ruby-identifier">will</span> <span class="ruby-identifier">become</span> <span class="ruby-identifier">handler</span>.
+<span class="ruby-identifier">args</span> = <span class="ruby-identifier">arguments</span> <span class="ruby-identifier">to</span> <span class="ruby-constant">Burp</span>
+<span class="ruby-identifier">init_args</span> = <span class="ruby-identifier">arguments</span> <span class="ruby-identifier">to</span> <span class="ruby-identifier">the</span> <span class="ruby-identifier">handler</span> <span class="ruby-identifier">constructor</span>
+
+<span class="ruby-constant">Returns</span> <span class="ruby-identifier">the</span> <span class="ruby-identifier">handler</span> <span class="ruby-identifier">instance</span>
+</pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+811
+812
+813
+814
+815
+816</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 811</span>
+
+<span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_start_burp'>start_burp</span><span class='lparen'>(</span><span class='id identifier rubyid_h_class'>h_class</span><span class='op'>=</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_init_args'>init_args</span><span class='op'>=</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_h_class'>h_class</span> <span class='op'>||=</span> <span class='kw'>self</span>
+  <span class='id identifier rubyid_init_args'>init_args</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_args'>args</span> <span class='op'>||=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_h_class'>h_class</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='op'>*</span><span class='id identifier rubyid_init_args'>init_args</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_start_burp'>start_burp</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="_check_and_callback-instance_method">
+  
+    - (<tt>Object</tt>) <strong>_check_and_callback</strong>(meth, *args) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is a __send__ callback gate for the IBurpExtenderCallbacks
+reference. It first checks to see if a method is available before calling
+with the specified arguments, and raises an exception if it is unavailable.</p>
+<ul><li>
+<p>meth = string or symbol name of method</p>
+</li><li>
+<p>args = variable length array of arguments to pass to meth</p>
+</li></ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+257
+258
+259
+260
+261
+262
+263</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 257</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='id identifier rubyid_meth'>meth</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_cb'>cb</span> <span class='op'>=</span> <span class='id identifier rubyid__check_cb'>_check_cb</span>
+  <span class='kw'>unless</span> <span class='id identifier rubyid_cb'>cb</span><span class='period'>.</span><span class='id identifier rubyid_respond_to?'>respond_to?</span><span class='lparen'>(</span><span class='id identifier rubyid_meth'>meth</span><span class='rparen'>)</span>
+    <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_meth'>meth</span><span class='rbrace'>}</span><span class='tstring_content'> is not available in your version of Burp</span><span class='tstring_end'>&quot;</span></span>
+  <span class='kw'>end</span>
+  <span class='id identifier rubyid_cb'>cb</span><span class='period'>.</span><span class='id identifier rubyid___send__'>__send__</span> <span class='id identifier rubyid_meth'>meth</span><span class='comma'>,</span> <span class='op'>*</span><span class='id identifier rubyid_args'>args</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="_check_cb-instance_method">
+  
+    - (<tt>Object</tt>) <strong>_check_cb</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Internal method to check for the existence of the burp_callbacks reference
+before doing anything with it.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+120
+121
+122</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 120</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid__check_cb'>_check_cb</span>
+  <span class='ivar'>@burp_callbacks</span> <span class='kw'>or</span> <span class='id identifier rubyid_raise'>raise</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Burp callbacks have not been set</span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="activate!-instance_method">
+  
+    - (<tt>Object</tt>) <strong>activate!</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Makes this handler the active Ruby handler object for the BurpExtender Java
+runtime. (there can be only one!)</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+104
+105
+106</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 104</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_activate!'>activate!</span>
+  <span class='const'>BurpExtender</span><span class='period'>.</span><span class='id identifier rubyid_set_handler'>set_handler</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="addToSiteMap-instance_method">
+  
+    - (<tt>Object</tt>) <strong>addToSiteMap</strong>(item) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='add_to_site_map-instance_method'>add_to_site_map</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method can be used to add an item to Burp's site map with the
+specified request/response details. This will overwrite the details of any
+existing matching item in the site map.</p>
+
+<p>This method is only available with Burp 1.3.09+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>item</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Details of the item to be added to the site map</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+380
+381
+382</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 380</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_addToSiteMap'>addToSiteMap</span><span class='lparen'>(</span><span class='id identifier rubyid_item'>item</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:addToSiteMap</span><span class='comma'>,</span> <span class='id identifier rubyid_item'>item</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="burp_callbacks-instance_method">
+  
+    - (<tt>Object</tt>) <strong>burp_callbacks</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the internal reference to the IBupExtenderCallbacks instance. This
+reference gets set from Java through the evt_register_callbacks method. It
+is exposed to allow you to access the IBurpExtenderCallbacks  instance
+directly if you so choose.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+116</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 116</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_burp_callbacks'>burp_callbacks</span><span class='semicolon'>;</span> <span class='ivar'>@burp_callbacks</span><span class='semicolon'>;</span> <span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="burp_extender-instance_method">
+  
+    - (<tt>Object</tt>) <strong>burp_extender</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the internal reference to the BurpExtender instance. This reference
+gets set from Java through the evt_extender_init method.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+110</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 110</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_burp_extender'>burp_extender</span><span class='semicolon'>;</span> <span class='ivar'>@burp_extender</span><span class='semicolon'>;</span> <span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="doActiveScan-instance_method">
+  
+    - (<tt>Object</tt>) <strong>doActiveScan</strong>(host, port, https, req, ip_off) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='do_active_scan-instance_method'>do_active_scan</span>, <span id='active_scan-instance_method'>active_scan</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Send an HTTP request to the Burp Scanner tool to perform an active 
+vulnerability scan.</p>
+
+<pre class="code ruby"><code>* host = The hostname of the remote HTTP server.
+* port = The port of the remote HTTP server.
+* https = Flags whether the protocol is HTTPS or HTTP.
+* req  = The full HTTP request. (String or Java bytes[])
+* ip_off = A list of index pairs representing the
+* positions of the insertion points that should be scanned. Each item in
+* the list must be an int[2] array containing the start and end offsets
+* for the insertion point. *1.4+* only</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+135
+136
+137
+138</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 135</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_doActiveScan'>doActiveScan</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_ip_off'>ip_off</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_req'>req</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid_getBurpVersion'>getBurpVersion</span> <span class='op'>?</span> <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_doActiveScan'>doActiveScan</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_ip_off'>ip_off</span><span class='rparen'>)</span> <span class='op'>:</span> <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_doActiveScan'>doActiveScan</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="doPassiveScan-instance_method">
+  
+    - (<tt>Object</tt>) <strong>doPassiveScan</strong>(host, port, https, req, rsp) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='do_passive_scan-instance_method'>do_passive_scan</span>, <span id='passive_scan-instance_method'>passive_scan</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Send an HTTP request and response to the Burp Scanner tool to perform a 
+passive vulnerability scan.</p>
+
+<pre class="code ruby"><code>* host = The hostname of the remote HTTP server.
+* port = The port of the remote HTTP server.
+* https = Flags whether the protocol is HTTPS or HTTP.
+* req  = The full HTTP request. (String or Java bytes[])
+* rsp  = The full HTTP response. (String or Java bytes[])</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+149
+150
+151
+152
+153</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 149</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_doPassiveScan'>doPassiveScan</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_rsp'>rsp</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_req'>req</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid_rsp'>rsp</span> <span class='op'>=</span> <span class='id identifier rubyid_rsp'>rsp</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_rsp'>rsp</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_doPassiveScan'>doPassiveScan</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_rsp'>rsp</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_application_closing-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_application_closing</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is called by BurpExtender right before closing the application.
+Implementations can use this method to perform cleanup tasks such as
+closing files or databases before exit.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+695
+696
+697</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 695</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_application_closing'>evt_application_closing</span> 
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='symbol'>:got_app_close</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_command_line_args-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_command_line_args</strong>(args) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is called by the BurpExtender implementation Burp startup. The
+args parameter contains main()'s argv command-line arguments array.</p>
+
+<p>Note: This maps to the 'setCommandLineArgs' method in the java 
+implementation of BurpExtender.</p>
+
+<p>The return value is ignored.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+461
+462
+463</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 461</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_command_line_args'>evt_command_line_args</span> <span class='id identifier rubyid_args'>args</span>
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='symbol'>:got_args</span><span class='comma'>,</span> <span class='id identifier rubyid_args'>args</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_extender_init-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_extender_init</strong>(ext) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is called by the BurpExtender java implementation upon 
+initialization of the BurpExtender instance for Burp. The args parameter is
+passed with a instance of the newly initialized BurpExtender instance  so
+that implementations can access and extend its public interfaces.</p>
+
+<p>The return value is ignored.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+449
+450
+451
+452</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 449</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_extender_init'>evt_extender_init</span> <span class='id identifier rubyid_ext'>ext</span>
+  <span class='ivar'>@burp_extender</span> <span class='op'>=</span> <span class='id identifier rubyid_ext'>ext</span>
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='symbol'>:got_extender</span><span class='comma'>,</span> <span class='id identifier rubyid_ext'>ext</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_http_message-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_http_message</strong>(tool_name, is_request, message_info) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is invoked whenever any of Burp's tools makes an HTTP request 
+or receives a response. This is effectively a generalised version of the 
+pre-existing evt_proxy_message method, and can be used to intercept and 
+modify the HTTP traffic of all Burp tools.</p>
+
+<p>IMPORTANT: This event handler is only used in Burp version 1.2.09 and 
+higher.</p>
+
+<p>Note: this method maps to the processHttpMessage BurpExtender Java method.</p>
+
+<p>This method should be overridden if you wish to implement functionality
+relating to generalized requests and responses from any BurpSuite tool.</p>
+
+<p>You may want to use evt_proxy_message if you only intend to work on proxied
+messages. Note, however, the IHttpRequestResponse Java object is  not used
+in evt_proxy_message and gives evt_http_message a somewhat  nicer interface
+to work with.</p>
+
+<p>Parameters:</p>
+<ul><li>
+<p>tool_name = a string name of the tool that generated the message</p>
+</li><li>
+<p>is_request = boolean true = request / false = response</p>
+</li><li>
+<p>message_info = an instance of the IHttpRequestResponse Java class with
+methods for accessing and manipulating various attributes of the message.</p>
+</li></ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+670
+671
+672
+673</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 670</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_http_message'>evt_http_message</span><span class='lparen'>(</span><span class='id identifier rubyid_tool_name'>tool_name</span><span class='comma'>,</span> <span class='id identifier rubyid_is_request'>is_request</span><span class='comma'>,</span> <span class='id identifier rubyid_message_info'>message_info</span><span class='rparen'>)</span>
+  <span class='const'>HttpRequestResponseHelper</span><span class='period'>.</span><span class='id identifier rubyid_implant'>implant</span><span class='lparen'>(</span><span class='id identifier rubyid_message_info'>message_info</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='symbol'>:got_http_message</span><span class='comma'>,</span> <span class='id identifier rubyid_tool_name'>tool_name</span><span class='comma'>,</span> <span class='id identifier rubyid_is_request'>is_request</span><span class='comma'>,</span> <span class='id identifier rubyid_message_info'>message_info</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_proxy_message-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_proxy_message</strong>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is called by BurpExtender while proxying HTTP messages and
+before passing them through the Burp proxy. Implementations can use this
+method to implement arbitrary processing upon HTTP requests and responses 
+such as interception, logging, modification, and so on.</p>
+
+<p>The 'is_req' parameter indicates whether it is a response or request.</p>
+
+<p>Note: This method maps to the 'processProxyMessage' method in the java 
+implementation of BurpExtender.</p>
+
+<p>See also, evt_proxy_message_raw which is actually called before this in the
+BurpExtender processProxyMessage handler.</p>
+
+<p>Below are the parameters descriptions based on the IBurpExtender  javadoc.
+Where applicable, decriptions have been modified for  local parameter
+naming and other ruby-specific details added.</p>
+<ul><li>
+<p>msg_ref: An identifier which is unique to a single request/response pair.
+This  can be used to correlate details of requests and responses and
+perform  processing on the response message accordingly. This number also 
+corresponds to the Burp UI's proxy "history" # column.</p>
+</li><li>
+<p>is_req: (true/false) Flags whether the message is a client request or a
+server response.</p>
+</li><li>
+<p>rhost: The hostname of the remote HTTP server.</p>
+</li><li>
+<p>rport: The port of the remote HTTP server.</p>
+</li><li>
+<p>is_https: Flags whether the protocol is HTTPS or HTTP.</p>
+</li><li>
+<p>http_meth: The method verb used in the client request.</p>
+</li><li>
+<p>url: The requested URL. Set in both the request and response.</p>
+</li><li>
+<p>resourceType: The filetype of the requested resource, or nil if the
+resource has no  filetype.</p>
+</li><li>
+<p>status: The HTTP status code returned by the server. This value is nil for 
+request messages.</p>
+</li><li>
+<p>req_content_type: The content-type string returned by the server. This
+value is nil for  request messages.</p>
+</li><li>
+<p>message: The full HTTP message.</p>
+
+<p>**Ruby note:</p>
+
+<pre class="code ruby"><code>For convenience, the message is received and returned as a ruby 
+String object. Internally within Burp it is handled as a java byte[] 
+array. See also the notes about the return object below.</code></pre>
+</li><li>
+<p>action: An array containing a single integer, allowing the implementation
+to  communicate back to Burp Proxy a non-default interception action for 
+the message. The default value is ACTION_FOLLOW_RULES (or 0).  Possible
+values include:</p>
+
+<pre class="code ruby"><code><span class='const'>ACTION_FOLLOW_RULES</span> <span class='op'>=</span> <span class='int'>0</span>
+<span class='const'>ACTION_DO_INTERCEPT</span> <span class='op'>=</span> <span class='int'>1</span>
+<span class='const'>ACTION_DONT_INTERCEPT</span> <span class='op'>=</span> <span class='int'>2</span>
+<span class='const'>ACTION_DROP</span> <span class='op'>=</span> <span class='int'>3</span></code></pre>
+
+<p>Refer to the BurpExtender.java source comments for more details.</p>
+</li></ul>
+
+<p>Return Value:</p>
+
+<pre class="code ruby"><code>Implementations should return either (a) the same object received
+in the message paramater, or (b) a different object containing a 
+modified message.</code></pre>
+
+<p>**IMPORTANT RUBY NOTE: Always be sure to return a new object if making
+modifications to messages.</p>
+
+<p>Explanation:  The (a) and (b) convention above is followed rather literally
+during type  conversion on the return value back into the java
+BurpExtender.</p>
+
+<p>When determining whether a change has been made in the message or not,  the
+decision is made based on whether the object returned is the same as the
+object submitted in the call to evt_proxy_message.</p>
+
+<p>So, for example, using in-place modification of the message using range 
+substring assignments or destructive method variations like String.sub!() 
+and String.gsub! alone won't work because the same object gets returned  to
+BurpExtender.</p>
+
+<p>In short, this means that if you want modifications to be made, be sure to
+return a different String than the one you got in your handler.</p>
+
+<p>So for example this code won't do anything at all:</p>
+
+<pre class="code ruby"><code>...
+message.sub!(/^GET /, &quot;HEAD &quot;)
+return message</code></pre>
+
+<p>Nor this:</p>
+
+<pre class="code ruby"><code><span class='id identifier rubyid_message'>message</span><span class='lbracket'>[</span><span class='int'>0</span><span class='op'>..</span><span class='int'>4</span><span class='rbracket'>]</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>HEAD </span><span class='tstring_end'>&quot;</span></span>
+<span class='kw'>return</span> <span class='id identifier rubyid_message'>message</span></code></pre>
+
+<p>But this will</p>
+
+<pre class="code ruby"><code>...
+return message.sub(/^GET /, &quot;HEAD &quot;)</code></pre>
+
+<p>And so will this</p>
+
+<pre class="code ruby"><code>...
+message[0..4] = &quot;HEAD &quot;
+return message.dup</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+625
+626
+627
+628
+629
+630
+631
+632
+633
+634
+635
+636
+637
+638
+639
+640
+641</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 625</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_proxy_message'>evt_proxy_message</span> <span class='id identifier rubyid_msg_ref'>msg_ref</span><span class='comma'>,</span> <span class='id identifier rubyid_is_req'>is_req</span><span class='comma'>,</span> <span class='id identifier rubyid_rhost'>rhost</span><span class='comma'>,</span> <span class='id identifier rubyid_rport'>rport</span><span class='comma'>,</span> <span class='id identifier rubyid_is_https'>is_https</span><span class='comma'>,</span> <span class='id identifier rubyid_http_meth'>http_meth</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='comma'>,</span> <span class='id identifier rubyid_resourceType'>resourceType</span><span class='comma'>,</span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_req_content_type'>req_content_type</span><span class='comma'>,</span> <span class='id identifier rubyid_message'>message</span><span class='comma'>,</span> <span class='id identifier rubyid_action'>action</span>
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='lbracket'>[</span> <span class='lparen'>(</span><span class='id identifier rubyid_is_req'>is_req</span><span class='rparen'>)</span><span class='op'>?</span> <span class='symbol'>:got_proxy_request</span> <span class='op'>:</span> <span class='symbol'>:got_proxy_response</span><span class='comma'>,</span>
+       <span class='lbracket'>[</span><span class='symbol'>:msg_ref</span><span class='comma'>,</span> <span class='id identifier rubyid_msg_ref'>msg_ref</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:is_req</span><span class='comma'>,</span> <span class='id identifier rubyid_is_req'>is_req</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:rhost</span><span class='comma'>,</span> <span class='id identifier rubyid_rhost'>rhost</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:rport</span><span class='comma'>,</span> <span class='id identifier rubyid_rport'>rport</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:is_https</span><span class='comma'>,</span> <span class='id identifier rubyid_is_https'>is_https</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:http_meth</span><span class='comma'>,</span> <span class='id identifier rubyid_http_meth'>http_meth</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:url</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:resourceType</span><span class='comma'>,</span> <span class='id identifier rubyid_resourceType'>resourceType</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:status</span><span class='comma'>,</span> <span class='id identifier rubyid_status'>status</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:req_content_type</span><span class='comma'>,</span> <span class='id identifier rubyid_req_content_type'>req_content_type</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:message</span><span class='comma'>,</span> <span class='id identifier rubyid_message'>message</span><span class='rbracket'>]</span><span class='comma'>,</span> 
+       <span class='lbracket'>[</span><span class='symbol'>:action</span><span class='comma'>,</span> <span class='id identifier rubyid_action'>action</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='rbracket'>]</span> <span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+  
+  <span class='kw'>return</span> <span class='id identifier rubyid_message'>message</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_proxy_message_raw-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_proxy_message_raw</strong>(msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Seems we need to specifically render our 'message' to a string here in
+ruby. Otherwise there's flakiness when converting certain binary non-ascii
+sequences. As long as we do it here, it should be fine.</p>
+
+<p>Note: This method maps to the 'processProxyMessage' method in the java 
+implementation of BurpExtender.</p>
+
+<p>This method just handles the conversion to and from evt_proxy_message which
+expects a message string</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+495
+496
+497
+498
+499
+500
+501
+502
+503</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 495</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_proxy_message_raw'>evt_proxy_message_raw</span> <span class='id identifier rubyid_msg_ref'>msg_ref</span><span class='comma'>,</span> <span class='id identifier rubyid_is_req'>is_req</span><span class='comma'>,</span> <span class='id identifier rubyid_rhost'>rhost</span><span class='comma'>,</span> <span class='id identifier rubyid_rport'>rport</span><span class='comma'>,</span> <span class='id identifier rubyid_is_https'>is_https</span><span class='comma'>,</span> <span class='id identifier rubyid_http_meth'>http_meth</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='comma'>,</span> <span class='id identifier rubyid_resourceType'>resourceType</span><span class='comma'>,</span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_req_content_type'>req_content_type</span><span class='comma'>,</span> <span class='id identifier rubyid_message'>message</span><span class='comma'>,</span> <span class='id identifier rubyid_action'>action</span>
+  <span class='id identifier rubyid_pp'>pp</span> <span class='lbracket'>[</span><span class='symbol'>:evt_proxy_message_raw_hit</span><span class='comma'>,</span> <span class='id identifier rubyid_msg_ref'>msg_ref</span><span class='comma'>,</span> <span class='id identifier rubyid_is_req'>is_req</span><span class='comma'>,</span> <span class='id identifier rubyid_rhost'>rhost</span><span class='comma'>,</span> <span class='id identifier rubyid_rport'>rport</span><span class='comma'>,</span> <span class='id identifier rubyid_is_https'>is_https</span><span class='comma'>,</span> <span class='id identifier rubyid_http_meth'>http_meth</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='comma'>,</span> <span class='id identifier rubyid_resourceType'>resourceType</span><span class='comma'>,</span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_req_content_type'>req_content_type</span><span class='comma'>,</span> <span class='id identifier rubyid_message'>message</span><span class='comma'>,</span> <span class='id identifier rubyid_action'>action</span> <span class='rbracket'>]</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+
+  <span class='id identifier rubyid_str_msg'>str_msg</span> <span class='op'>=</span> <span class='const'>String</span><span class='period'>.</span><span class='id identifier rubyid_from_java_bytes'>from_java_bytes</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='id identifier rubyid_evt_proxy_message'>evt_proxy_message</span><span class='lparen'>(</span><span class='id identifier rubyid_msg_ref'>msg_ref</span><span class='comma'>,</span> <span class='id identifier rubyid_is_req'>is_req</span><span class='comma'>,</span> <span class='id identifier rubyid_rhost'>rhost</span><span class='comma'>,</span> <span class='id identifier rubyid_rport'>rport</span><span class='comma'>,</span> <span class='id identifier rubyid_is_https'>is_https</span><span class='comma'>,</span> <span class='id identifier rubyid_http_meth'>http_meth</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='comma'>,</span> <span class='id identifier rubyid_resourceType'>resourceType</span><span class='comma'>,</span> <span class='id identifier rubyid_status'>status</span><span class='comma'>,</span> <span class='id identifier rubyid_req_content_type'>req_content_type</span><span class='comma'>,</span> <span class='id identifier rubyid_str_msg'>str_msg</span><span class='comma'>,</span> <span class='id identifier rubyid_action'>action</span><span class='rparen'>)</span>
+
+  <span class='id identifier rubyid_message'>message</span> <span class='op'>=</span> <span class='id identifier rubyid_ret'>ret</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_ret'>ret</span><span class='period'>.</span><span class='id identifier rubyid_object_id'>object_id</span> <span class='op'>!=</span> <span class='id identifier rubyid_str_msg'>str_msg</span><span class='period'>.</span><span class='id identifier rubyid_object_id'>object_id</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_message'>message</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_register_callbacks-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_register_callbacks</strong>(cb) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is called by BurpExtender on startup to register Burp's 
+IBurpExtenderCallbacks interface object.</p>
+
+<p>This maps to the 'registerExtenderCallbacks' method in the Java 
+implementation of BurpExtender.</p>
+
+<p>The return value is ignored.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+472
+473
+474
+475
+476</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 472</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_register_callbacks'>evt_register_callbacks</span> <span class='id identifier rubyid_cb'>cb</span>
+  <span class='ivar'>@burp_callbacks</span> <span class='op'>=</span> <span class='id identifier rubyid_cb'>cb</span>
+  <span class='id identifier rubyid_cb'>cb</span><span class='period'>.</span><span class='id identifier rubyid_issueAlert'>issueAlert</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>[JRuby::</span><span class='embexpr_beg'>#{</span><span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_class'>class</span><span class='rbrace'>}</span><span class='tstring_content'>] registered callback</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='symbol'>:got_callbacks</span><span class='comma'>,</span> <span class='id identifier rubyid_cb'>cb</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="evt_scan_issue-instance_method">
+  
+    - (<tt>Object</tt>) <strong>evt_scan_issue</strong>(issue) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method is invoked whenever Burp Scanner discovers a new, unique 
+issue, and can be used to perform customised reporting or logging of 
+detected issues.</p>
+
+<p>IMPORTANT: This event handler is only used in Burp version 1.2.09 and 
+higher.</p>
+
+<p>Note: this method maps to the BurpExtender Java method.</p>
+
+<p>Parameters:</p>
+<ul><li>
+<p>issue = an instance of the IScanIssue Java class with methods for viewing
+information on the scan issue that was generated.</p>
+</li></ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+687
+688
+689
+690</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 687</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_evt_scan_issue'>evt_scan_issue</span><span class='lparen'>(</span><span class='id identifier rubyid_issue'>issue</span><span class='rparen'>)</span>
+  <span class='const'>ScanIssueHelper</span><span class='period'>.</span><span class='id identifier rubyid_implant'>implant</span><span class='lparen'>(</span><span class='id identifier rubyid_issue'>issue</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_pp'>pp</span><span class='lparen'>(</span><span class='lbracket'>[</span><span class='symbol'>:got_scan_issue</span><span class='comma'>,</span> <span class='id identifier rubyid_issue'>issue</span><span class='rbracket'>]</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='gvar'>$DEBUG</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="excludeFromScope-instance_method">
+  
+    - (<tt>Object</tt>) <strong>excludeFromScope</strong>(url) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='exclude_from_scope-instance_method'>exclude_from_scope</span>, <span id='exclude_scope-instance_method'>exclude_scope</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Exclude the specified URL from the Suite-wide scope.</p>
+
+<pre class="code ruby"><code>* url = The URL to exclude from the Suite-wide scope.</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+159
+160
+161
+162</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 159</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_excludeFromScope'>excludeFromScope</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_url'>url</span> <span class='op'>=</span> <span class='id identifier rubyid_java'>java</span><span class='period'>.</span><span class='id identifier rubyid_net'>net</span><span class='period'>.</span><span class='const'>URL</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_url'>url</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_excludeFromScope'>excludeFromScope</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="exitSuite-instance_method">
+  
+    - (<tt>Object</tt>) <strong>exitSuite</strong>(prompt_user = false) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='exit_suite-instance_method'>exit_suite</span>, <span id='close-instance_method'>close</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Shuts down Burp programatically. If the method returns the user cancelled
+the shutdown prompt.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+350
+351
+352</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 350</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_exitSuite'>exitSuite</span><span class='lparen'>(</span><span class='id identifier rubyid_prompt_user'>prompt_user</span><span class='op'>=</span><span class='kw'>false</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:exitSuite</span><span class='comma'>,</span> <span class='id identifier rubyid_prompt_user'>prompt_user</span> <span class='op'>?</span> <span class='kw'>true</span> <span class='op'>:</span> <span class='kw'>false</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="getBurpVersion-instance_method">
+  
+    - (<tt>Object</tt>) <strong>getBurpVersion</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='burp_version-instance_method'>burp_version</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method can be used to determine the version of the loaded burp at
+runtime. This is included in the Javadoc for the extension interfaces but
+not the supplied interface files.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>String array containing the product name, major version, and minor version.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+432
+433
+434
+435
+436
+437
+438</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 432</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_getBurpVersion'>getBurpVersion</span>
+  <span class='kw'>begin</span>
+    <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:getBurpVersion</span><span class='rparen'>)</span>
+  <span class='kw'>rescue</span>
+    <span class='kw'>nil</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="getHeaders-instance_method">
+  
+    - (<tt>Object</tt>) <strong>getHeaders</strong>(msg) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='headers-instance_method'>headers</span>, <span id='get_headers-instance_method'>get_headers</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Parses a raw HTTP message (request or response ) and returns an associative
+array containing the headers as they are structured in the 'Headers' tab 
+in the Burp request/response viewer UI.</p>
+
+<p>IMPORTANT: This method is only available with Burp 1.2.09 and higher.</p>
+
+<p>msg = raw request/response (String or Java bytes[])</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+341
+342
+343
+344</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 341</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_getHeaders'>getHeaders</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_msg'>msg</span> <span class='op'>=</span> <span class='id identifier rubyid_msg'>msg</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_msg'>msg</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:getHeaders</span><span class='comma'>,</span> <span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="getParameters-instance_method">
+  
+    - (<tt>Object</tt>) <strong>getParameters</strong>(req) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='parameters-instance_method'>parameters</span>, <span id='get_parameters-instance_method'>get_parameters</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Parses a raw HTTP request message and returns an associative array 
+containing parameters as they are structured in the 'Parameters' tab in the
+Burp request UI.</p>
+
+<p>IMPORTANT: This method is only available with Burp 1.2.09 and higher.</p>
+
+<p>req = raw request (String or Java bytes[])</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+326
+327
+328
+329</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 326</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_getParameters'>getParameters</span><span class='lparen'>(</span><span class='id identifier rubyid_req'>req</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_req'>req</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:getParameters</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="getProxyHistory-instance_method">
+  
+    - (<tt>Object</tt>) <strong>getProxyHistory</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='proxy_history-instance_method'>proxy_history</span>, <span id='get_proxy_history-instance_method'>get_proxy_history</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a Java array of IHttpRequestResponse objects pulled directly from 
+the Burp proxy history.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+268
+269
+270</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 268</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_getProxyHistory'>getProxyHistory</span>
+  <span class='const'>HttpRequestResponseList</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:getProxyHistory</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="getScanIssues-instance_method">
+  
+    - (<tt>Object</tt>) <strong>getScanIssues</strong>(urlprefix = nil) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='scan_issues-instance_method'>scan_issues</span>, <span id='get_scan_issues-instance_method'>get_scan_issues</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method returns all of the current scan issues for URLs matching the 
+specified literal prefix. The prefix can be nil to match all issues.</p>
+
+<p>IMPORTANT: This method is only available with Burp 1.2.15 and higher.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+289
+290
+291</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 289</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_getScanIssues'>getScanIssues</span><span class='lparen'>(</span><span class='id identifier rubyid_urlprefix'>urlprefix</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'>ScanIssuesList</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span> <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:getScanIssues</span><span class='comma'>,</span> <span class='id identifier rubyid_urlprefix'>urlprefix</span><span class='rparen'>)</span> <span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="getSiteMap-instance_method">
+  
+    - (<tt>Object</tt>) <strong>getSiteMap</strong>(urlprefix = nil) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='site_map-instance_method'>site_map</span>, <span id='get_site_map-instance_method'>get_site_map</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns a Java array of IHttpRequestResponse objects pulled directly from 
+the Burp site map for all urls matching the specified literal prefix.  The
+prefix can be nil to return all objects.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+278
+279
+280</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 278</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_getSiteMap'>getSiteMap</span><span class='lparen'>(</span><span class='id identifier rubyid_urlprefix'>urlprefix</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='const'>HttpRequestResponseList</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:getSiteMap</span><span class='comma'>,</span> <span class='id identifier rubyid_urlprefix'>urlprefix</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="harvest_cookies_from_history-instance_method">
+  
+    - (<tt>Object</tt>) <strong>harvest_cookies_from_history</strong>(cookie = nil, urlrx = nil, statefile = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Harvest cookies from a session's proxy history.</p>
+
+<p>Params:</p>
+
+<pre class="code ruby"><code>cookie    = optional: name of cookie to harvest
+urlrx     = optional: regular expression to match urls against
+statefile = optional: filename for a burp session file to temporarily load
+            and harvest from.</code></pre>
+
+<p>Takes an optional block as additional 'select' criteria for cookies. The
+block return value of true/false will determine whether a cookie  string is
+selected.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+783
+784
+785
+786
+787
+788
+789
+790
+791
+792
+793</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 783</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_harvest_cookies_from_history'>harvest_cookies_from_history</span><span class='lparen'>(</span><span class='id identifier rubyid_cookie'>cookie</span><span class='op'>=</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_urlrx'>urlrx</span><span class='op'>=</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_statefile'>statefile</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_search_proxy_history'>search_proxy_history</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='comma'>,</span> <span class='id identifier rubyid_urlrx'>urlrx</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_hrr'>hrr</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='id identifier rubyid_heads'>heads</span><span class='op'>=</span><span class='id identifier rubyid_hrr'>hrr</span><span class='period'>.</span><span class='id identifier rubyid_rsp_headers'>rsp_headers</span>
+      <span class='id identifier rubyid_ret'>ret</span> <span class='op'>+=</span> <span class='id identifier rubyid_heads'>heads</span><span class='period'>.</span><span class='id identifier rubyid_select'>select</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_h'>h</span><span class='op'>|</span> 
+        <span class='id identifier rubyid_h'>h</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_downcase'>downcase</span> <span class='op'>==</span> <span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>set-cookie</span><span class='tstring_end'>'</span></span> <span class='kw'>and</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_block_given?'>block_given?</span> <span class='kw'>or</span> <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_h'>h</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rparen'>)</span><span class='rparen'>)</span>
+      <span class='kw'>end</span><span class='period'>.</span><span class='id identifier rubyid_map'>map</span><span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_h'>h</span><span class='op'>|</span> <span class='id identifier rubyid_h'>h</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span><span class='rbrace'>}</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="includeInScope-instance_method">
+  
+    - (<tt>Object</tt>) <strong>includeInScope</strong>(url) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='include_in_scope-instance_method'>include_in_scope</span>, <span id='include_scope-instance_method'>include_scope</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Include the specified URL in the Suite-wide scope.</p>
+
+<pre class="code ruby"><code>* url = The URL to exclude in the Suite-wide scope.</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+168
+169
+170
+171</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 168</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_includeInScope'>includeInScope</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_url'>url</span> <span class='op'>=</span> <span class='id identifier rubyid_java'>java</span><span class='period'>.</span><span class='id identifier rubyid_net'>net</span><span class='period'>.</span><span class='const'>URL</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_url'>url</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_includeInScope'>includeInScope</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="isInScope-instance_method">
+  
+    - (<tt>Object</tt>) <strong>isInScope</strong>(url) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='is_in_scope-instance_method'>is_in_scope</span>, <span id='in_scope?-instance_method'>in_scope?</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Query whether a specified URL is within the current Suite-wide scope.</p>
+
+<pre class="code ruby"><code><span class='op'>*</span> <span class='id identifier rubyid_url'>url</span> <span class='op'>=</span> <span class='const'>The</span> <span class='const'>URL</span> <span class='id identifier rubyid_to'>to</span> <span class='id identifier rubyid_query'>query</span></code></pre>
+
+<p>Returns: true / false</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+179
+180
+181
+182</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 179</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_isInScope'>isInScope</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_url'>url</span> <span class='op'>=</span> <span class='id identifier rubyid_java'>java</span><span class='period'>.</span><span class='id identifier rubyid_net'>net</span><span class='period'>.</span><span class='const'>URL</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_url'>url</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_isInScope'>isInScope</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="issueAlert-instance_method">
+  
+    - (<tt>Object</tt>) <strong>issueAlert</strong>(msg) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='issue_alert-instance_method'>issue_alert</span>, <span id='alert-instance_method'>alert</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Display a message in the Burp Suite alerts tab.</p>
+
+<pre class="code ruby"><code>* msg =  The alert message to display.</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+188
+189
+190</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 188</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_issueAlert'>issueAlert</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_issueAlert'>issueAlert</span><span class='lparen'>(</span><span class='id identifier rubyid_msg'>msg</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="loadConfig-instance_method">
+  
+    - (<tt>Object</tt>) <strong>loadConfig</strong>(conf) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='load_config-instance_method'>load_config</span>, <span id='config=-instance_method'>config=</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method causes Burp to load a new configuration from the Map of
+name/value Strings provided. Any settings not specified in the Map will be
+restored to their default values. To selectively update only some settings
+and leave the rest unchanged, you should first call <code>saveConfig</code>
+to obtain Burp's current configuration, modify the relevant items in the
+Map, and then call <code>loadConfig</code> with the same Map.</p>
+
+<p>configuration.</p>
+
+<p>This method is only available with Burp 1.3.09+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>config</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>A map of name/value Strings to use as Burp's new</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+410
+411
+412</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 410</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_loadConfig'>loadConfig</span><span class='lparen'>(</span><span class='id identifier rubyid_conf'>conf</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:loadConfig</span><span class='comma'>,</span> <span class='id identifier rubyid_conf'>conf</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="makeHttpRequest-instance_method">
+  
+    - (<tt>Object</tt>) <strong>makeHttpRequest</strong>(host, port, https, req) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='make_http_request-instance_method'>make_http_request</span>, <span id='make_request-instance_method'>make_request</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Issue an arbitrary HTTP request and retrieve its response</p>
+
+<pre class="code ruby"><code>* host  = The hostname of the remote HTTP server.
+* port  = The port of the remote HTTP server.
+* https = Flags whether the protocol is HTTPS or HTTP.
+* req   = The full HTTP request. (String or Java bytes[])</code></pre>
+
+<p>Returns: The full response retrieved from the remote server.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+201
+202
+203
+204</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 201</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_makeHttpRequest'>makeHttpRequest</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_req'>req</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='const'>String</span><span class='period'>.</span><span class='id identifier rubyid_from_java_bytes'>from_java_bytes</span><span class='lparen'>(</span> <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_makeHttpRequest'>makeHttpRequest</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='rparen'>)</span> <span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="registerMenuItem-instance_method">
+  
+    - (<tt>Object</tt>) <strong>registerMenuItem</strong>(menuItemCaption, menuItemHandler) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='register_menu_item-instance_method'>register_menu_item</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method can be used to register a new menu item which will appear  on
+the various context menus that are used throughout Burp Suite to  handle
+user-driven actions.</p>
+
+<p>on the menu item.</p>
+
+<p>This method is only available with Burp 1.3.07 and higher.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>menuItemCaption</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The caption to be displayed on the menu item.</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>menuItemHandler</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The handler to be invoked when the user clicks</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+365
+366
+367
+368</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 365</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_registerMenuItem'>registerMenuItem</span><span class='lparen'>(</span><span class='id identifier rubyid_menuItemCaption'>menuItemCaption</span><span class='comma'>,</span> <span class='id identifier rubyid_menuItemHandler'>menuItemHandler</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:registerMenuItem</span><span class='comma'>,</span> <span class='id identifier rubyid_menuItemCaption'>menuItemCaption</span><span class='comma'>,</span> <span class='id identifier rubyid_menuItemHandler'>menuItemHandler</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_issueAlert'>issueAlert</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Handler </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_menuItemHandler'>menuItemHandler</span><span class='rbrace'>}</span><span class='tstring_content'> registered for \&quot;</span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_menuItemCaption'>menuItemCaption</span><span class='rbrace'>}</span><span class='tstring_content'>\&quot;</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="restoreState-instance_method">
+  
+    - (<tt>Object</tt>) <strong>restoreState</strong>(filename) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='restore_state-instance_method'>restore_state</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Restores Burp session state from a previously saved state file. See also:
+saveState</p>
+
+<p>IMPORTANT: This method is only available with Burp 1.2.09 and higher.</p>
+<ul><li>
+<p>filename = path and filename of the file to restore from</p>
+</li></ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+302
+303
+304</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 302</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_restoreState'>restoreState</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:restoreState</span><span class='comma'>,</span> <span class='id identifier rubyid_java'>java</span><span class='period'>.</span><span class='id identifier rubyid_io'>io</span><span class='period'>.</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="saveConfig-instance_method">
+  
+    - (<tt>Object</tt>) <strong>saveConfig</strong> 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='save_config-instance_method'>save_config</span>, <span id='config-instance_method'>config</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method causes Burp to save all of its current configuration as a Map
+of name/value Strings.</p>
+
+<p>configuration.</p>
+
+<p>This method is only available with Burp 1.3.09+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        
+        <div class='inline'>
+<p>A Map of name/value Strings reflecting Burp's current</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+392
+393
+394</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 392</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_saveConfig'>saveConfig</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:saveConfig</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_to_hash'>to_hash</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="saveState-instance_method">
+  
+    - (<tt>Object</tt>) <strong>saveState</strong>(filename) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='save_state-instance_method'>save_state</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Saves the current Burp session to a state file. See also restoreState.</p>
+
+<p>IMPORTANT: This method is only available with Burp 1.2.09 and higher.</p>
+<ul><li>
+<p>filename = path and filename of the file to save to</p>
+</li></ul>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+313
+314
+315</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 313</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_saveState'>saveState</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:saveState</span><span class='comma'>,</span> <span class='id identifier rubyid_java'>java</span><span class='period'>.</span><span class='id identifier rubyid_io'>io</span><span class='period'>.</span><span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_filename'>filename</span><span class='rparen'>)</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="search_proxy_history-instance_method">
+  
+    - (<tt>Object</tt>) <strong>search_proxy_history</strong>(statefile = nil, urlrx = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Searches the proxy history for the url's matched by the specified  regular
+expression (returns them all if urlrx is nil).</p>
+
+<p>A statefile to search in can optionally be specified or the existing state
+will be used if statefile is nil.</p>
+
+<p>This method also accepts an optional block which is passed each of the
+matched history members.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+762
+763
+764
+765
+766
+767
+768
+769
+770</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 762</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_search_proxy_history'>search_proxy_history</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='op'>=</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_urlrx'>urlrx</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_ret'>ret</span> <span class='op'>=</span> <span class='lbracket'>[</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_with_proxy_history'>with_proxy_history</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_r'>r</span><span class='op'>|</span>
+    <span class='kw'>if</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_urlrx'>urlrx</span><span class='rparen'>)</span> <span class='kw'>or</span> <span class='id identifier rubyid_r'>r</span><span class='period'>.</span><span class='id identifier rubyid_url'>url</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span> <span class='op'>=~</span> <span class='id identifier rubyid_urlrx'>urlrx</span>
+      <span class='id identifier rubyid_ret'>ret</span> <span class='op'>&lt;&lt;</span> <span class='id identifier rubyid_r'>r</span> <span class='kw'>if</span> <span class='lparen'>(</span><span class='kw'>not</span> <span class='id identifier rubyid_block_given?'>block_given?</span><span class='rparen'>)</span> <span class='kw'>or</span> <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_r'>r</span><span class='rparen'>)</span>
+    <span class='kw'>end</span>
+  <span class='kw'>end</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_ret'>ret</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="sendToIntruder-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sendToIntruder</strong>(host, port, https, req, ip_off) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='send_to_intruder-instance_method'>send_to_intruder</span>, <span id='intruder-instance_method'>intruder</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Send an HTTP request to the Burp Intruder tool</p>
+
+<pre class="code ruby"><code>* host  = The hostname of the remote HTTP server.
+* port  = The port of the remote HTTP server.
+* https = Flags whether the protocol is HTTPS or HTTP.
+* req   = The full HTTP request.  (String or Java bytes[])
+* ip_off = A list of index pairs representing the
+* positions of the insertion points that should be scanned. Each item in
+* the list must be an int[2] array containing the start and end offsets
+* for the insertion point. *1.4.04+* only
+*</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+218
+219
+220
+221
+222
+223
+224
+225</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 218</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sendToIntruder'>sendToIntruder</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_ip_off'>ip_off</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_req'>req</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_getBurpVersion'>getBurpVersion</span><span class='period'>.</span><span class='id identifier rubyid_to_a'>to_a</span><span class='lbracket'>[</span><span class='int'>1</span><span class='op'>..</span><span class='op'>-</span><span class='int'>1</span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span> <span class='op'>&lt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>1.4.04</span><span class='tstring_end'>&quot;</span></span>
+    <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_sendToIntruder'>sendToIntruder</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='rparen'>)</span>
+  <span class='kw'>else</span>
+    <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_sendToIntruder'>sendToIntruder</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_ip_off'>ip_off</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="sendToRepeater-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sendToRepeater</strong>(host, port, https, req, tab = nil) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='send_to_repeater-instance_method'>send_to_repeater</span>, <span id='repeater-instance_method'>repeater</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Send an HTTP request to the Burp Repeater tool.</p>
+
+<pre class="code ruby"><code>* host  = The hostname of the remote HTTP server.
+* port  = The port of the remote HTTP server.
+* https = Flags whether the protocol is HTTPS or HTTP.
+* req   = The full HTTP request. (String or Java bytes[])
+* tab   = The tab caption displayed in Repeater. (default: auto-generated)</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+235
+236
+237
+238</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 235</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sendToRepeater'>sendToRepeater</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_tab'>tab</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_req'>req</span> <span class='op'>=</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_to_java_bytes'>to_java_bytes</span> <span class='kw'>if</span> <span class='id identifier rubyid_req'>req</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_sendToRepeater'>sendToRepeater</span><span class='lparen'>(</span><span class='id identifier rubyid_host'>host</span><span class='comma'>,</span> <span class='id identifier rubyid_port'>port</span><span class='comma'>,</span> <span class='id identifier rubyid_https'>https</span><span class='comma'>,</span> <span class='id identifier rubyid_req'>req</span><span class='comma'>,</span> <span class='id identifier rubyid_tab'>tab</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="sendToSpider-instance_method">
+  
+    - (<tt>Object</tt>) <strong>sendToSpider</strong>(url) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='send_to_spider-instance_method'>send_to_spider</span>, <span id='spider-instance_method'>spider</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Send a seed URL to the Burp Spider tool.</p>
+
+<pre class="code ruby"><code>* url = The new seed URL to begin spidering from.</code></pre>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+244
+245
+246
+247</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 244</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_sendToSpider'>sendToSpider</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_url'>url</span> <span class='op'>=</span> <span class='id identifier rubyid_java'>java</span><span class='period'>.</span><span class='id identifier rubyid_net'>net</span><span class='period'>.</span><span class='const'>URL</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_url'>url</span><span class='period'>.</span><span class='id identifier rubyid_is_a?'>is_a?</span> <span class='const'>String</span>
+  <span class='id identifier rubyid__check_cb'>_check_cb</span><span class='period'>.</span><span class='id identifier rubyid_sendToSpider'>sendToSpider</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="setProxyInterceptionEnabled-instance_method">
+  
+    - (<tt>Object</tt>) <strong>setProxyInterceptionEnabled</strong>(enabled) 
+  
+
+  
+    <span class="aliases">Also known as:
+    <span class="names"><span id='proxy_interception_enabled-instance_method'>proxy_interception_enabled</span>, <span id='proxy_interception=-instance_method'>proxy_interception=</span></span>
+    </span>
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This method sets the interception mode for Burp Proxy.</p>
+
+<p>be enabled.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
+  
+    <li>
+      
+        <span class='name'>enabled</span>
+      
+      
+        <span class='type'></span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Indicates whether interception of proxy messages should</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+423
+424
+425</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 423</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_setProxyInterceptionEnabled'>setProxyInterceptionEnabled</span><span class='lparen'>(</span><span class='id identifier rubyid_enabled'>enabled</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid__check_and_callback'>_check_and_callback</span><span class='lparen'>(</span><span class='symbol'>:setProxyInterceptionEnabled</span><span class='comma'>,</span> <span class='id identifier rubyid_enabled'>enabled</span><span class='rparen'>)</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="start_burp-instance_method">
+  
+    - (<tt>Object</tt>) <strong>start_burp</strong>(args = []) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Prepares the java BurpExtender implementation with a reference to self as
+the module handler and launches burp suite.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+799
+800
+801
+802
+803</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 799</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_start_burp'>start_burp</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='op'>=</span><span class='lbracket'>[</span><span class='rbracket'>]</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_activate!'>activate!</span><span class='lparen'>(</span><span class='rparen'>)</span>
+  <span class='const'>Java</span><span class='op'>::</span><span class='const'>Burp</span><span class='op'>::</span><span class='const'>StartBurp</span><span class='period'>.</span><span class='id identifier rubyid_main'>main</span><span class='lparen'>(</span><span class='id identifier rubyid_args'>args</span><span class='period'>.</span><span class='id identifier rubyid_to_java'>to_java</span><span class='lparen'>(</span><span class='symbol'>:string</span><span class='rparen'>)</span><span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='kw'>self</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="with_proxy_history-instance_method">
+  
+    - (<tt>Object</tt>) <strong>with_proxy_history</strong>(statefile = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This is a convenience wrapper which can load a given burp state file and 
+lets its caller to perform actions inside of a block on the proxy history 
+contained in the loaded session.</p>
+
+<p>If a statefile argument isn't specified current burp session state is used.</p>
+
+<p>Yields each entry in the proxy history to a block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+721
+722
+723
+724
+725</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 721</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_with_proxy_history'>with_proxy_history</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_with_statefile'>with_statefile</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_this'>this</span><span class='op'>|</span>
+    <span class='id identifier rubyid_this'>this</span><span class='period'>.</span><span class='id identifier rubyid_proxy_history'>proxy_history</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_h'>h</span><span class='op'>|</span> <span class='kw'>yield</span> <span class='id identifier rubyid_h'>h</span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="with_site_map-instance_method">
+  
+    - (<tt>Object</tt>) <strong>with_site_map</strong>(urlprefix = nil, statefile = nil) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This is a convenience wrapper which can load a given burp state file and 
+lets its caller to perform actions inside of a block on the site map 
+contained in the loaded session.</p>
+
+<p>If a statefile argument isn't specified current burp session state is used.</p>
+
+<p>Yields each entry in the site map to a block.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+708
+709
+710
+711
+712</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 708</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_with_site_map'>with_site_map</span><span class='lparen'>(</span><span class='id identifier rubyid_urlprefix'>urlprefix</span><span class='op'>=</span><span class='kw'>nil</span><span class='comma'>,</span> <span class='id identifier rubyid_statefile'>statefile</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='id identifier rubyid_with_statefile'>with_statefile</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='rparen'>)</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_this'>this</span><span class='op'>|</span>
+    <span class='id identifier rubyid_this'>this</span><span class='period'>.</span><span class='id identifier rubyid_site_map'>site_map</span><span class='lparen'>(</span><span class='id identifier rubyid_urlprefix'>urlprefix</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_each'>each</span> <span class='lbrace'>{</span><span class='op'>|</span><span class='id identifier rubyid_h'>h</span><span class='op'>|</span> <span class='kw'>yield</span> <span class='id identifier rubyid_h'>h</span> <span class='rbrace'>}</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="with_statefile-instance_method">
+  
+    - (<tt>Object</tt>) <strong>with_statefile</strong>(statefile = nil) {|_self| ... }
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>This is a convenience wrapper which loads a given burp statefile and lets
+its caller perform actions via burp while its loaded on it inside of a 
+block. The old state is restored after the block completes.</p>
+
+<p>It can safely be run with a nil statefile argument in which the  current
+burp session state is used.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Yields:</p>
+<ul class="yield">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>_self</tt>)</span>
+      
+      
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>_self</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="" title="Buby (class)">Buby</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the object that the method was called on</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+733
+734
+735
+736
+737
+738
+739
+740
+741
+742
+743
+744
+745
+746
+747
+748
+749
+750
+751
+752</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'lib/buby.rb', line 733</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_with_statefile'>with_statefile</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='op'>=</span><span class='kw'>nil</span><span class='rparen'>)</span>
+  <span class='kw'>if</span> <span class='id identifier rubyid_statefile'>statefile</span>
+    <span class='comment'># save current state:
+</span>    <span class='id identifier rubyid_old_state'>old_state</span><span class='op'>=</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='gvar'>$$</span><span class='rbrace'>}</span><span class='tstring_content'>.</span><span class='embexpr_beg'>#{</span><span class='const'>Time</span><span class='period'>.</span><span class='id identifier rubyid_now'>now</span><span class='period'>.</span><span class='id identifier rubyid_to_i'>to_i</span><span class='rbrace'>}</span><span class='tstring_content'>.state.bak</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_alert'>alert</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Saving current state to temp statefile: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_old_state'>old_state</span><span class='rbrace'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_save_state'>save_state</span><span class='lparen'>(</span><span class='id identifier rubyid_old_state'>old_state</span><span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_alert'>alert</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Restoring state: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_statefile'>statefile</span><span class='rbrace'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_restore_state'>restore_state</span><span class='lparen'>(</span><span class='id identifier rubyid_statefile'>statefile</span><span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>yield</span> <span class='kw'>self</span>
+
+  <span class='kw'>if</span> <span class='id identifier rubyid_statefile'>statefile</span>
+    <span class='comment'># restore original state
+</span>    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_alert'>alert</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Restoring temp statefile: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_old_state'>old_state</span><span class='rbrace'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_restore_state'>restore_state</span> <span class='id identifier rubyid_old_state'>old_state</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_alert'>alert</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Deleting temp state file: </span><span class='embexpr_beg'>#{</span><span class='id identifier rubyid_old_state'>old_state</span><span class='rbrace'>}</span><span class='tstring_end'>&quot;</span></span>
+    <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_unlink'>unlink</span> <span class='id identifier rubyid_old_state'>old_state</span>
+  <span class='kw'>end</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Fri Dec 14 17:52:42 2012 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.3 (ruby-1.9.3).
+</div>
+
+  </body>
+</html>
