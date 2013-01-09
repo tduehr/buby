@@ -155,6 +155,15 @@ public interface IBurpExtenderCallbacks
     void registerScannerListener(IScannerListener listener);
 
     /**
+     * This method is used to register a listener which will be notified of
+     * changes to Burp's suite-wide target scope.
+     *
+     * @param listener An object created by the extension that implements the
+     * <code>IScopeChangeListener</code> interface.
+     */
+    void registerScopeChangeListener(IScopeChangeListener listener);
+
+    /**
      * This method is used to register a factory for custom context menu items.
      * When the user invokes a context menu anywhere within Burp, the factory
      * will be passed details of the invocation event, and asked to provide any
@@ -281,6 +290,30 @@ public interface IBurpExtenderCallbacks
      */
     IMessageEditor createMessageEditor(IMessageEditorController controller,
             boolean editable);
+
+    /**
+     * This method is used to save configuration settings for the extension in a
+     * persistent way that survives reloads of the extension and of Burp Suite.
+     * Saved settings can be retrieved using the method
+     * <code>loadExtensionSetting()</code>.
+     *
+     * @param name The name of the setting.
+     * @param value The value of the setting. If this value is
+     * <code>null</code> then any existing setting with the specified name will
+     * be removed.
+     */
+    void saveExtensionSetting(String name, String value);
+
+    /**
+     * This method is used to load configuration settings for the extension that
+     * were saved using the method
+     * <code>saveExtensionSetting()</code>.
+     *
+     * @param name The name of the setting.
+     * @return The value of the setting, or
+     * <code>null</code> if no value is set.
+     */
+    String loadExtensionSetting(String name);
 
     /**
      * This method is used to create a new instance of Burp's plain text editor,
@@ -516,6 +549,35 @@ public interface IBurpExtenderCallbacks
      * @return Details of the scan issues.
      */
     IScanIssue[] getScanIssues(String urlPrefix);
+
+    /**
+     * This method is used to retrieve the contents of Burp's session handling
+     * cookie jar. Extensions that provide an
+     * <code>ISessionHandlingAction</code> can query and update the cookie jar
+     * in order to handle unusual session handling mechanisms.
+     *
+     * @return A list of
+     * <code>ICookie</code> objects representing the contents of Burp's session
+     * handling cookie jar.
+     */
+    List<ICookie> getCookieJarContents();
+
+    /**
+     * This method is used to update the contents of Burp's session handling
+     * cookie jar. Extensions that provide an
+     * <code>ISessionHandlingAction</code> can query and update the cookie jar
+     * in order to handle unusual session handling mechanisms.
+     *
+     * @param cookie An
+     * <code>ICookie</code> object containing details of the cookie to be
+     * updated. If the cookie jar already contains a cookie that matches the
+     * specified domain and name, then that cookie will be updated with the new
+     * value and expiration, unless the new value is
+     * <code>null</code>, in which case the cookie will be removed. If the
+     * cookie jar does not already contain a cookie that matches the specified
+     * domain and name, then the cookie will be added.
+     */
+    void updateCookieJar(ICookie cookie);
 
     /**
      * This method can be used to add an item to Burp's site map with the

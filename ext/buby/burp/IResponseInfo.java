@@ -41,4 +41,14 @@ public interface IResponseInfo
      * @return The HTTP status code contained in the response.
      */
     short getStatusCode();
+
+    /**
+     * This method is used to obtain details of the HTTP cookies set in the
+     * response.
+     *
+     * @return A list of
+     * <code>ICookie</code> objects representing the cookies set in the
+     * response, if any.
+     */
+    List<ICookie> getCookies();
 }

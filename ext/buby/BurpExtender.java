@@ -1,10 +1,6 @@
 //import javax.annotation.PostConstruct; 
 
-import burp.IBurpExtender;
-import burp.IBurpExtenderCallbacks;
-import burp.IExtensionStateListener;
-import burp.IScanIssue;
-import burp.IHttpRequestResponse;
+import burp.*;
 
 import org.jruby.*;
 import org.jruby.javasupport.JavaUtil;
