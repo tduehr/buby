@@ -58,6 +58,10 @@ end
 begin
   require 'yard'
   YARD::Rake::YardocTask.new
+  YARD::Rake::YardocTask.new(:todo) do |yard|
+    yard.options.concat ['--query', '@todo']
+    yard.options << "--list"
+  end
 rescue LoadError
 end
 
