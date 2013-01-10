@@ -1,6 +1,5 @@
-include Java
-
 require 'pp'
+require 'uri'
 require "buby.jar"
 require 'buby/extends.rb'
 
@@ -494,7 +493,7 @@ class Buby
   # building and analyzing HTTP requests.
   #
   def getHelpers
-    _check_and_callback(:getHelpers)
+    Buby::Implants::ExtensionHelpers.implant(_check_and_callback(:getHelpers))
   end
   alias helpers getHelpers
   alias get_helpers getHelpers
