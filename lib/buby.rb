@@ -3,7 +3,7 @@ require 'uri'
 require "buby.jar"
 require 'buby/extends.rb'
 
-java_import 'BurpExtender'
+java_import 'Java::Burp::BurpExtender'
 
 # Buby is a mash-up of the commercial security testing web proxy PortSwigger 
 # Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from 
@@ -860,8 +860,6 @@ class Buby
   def evt_register_callbacks cb
     @burp_callbacks = cb
     cb.issueAlert("[JRuby::#{self.class}] registered callback")
-    extension_name = "Buby v#{VERSION}"
-    register_extension_state_listener self
     pp([:got_callbacks, cb]) if $DEBUG
   end
 

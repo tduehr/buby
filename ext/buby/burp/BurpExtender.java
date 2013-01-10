@@ -126,6 +126,9 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener {
     public void registerExtenderCallbacks(IBurpExtenderCallbacks cb) {
       if(r_obj != null && r_obj.respondsTo(REG_METH)) {
         cb.issueAlert("[BurpExtender] registering JRuby handler callbacks");
+        cb.setExtensionName("Buby");
+        cb.registerExtensionStateListener(this);
+        
         r_obj.callMethod(ctx(r_obj), REG_METH, to_ruby(rt(r_obj), cb));
       }
     }
