@@ -12,18 +12,19 @@ class Buby
 
       # This method can be used to analyze an HTTP request, and obtain various
       # key details about it. The resulting +IRequestInfo+ object
-      # will not include the full request URL. To obtain the full URL, use one
-      # of the other overloaded {#analyzeRequest} methods.
+      # will not include the full request URL.
       #
       # @overload analyzeRequest(request)
       #   Analyze a +HttpRequestResponse+ object.
       #   @param [IHttpRequestResponse] request The request to be analyzed.
       # @overload analyzeRequest(httpService, request)
-      #   Analyze a request using +HttpService+, and +String+ or +byte[]+ objects
+      #   Analyze a request from a +HttpService+ object, and a +String+ or
+      #     +byte[]+.
       #   @param [IHttpService] http_service HTTP service description
       #   @param [String, Array<byte>] request The request to be analyzed
       # @overload analyzeRequest(request)
-      #   Analyze a +String+ or +byte[]+ request
+      #   Analyze a +String+ or +byte[]+ request. To obtain the full URL, use one
+      # of the other overloaded {#analyzeRequest} methods.
       #   @param [String, Array<byte>] request The request to be analyzed
       # @return [IRequestInfo] object (wrapped with Ruby goodness)
       #   that can be queried to obtain details about the request.
@@ -37,7 +38,7 @@ class Buby
       # This method can be used to analyze an HTTP response, and obtain various
       # key details about it.
       #
-      # @param response The response to be analyzed.
+      # @param [String, Array<byte> response The response to be analyzed.
       # @return [IResponseInfo] object (wrapped with Ruby goodness) that can be
       #   queried to obtain details about the response.
       #
@@ -47,33 +48,11 @@ class Buby
         Buby::Implants::ResponseInfo.implant(__analyzeResponse(response))
       end
 
-      # @!method urlDecode(data)
-      #   This method can be used to URL-decode the specified data.
-      #   @overload urlDecode(data)
-      #     URL decode a +String+
-      #     @param [String] data The data to be decoded.
-      #     @return [String] The decoded data.
-      #   @overload urlDecode(data)
-      #     URL decode a +byte+ array
-      #     @param [byte[]] data The data to be decoded.
-      #     @return [byte[]] The decoded data.
-
-      # @!method urlEncode(data)
-      #   This method can be used to URL-encode the specified data. Any characters
-      #   that do not need to be encoded within HTTP requests are not encoded.
-      #   @overload urlEncode(data)
-      #     @param [String] data The data to be encoded.
-      #     @return [String] The encoded data.
-      #   @overload urlEncode(data)
-      #     @param [byte[]] data The data to be encoded.
-      #     @return [byte[]] The encoded data.
-      #
-
       # This method can be used to retrieve details of a specified parameter
       # within an HTTP request. <b>Note:</b> Use {#analyzeRequest} to obtain
       # details of all parameters within the request.
       #
-      # @param [String, byte[]] request The request to be inspected for the specified parameter.
+      # @param [String, Array<byte>] request The request to be inspected for the specified parameter.
       # @param [String] parameter_name The name of the parameter to retrieve.
       # @return [IParameter] object that can be queried to obtain details
       #   about the parameter, or +nil+ if the parameter was not found.
@@ -81,7 +60,7 @@ class Buby
       def getRequestParameter(request, parameter_name)
         pp [:got_get_request_parameter, parameter_name, request] if $DEBUG
         request = request.to_java_bytes if request.kind_of?(String)
-        Buby::Implants::Parameter.implant(__getRequestParameter(request, paramter_name))
+        __getRequestParameter(request, paramter_name)
       end
 
       # This method searches a piece of data for the first occurrence of a
@@ -90,8 +69,8 @@ class Buby
       # String-based data.
       # @note This method is only wrapped for testing purposes. There are better ways to do this in the JRuby runtime.
       #
-      # @param [String, byte[]] data The data to be searched.
-      # @param [String, byte[]] pattern The pattern to be searched for.
+      # @param [String, Array<byte>] data The data to be searched.
+      # @param [String, Array<byte>] pattern The pattern to be searched for.
       # @param [Boolean] case_sensitive Flags whether or not the search is case-sensitive.
       # @param [Fixnum] from The offset within +data+ where the search should begin.
       # @param [Fixnum] to The offset within +data+ where the search should end.
@@ -135,12 +114,13 @@ class Buby
       # This method adds a new parameter to an HTTP request, and if appropriate
       # updates the Content-Length header.
       #
-      # @param [String, Array<byte>, IHttpRequestResponse] request The request to which the parameter should be added.
+      # @param [String, Array<byte>, IHttpRequestResponse] request The request
+      #   to which the parameter should be added.
       # @param [IParameter] parameter An +IParameter+ object containing details
-      # of the parameter to be added. Supported parameter types are:
-      # * +PARAM_URL+,
-      # * +PARAM_BODY+
-      # * +PARAM_COOKIE+
+      #   of the parameter to be added. Supported parameter types are:
+      #   * +PARAM_URL+
+      #   * +PARAM_BODY+
+      #   * +PARAM_COOKIE+
       # @return [String] A new HTTP request with the new parameter added.
       #
       # @todo Switch IHttpRequestResponse to new Buby::Implants functionality (2.0)
@@ -158,7 +138,7 @@ class Buby
       #   from which the parameter should be removed.
       # @param [IParameter] parameter Object containing details of the parameter
       #   to be removed. Supported parameter types are:
-      #   * +PARAM_URL+,
+      #   * +PARAM_URL+
       #   * +PARAM_BODY+
       #   * +PARAM_COOKIE+
       # @return [String] A new HTTP request with the parameter removed.
@@ -183,7 +163,7 @@ class Buby
       #   containing the parameter to be updated.
       # @param [IParameter] parameter Object containing details of the parameter
       #   to be updated. Supported parameter types are:
-      #   * +PARAM_URL+,
+      #   * +PARAM_URL+
       #   * +PARAM_BODY+
       #   * +PARAM_COOKIE+
       # @return [String] A new HTTP request with the parameter updated.
@@ -231,15 +211,18 @@ class Buby
         Buby::Implants::HttpService.implant(__buildHttpService(host, port, protocol))
       end
 
-      # @!method buildParameter(name, value, type)
-      #   This method constructs an
-      #   <code>IParameter</code> object based on the details provided.
-      #   
-      #   @param [String] name The parameter name.
-      #   @param [String] value The parameter value.
-      #   @param [Fixnum] type The parameter type, as defined in the
-      #    +IParameter+ interface.
-      #   @return [IParameter] object based on the details provided.
+      # This method constructs an +IParameter+ object based on the details
+      #   provided.
+      #
+      # @param [String] name The parameter name.
+      # @param [String] value The parameter value.
+      # @param [Fixnum] type The parameter type, as defined in the
+      #   +IParameter+ interface.
+      # @return [IParameter] object based on the details provided.
+      def buildParameter(name, type)
+        pp [:got_buildParameter, name, type] if $DEBUG
+        Buby::Implants::Parameter.implant(__buildParameter(name, type))
+      end
 
       # This method constructs an +IScannerInsertionPoint+ object based on the
       #  details provided. It can be used to quickly create a simple insertion
@@ -281,13 +264,14 @@ class Buby
             updateParameter
             toggleRequestMethod
             buildHttpService
+            buildParameter
             makeScannerInsertionPoint            
           }
-          methods.each do |meth|
-            alias_method "__"+meth, meth
+          instance_methods.each do |meth|
+            alias_method "__"+meth.to_s, meth
           end
           include Buby::Implants::ExtensionHelpers
-          methods.each do |meth|
+          instance_methods.each do |meth|
             rewrap_java_method meth
           end
         end
