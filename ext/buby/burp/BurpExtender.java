@@ -1,3 +1,5 @@
+package burp;
+
 //import javax.annotation.PostConstruct; 
 
 import burp.*;
@@ -6,8 +8,6 @@ import org.jruby.*;
 import org.jruby.javasupport.JavaUtil;
 import org.jruby.runtime.ThreadContext; 
 import org.jruby.runtime.builtin.IRubyObject; 
-
-package burp;
 
 /**
  * This is an implementation of the BurpExtender/IBurpExtender interface
