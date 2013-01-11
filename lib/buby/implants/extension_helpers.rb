@@ -38,7 +38,7 @@ class Buby
       # This method can be used to analyze an HTTP response, and obtain various
       # key details about it.
       #
-      # @param [String, Array<byte> response The response to be analyzed.
+      # @param [String, Array<byte>] response The response to be analyzed.
       # @return [IResponseInfo] object (wrapped with Ruby goodness) that can be
       #   queried to obtain details about the response.
       #
@@ -219,9 +219,9 @@ class Buby
       # @param [Fixnum] type The parameter type, as defined in the
       #   +IParameter+ interface.
       # @return [IParameter] object based on the details provided.
-      def buildParameter(name, type)
-        pp [:got_buildParameter, name, type] if $DEBUG
-        Buby::Implants::Parameter.implant(__buildParameter(name, type))
+      def buildParameter(name, value, type)
+        pp [:got_buildParameter, name, value, type] if $DEBUG
+        Buby::Implants::Parameter.implant(__buildParameter(name, value, type))
       end
 
       # This method constructs an +IScannerInsertionPoint+ object based on the
