@@ -807,7 +807,7 @@ class Buby
   #   of Burp's session handling cookie jar.
   #
   def getCookieJarContents
-    _check_and_callback(:getCookieJarContents)
+    _check_and_callback(:getCookieJarContents).tap{|arr| Buby::Implants::Cookie.implant(arr.first)}
   end
   alias get_cookie_jar_contents getCookieJarContents
   alias cookie_jar_contents getCookieJarContents
@@ -817,7 +817,7 @@ class Buby
   # <code>ISessionHandlingAction</code> can query and update the cookie jar
   # in order to handle unusual session handling mechanisms.
   #
-  # @param [ICookie] cookie An array containing details of the cookie to be
+  # @param [ICookie] cookie An onject containing details of the cookie to be
   #   updated. If the cookie jar already contains a cookie that matches the
   #   specified domain and name, then that cookie will be updated with the new
   #   value and expiration, unless the new value is +nil+, in which case the
@@ -825,7 +825,6 @@ class Buby
   #   cookie that matches the specified domain and name, then the cookie will
   #   be added.
   #
-  # @todo hash argument
   def updateCookieJar(cookie)
     _check_and_callback(:updateCookieJar, cookie)
   end
