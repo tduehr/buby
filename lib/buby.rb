@@ -1,7 +1,7 @@
 require 'pp'
 require 'uri'
 require "buby.jar"
-require 'buby/extends.rb'
+require 'buby/implants.rb'
 
 java_import 'Java::Burp::BurpExtender'
 
