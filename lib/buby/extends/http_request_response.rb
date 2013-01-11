@@ -10,7 +10,10 @@ class Buby
 
   end
 
-
+  # @deprecated This will change to the new Buby::Implants style in the next
+  #   release. The methods will be overwritten to be Ruby-like themselves. If
+  #   the standard Java implententation is still desired, use the +__method+
+  #   version. (eg. __response or __request)
   module HttpRequestResponseHelper
 
     # returns the response as a Ruby String object - returns an empty string

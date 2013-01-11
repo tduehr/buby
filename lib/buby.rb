@@ -269,12 +269,12 @@ class Buby
   #
   # * meth = string or symbol name of method
   # * args = variable length array of arguments to pass to meth
-  def _check_and_callback(meth, *args)
+  def _check_and_callback(meth, *args, &block)
     cb = _check_cb
     unless cb.respond_to?(meth)
       raise "#{meth} is not available in your version of Burp"
     end
-    cb.__send__ meth, *args
+    cb.__send__ meth, *args, &block
   end
 
 
@@ -342,10 +342,9 @@ class Buby
   #
   # @param request The request to be parsed.
   # @return An array of:
-  # <code>String[] { name, value, type }</code> containing details of the
-  # parameters contained within the request.
-  # @deprecated Use
-  # <code>IExtensionHelpers.analyzeRequest()</code> instead.
+  #   <code>String[] { name, value, type }</code> containing details of the
+  #   parameters contained within the request.
+  # @deprecated Use +IExtensionHelpers.analyzeRequest()+ instead.
   #
   def getParameters(request)
     request = request.to_java_bytes if request.is_a? String
@@ -392,8 +391,7 @@ class Buby
   # @param menuItemCaption The caption to be displayed on the menu item.
   # @param menuItemHandler The handler to be invoked when the user clicks on
   # the menu item.
-  # @deprecated Use
-  # <code>registerContextMenuFactory()</code> instead.
+  # @deprecated Use {#registerContextMenuFactory} instead.
   #
   # This method is only available with Burp 1.3.07+ and is deprecated in 1.5.01.
   #
@@ -477,10 +475,11 @@ class Buby
   # This method is used to set the display name for the current extension,
   # which will be displayed within the user interface for the Extender tool.
   #
-  # @param name The extension name.
+  # @param [String] name The extension name.
+  # @return [void]
   #
   def setExtensionName(name)
-    _check_and_callback(:getBurpVersion)
+    _check_and_callback(:setExtensionName, name)
   end
   alias extension_name= setExtenstionName
   alias set_extension_name setExtensionName
@@ -502,10 +501,10 @@ class Buby
   # stream. Extensions should write all output to this stream, allowing the
   # Burp user to configure how that output is handled from within the UI.
   #
-  # @return The extension's standard output stream.
+  # @return [OutputStream] The extension's standard output stream.
   #
+  # @todo double check
   def getStdout
-    # TODO might need tweaking
     _check_and_callback(:getStdout)
   end
   alias stdout getStdout
@@ -516,7 +515,7 @@ class Buby
   # allowing the Burp user to configure how that output is handled from
   # within the UI.
   #
-  # @return The extension's standard error stream.
+  # @return [OutputStream] The extension's standard error stream.
   #
   def getStderr
     _check_and_callback(:getStderr)
@@ -530,11 +529,15 @@ class Buby
   # connections) should register a listener and terminate threads / close
   # resources when the extension is unloaded.
   #
-  # @param listener An object created by the extension that implements the
-  # <code>IExtensionStateListener</code> interface.
+  # @overload registerExtensionStateListener(listener)
+  #   @param [IExtensionStateListener] listener A listener for extension
+  #    state events
+  # @overload registerExtensionStateListener(&block)
+  #   @param [Proc] &block A listener for extension state events
+  #    (Isn't JRuby fun?)
   #
-  def registerExtensionStateListener(listener)
-    _check_and_callback(:registerExtensionStateListener, listener)
+  def registerExtensionStateListener(listener = nil, &block)
+    _check_and_callback(:registerExtensionStateListener, listener || block)
   end
   alias register_extension_state_listener registerExtensionStateListener
 
@@ -543,11 +546,14 @@ class Buby
   # custom analysis or modification of these messages by registering an HTTP
   # listener.
   #
-  # @param listener An object created by the extension that implements the
-  # <code>IHttpListener</code> interface.
+  # @overload registerHttpListener(listener)
+  #   @param [IHttpListener] listener A listener for http events
+  # @overload registerHttpListener(&block)
+  #   @param [Proc] &block A listener for http events
+  #    (Isn't JRuby fun?)
   #
-  def registerHttpListener(listener)
-    _check_and_callback(:registerHttpListener, listener)
+  def registerHttpListener(listener = nil, &block)
+    _check_and_callback(:registerHttpListener, listener || &block)
   end
   alias register_http_listener registerHttpListener
 
@@ -556,11 +562,14 @@ class Buby
   # perform custom analysis or modification of these messages, and control
   # in-UI message interception, by registering a proxy listener.
   #
-  # @param listener An object created by the extension that implements the
-  # <code>IProxyListener</code> interface.
+  # @overload registerProxyListener(listener)
+  #   @param [IProxyListener] listener A listener for proxy events
+  # @overload registerHttpListener(&block)
+  #   @param [Proc] &block A listener for proxy events
+  #    (Isn't JRuby fun?)
   #
-  def registerProxyListener(listener)
-    _check_and_callback(:registerProxyListener, listener)
+  def registerProxyListener(listener = nil, &block)
+    _check_and_callback(:registerProxyListener, listener || &block)
   end
   alias register_proxy_listener registerProxyListener
 
@@ -569,24 +578,47 @@ class Buby
   # custom analysis or logging of Scanner issues by registering a Scanner
   # listener.
   #
-  # @param listener An object created by the extension that implements the
-  # <code>IScannerListener</code> interface.
+  # @overload registerScannerListener(listener)
+  #   @param [IScannerListener] listener A listener for scanner events
+  # @overload registerScannerListener(&block)
+  #   @param [Proc] &block A listener for scanner events
+  #    (Isn't JRuby fun?)
   #
-  def registerScannerListener(listener)
-    _check_and_callback(:registerScannerListener, listener)
+  def registerScannerListener(listener = nil, &block)
+    _check_and_callback(:registerScannerListener, listener || &block)
   end
   alias register_scanner_listener registerScannerListener
+
+  # This method is used to register a listener which will be notified of
+  # changes to Burp's suite-wide target scope.
+  #
+  # @overload registerScopeChangeListener(listener)
+  #   @param [IScopeChangeListener] listener A listener for scope change events
+  # @overload registerScopeChangeListener(&block)
+  #   @param [Proc] &block A listener for scope change events
+  #    (Isn't JRuby fun?)
+  #
+  def registerScopeChangeListener(listener = nil, &block)
+    _check_and_callback(:registerScopeChangeListener, listener || &block)
+  end
 
   # This method is used to register a factory for custom context menu items.
   # When the user invokes a context menu anywhere within Burp, the factory
   # will be passed details of the invocation event, and asked to provide any
   # custom context menu items that should be shown.
   #
-  # @param factory An object created by the extension that implements the
-  # <code>IContextMenuFactory</code> interface.
+  # @overload registerContextMenuFactory(factory)
+  #   @param [IContextMenuFactory] factory A listener for context
+  #     menu invocation events
+  # @overload registerContextMenuFactory(&block)
+  #   @param [Proc] &block A listener for context menu invocation events
+  #     (Isn't JRuby fun?)
+  #   @note It is probably better to use the more explicit +factory+ argument
+  #     version to ensure the +IContextMenuInvocation+ Java classes have been
+  #     wrapped properly.
   #
-  def registerContextMenuFactory(factory)
-    _check_and_callback(:registerContextMenuFactory, factory)
+  def registerContextMenuFactory(factory = nil, &block)
+    _check_and_callback(:registerContextMenuFactory, factory || &block)
   end
   alias register_context_menu_factory registerContextMenuFactory
 
@@ -596,11 +628,18 @@ class Buby
   # <code>IMessageEditorTab</code> object, which can provide custom rendering
   # or editing of HTTP messages.
   #
-  # @param factory An object created by the extension that implements the
-  # <code>IMessageEditorTabFactory</code> interface.
+  # @overload registerMessageEditorTabFactory(factory)
+  #   @param [IMessageEditorTabFactory] factory A listener for message editor
+  #     tab events
+  # @overload registerMessageEditorTabFactory(&block)
+  #   @param [Proc] &block A listener for message editor tab events
+  #     (Isn't JRuby fun?)
+  #   @note It is probably better to use the more explicit +factory+ argument
+  #     version to ensure the +IMessageEditorController+ Java classes have been
+  #     wrapped properly.
   #
-  def registerMessageEditorTabFactory(factory)
-    _check_and_callback(:registerMessageEditorTabFactory, factory)
+  def registerMessageEditorTabFactory(factory = nil, &block)
+    _check_and_callback(:registerMessageEditorTabFactory, factory || &block)
   end
   alias register_message_editor_tab_factory registerMessageEditorTabFactory
 
@@ -609,11 +648,15 @@ class Buby
   # provider to provide any custom scanner insertion points that are
   # appropriate for the request.
   #
-  # @param provider An object created by the extension that implements the
-  # <code>IScannerInsertionPointProvider</code> interface.
+  # @overload registerScannerInsertionPointProvider(provider)
+  #   @param [IScannerInsertionPointProvider] provider A provider of scanner
+  #     insertion points
+  # @overload registerScannerInsertionPointProvider(&block)
+  #   @param [Proc] &block A provider of scanner insertion points
+  #     (Isn't JRuby fun?)
   #
-  def registerScannerInsertionPointProvider(provider)
-    _check_and_callback(:registerScannerInsertionPointProvider, provider)
+  def registerScannerInsertionPointProvider(provider = nil, &block)
+    _check_and_callback(:registerScannerInsertionPointProvider, provider || &block)
   end
   alias register_scanner_insertion_point_provider registerScannerInsertionPointProvider
 
@@ -621,8 +664,7 @@ class Buby
   # scanning, Burp will ask the check to perform active or passive scanning
   # on the base request, and report any Scanner issues that are identified.
   #
-  # @param check An object created by the extension that implements the
-  # <code>IScannerCheck</code> interface.
+  # @param [IScannerCheck] check An object that performs a given check.
   #
   def registerScannerCheck(check)
     _check_and_callback(:registerScannerCheck, check)
@@ -633,12 +675,13 @@ class Buby
   # registered factory will be available within the Intruder UI for the user
   # to select as the payload source for an attack. When this is selected, the
   # factory will be asked to provide a new instance of an
-  # <code>IIntruderPayloadGenerator</code> object, which will be used to
-  # generate payloads for the attack.
+  # +IIntruderPayloadGenerator+ object, which will be used to generate payloads
+  # for the attack.
   #
-  # @param factory An object created by the extension that implements the
-  # <code>IIntruderPayloadGeneratorFactory</code> interface.
+  # @param [IIntruderPayloadGeneratorFactory] factory An object to be used for
+  #   generating intruder payloads.
   #
+  # @todo Test - block version may work here
   def registerIntruderPayloadGeneratorFactory(factory)
     _check_and_callback(:registerIntruderPayloadGeneratorFactory, factory)
   end
@@ -648,9 +691,10 @@ class Buby
   # registered processor will be available within the Intruder UI for the
   # user to select as the action for a payload processing rule.
   #
-  # @param processor An object created by the extension that implements the
-  # <code>IIntruderPayloadProcessor</code> interface.
+  # @param [IIntruderPayloadProcessor] processor An object used for processing
+  #   Intruder payloads
   #
+  # @todo Test - block version may work here
   def registerIntruderPayloadProcessor(processor)
     _check_and_callback(:registerIntruderPayloadProcessor, processor)
   end
@@ -661,9 +705,9 @@ class Buby
   # for the user to select as a rule action. Users can choose to invoke an
   # action directly in its own right, or following execution of a macro.
   #
-  # @param action An object created by the extension that implements the
-  # <code>ISessionHandlingAction</code> interface.
+  # @param [ISessionHandlingAction] action An object used to perform a given session action.
   #
+  # @todo Test - block version may work here
   def registerSessionHandlingAction(action)
     _check_and_callback(:registerSessionHandlingAction, action)
   end
@@ -671,8 +715,7 @@ class Buby
 
   # This method is used to add a custom tab to the main Burp Suite window.
   #
-  # @param tab An object created by the extension that implements the
-  # <code>ITab</code> interface.
+  # @param [ITab] tab A tab to be added to the suite's user interface.
   #
   def addSuiteTab(tab)
     _check_and_callback(:addSuiteTab, tab)
@@ -682,8 +725,7 @@ class Buby
   # This method is used to remove a previously-added tab from the main Burp
   # Suite window.
   #
-  # @param tab An object created by the extension that implements the
-  # <code>ITab</code> interface.
+  # @param [ITab] tab The tab to be removed from the suite's user interface.
   #
   def removeSuiteTab(tab)
     _check_and_callback(:removeSuiteTab, tab)
@@ -693,7 +735,7 @@ class Buby
   # This method is used to customize UI components in line with Burp's UI
   # style, including font size, colors, table line spacing, etc.
   #
-  # @param component The UI component to be customized.
+  # @param [Component] component The UI component to be customized.
   #
   def customizeUiComponent(component)
     _check_and_callback(:customizeUiComponent, component)
@@ -704,46 +746,98 @@ class Buby
   # editor, for the extension to use in its own UI.
   #
   # @param controller An object created by the extension that implements the
-  # <code>IMessageEditorController</code> interface. This parameter is
-  # optional and may be
-  # <code>null</code>. If it is provided, then the message editor will query
-  # the controller when required to obtain details about the currently
-  # displayed message, including the
-  # <code>IHttpService</code> for the message, and the associated request or
-  # response message. If a controller is not provided, then the message
-  # editor will not support context menu actions, such as sending requests to
-  # other Burp tools.
-  # @param editable Indicates whether the editor created should be editable,
-  # or used only for message viewing.
-  # @return An object that implements the
-  # <code>IMessageEditor</code> interface, and which the extension can use in
-  # its own UI.
+  #   +IMessageEditorController+ interface. This parameter is optional and
+  #   defaults to +nil+. If it is provided, then the message editor will query
+  #   the controller when required to obtain details about the currently
+  #   displayed message, including the +IHttpService+ for the message, and the
+  #   associated request or response message. If a controller is not provided,
+  #   then the message editor will not support context menu actions, such as
+  #   sending requests to other Burp tools.
+  # @param [Boolean] editable Indicates whether the editor created should be
+  #   editable, or used only for message viewing.
+  # @return [IMessageEditor] An object which the extension can use in
+  #   its own UI.
   #
-  def createMessageEditor(controller, editable)
+  def createMessageEditor(controller = nil, editable = true)
     _check_and_callback(:createMessageEditor, controller, editable)
   end
   alias create_message_editor createMessageEditor
 
+  # This method is used to save configuration settings for the extension in a
+  # persistent way that survives reloads of the extension and of Burp Suite.
+  # Saved settings can be retrieved using the method {#loadExtensionSetting}.
+  #
+  # @param [String] name The name of the setting.
+  # @param [String] value The value of the setting. If this value is +nil+ then
+  #   any existing setting with the specified name will be removed.
+  #
+  def saveExtensionSetting(name, value)
+    _check_and_callback(:saveExtensionSetting, name, value)
+  end
+  alias save_extension_setting saveExtensionSetting
+
+  # This method is used to load configuration settings for the extension that
+  # were saved using the method
+  # <code>saveExtensionSetting()</code>.
+  #
+  # @param [String] name The name of the setting.
+  # @return [String] The value of the setting, or +nil+ if no value is set.
+  #
+  def loadExtensionSetting(name)
+    _check_and_callback(:loadExtensionSetting, name)
+  end
+  alias load_extension_setting loadExtensionSetting
+
   # This method is used to create a new instance of Burp's plain text editor,
   # for the extension to use in its own UI.
   #
-  # @return An object that implements the
-  # <code>ITextEditor</code> interface, and which the extension can use in
-  # its own UI.
+  # @return [ITextEditor] A new text editor the extension can use in its own UI.
   #
   def createTextEditor()
     _check_and_callback(:createTextEditor)
   end
   alias create_text_editor createTextEditor
 
+  # This method is used to retrieve the contents of Burp's session handling
+  # cookie jar. Extensions that provide an +ISessionHandlingAction+ can query
+  # and update the cookie jar in order to handle unusual session handling
+  # mechanisms.
+  #
+  # @return [Array<ICookie>] An array of the cookies representing the contents
+  #   of Burp's session handling cookie jar.
+  #
+  def getCookieJarContents
+    _check_and_callback(:getCookieJarContents)
+  end
+  alias get_cookie_jar_contents getCookieJarContents
+  alias cookie_jar_contents getCookieJarContents
+
+  # This method is used to update the contents of Burp's session handling
+  # cookie jar. Extensions that provide an
+  # <code>ISessionHandlingAction</code> can query and update the cookie jar
+  # in order to handle unusual session handling mechanisms.
+  #
+  # @param [ICookie] cookie An array containing details of the cookie to be
+  #   updated. If the cookie jar already contains a cookie that matches the
+  #   specified domain and name, then that cookie will be updated with the new
+  #   value and expiration, unless the new value is +nil+, in which case the
+  #   cookie will be removed. If the cookie jar does not already contain a
+  #   cookie that matches the specified domain and name, then the cookie will
+  #   be added.
+  #
+  # @todo hash argument
+  def updateCookieJar(cookie)
+    _check_and_callback(:updateCookieJar, cookie)
+  end
+  alias update_cookie_jar updateCookieJar
+
   # This method is used to create a temporary file on disk containing the
   # provided data. Extensions can use temporary files for long-term storage
   # of runtime data, avoiding the need to retain that data in memory.
   # Not strictly needed in JRuby (use Tempfile class in stdlib instead) but might see use.
   #
-  # @param buffer The data to be saved to a temporary file.
-  # @return An object that implements the
-  # <code>ITempFile</code> interface.
+  # @param [String Array<byte>] buffer The data to be saved to a temporary file.
+  # @return [ITempFile] A reference to the temp file.
   #
   def saveToTempFile(buffer)
     buffer = buffer.to_java_bytes if buffer.kind_of? String
@@ -752,19 +846,17 @@ class Buby
   alias save_to_temp_file saveToTempFile
 
   # This method is used to save the request and response of an
-  # <code>IHttpRequestResponse</code> object to temporary files, so that they
-  # are no longer held in memory. Extensions can used this method to convert
-  # <code>IHttpRequestResponse</code> objects into a form suitable for
-  # long-term storage.
+  # +IHttpRequestResponse+ object to temporary files, so that they are no longer
+  # held in memory. Extensions can used this method to convert
+  # +IHttpRequestResponse+ objects into a form suitable for long-term storage.
   #
-  # @param httpRequestResponse The
-  # <code>IHttpRequestResponse</code> object whose request and response
-  # messages are to be saved to temporary files.
-  # @return An object that implements the
-  # <code>IHttpRequestResponsePersisted</code> interface.
+  # @param [IHttpRequestResponse] httpRequestResponse The request and response
+  #   messages to be saved to temporary files.
+  # @return [IHttpRequestResponsePersisted] A reference to the saved temp file.
   #
+  # @todo move HttpRequestResponse to new Implants method...
   def saveBuffersToTempFiles(httpRequestResponse)
-    _check_and_callback(:saveBuffersToTempFiles, httpRequestResponse)
+    _check_and_callback(:saveBuffersToTempFiles, httpRequestResponse).tap{|obj| Buby::HttpRequestResponseHelper.implant(obj)}
   end
   alias save_buffers_to_temp_files saveBuffersToTempFiles
 
@@ -774,52 +866,45 @@ class Buby
   # payload positions, Scanner insertion points, and highlights in Scanner
   # issues.
   #
-  # @param httpRequestResponse The
-  # <code>IHttpRequestResponse</code> object to which the markers should be
-  # applied.
-  # @param requestMarkers A list of index pairs representing the offsets of
-  # markers to be applied to the request message. Each item in the list must
-  # be an int[2] array containing the start and end offsets for the marker.
-  # This parameter is optional and may be
-  # <code>null</code> if no request markers are required.
-  # @param responseMarkers A list of index pairs representing the offsets of
-  # markers to be applied to the response message. Each item in the list must
-  # be an int[2] array containing the start and end offsets for the marker.
-  # This parameter is optional and may be
-  # <code>null</code> if no response markers are required.
-  # @return An object that implements the
-  # <code>IHttpRequestResponseWithMarkers</code> interface.
+  # @param [IHttpRequestResponse] httpRequestResponse The object to which the
+  #   markers should be applied.
+  # @param [Array<Array<Fixnum>>] requestMarkers A list of index pairs
+  #   representing the offsets of markers to be applied to the request message.
+  #   Each item in the list must be an +int[2]+ array containing the start and
+  #   end offsets for the marker. This parameter is optional and may be +nil+ if
+  #   no request markers are required.
+  # @param [Array<Array<Fixnum>>] responseMarkers A list of index pairs
+  #   representing the offsets of markers to be applied to the response message.
+  #   Each item in the list must be an +int[2]+ array containing the start and
+  #   end offsets for the marker. This parameter is optional and may be +nil+ if
+  #   no response markers are required.
+  # @return [IHttpRequestResponseWithMarkers] A marked request/response pair.
   #
   def applyMarkers(httpRequestResponse, requestMarkers, responseMarkers)
-    _check_and_callback(:applyMarkers, httpRequestResponse, requestMarkers, responseMarkers)
+    _check_and_callback(:applyMarkers, httpRequestResponse, requestMarkers, responseMarkers).tap{|obj| Buby::HttpRequestResponseHelper.implant(obj)}
   end
   alias apply_markers applyMarkers
 
   # This method is used to obtain the descriptive name for the Burp tool
   # identified by the tool flag provided.
   #
-  # @param toolFlag A flag identifying a Burp tool (
-  # <code>TOOL_PROXY</code>,
-  # <code>TOOL_SCANNER</code>, etc.). Tool flags are defined within this
-  # interface.
-  # @return The descriptive name for the specified tool.
+  # @param [Fixnum] toolFlag A flag identifying a Burp tool (+TOOL_PROXY+, +TOOL_SCANNER+, etc.). Tool flags are defined within this interface.
+  # @return [String] The descriptive name for the specified tool.
   #
   def getToolName(toolFlag)
     _check_and_callback(:getToolName, toolFlag)
   end
   alias get_tool_name getToolName
 
-  # This method is used to register a new Scanner issue. <b>Note:</b>
-  # Wherever possible, extensions should implement custom Scanner checks
-  # using
-  # <code>IScannerCheck</code> and report issues via those checks, so as to
-  # integrate with Burp's user-driven workflow, and ensure proper
-  # consolidation of duplicate reported issues. This method is only designed
-  # for tasks outside of the normal testing workflow, such as importing
-  # results from other scanning tools.
+  # This method is used to register a new Scanner issue.
+  # @note Wherever possible, extensions should implement custom Scanner checks
+  #   using +IScannerCheck+ and report issues via those checks, so as to
+  #   integrate with Burp's user-driven workflow, and ensure proper
+  #   consolidation of duplicate reported issues. This method is only designed
+  #   for tasks outside of the normal testing workflow, such as importing
+  #   results from other scanning tools.
   #
-  # @param issue An object created by the extension that implements the
-  # <code>IScanIssue</code> interface.
+  # @param [IScanIssue] issue An issue to be added to the scan results.
   #
   def addScanIssue(issue)
     _check_and_callback(:addScanIssue, issue)
