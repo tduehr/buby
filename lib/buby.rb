@@ -282,6 +282,7 @@ class Buby
 
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp proxy history.
+  # @todo Bring IHttpRequestResponse helper up to date
   def getProxyHistory
     HttpRequestResponseList.new(_check_and_callback(:getProxyHistory))
   end
@@ -292,6 +293,7 @@ class Buby
   # Returns a Java array of IHttpRequestResponse objects pulled directly from 
   # the Burp site map for all urls matching the specified literal prefix. 
   # The prefix can be nil to return all objects.
+  # @todo Bring IHttpRequestResponse helper up to date
   def getSiteMap(urlprefix=nil)
     HttpRequestResponseList.new(_check_and_callback(:getSiteMap, urlprefix))
   end
@@ -837,11 +839,11 @@ class Buby
   # of runtime data, avoiding the need to retain that data in memory.
   # Not strictly needed in JRuby (use Tempfile class in stdlib instead) but might see use.
   #
-  # @param [String Array<byte>] buffer The data to be saved to a temporary file.
+  # @param [String, Array<byte>] buffer The data to be saved to a temporary file.
   # @return [ITempFile] A reference to the temp file.
   #
   def saveToTempFile(buffer)
-    buffer = buffer.to_java_bytes if buffer.kind_of? String
+    buffer = buffer.to_java_bytes if buffer.respond_to? :to_java_bytes
     _check_and_callback(:saveToTempFile, buffer)
   end
   alias save_to_temp_file saveToTempFile
@@ -881,6 +883,7 @@ class Buby
   #   no response markers are required.
   # @return [IHttpRequestResponseWithMarkers] A marked request/response pair.
   #
+  # @todo Bring IHttpRequestResponse helper up to date
   def applyMarkers(httpRequestResponse, requestMarkers, responseMarkers)
     _check_and_callback(:applyMarkers, httpRequestResponse, requestMarkers, responseMarkers).tap{|obj| Buby::HttpRequestResponseHelper.implant(obj)}
   end
@@ -1163,6 +1166,7 @@ class Buby
   # * message_info = an instance of the IHttpRequestResponse Java class with
   #   methods for accessing and manipulating various attributes of the message.
   #
+  # @todo Bring IHttpRequestResponse helper up to date
   def evt_http_message(tool_name, is_request, message_info)
     HttpRequestResponseHelper.implant(message_info)
     pp([:got_http_message, tool_name, is_request, message_info]) if $DEBUG

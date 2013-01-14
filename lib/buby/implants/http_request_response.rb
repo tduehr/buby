@@ -1,7 +1,9 @@
 require 'uri'
 
 class Buby
+  # @todo bring IHttpRequestResponse into the now.
 
+  # @deprecated no longer needed in JRuby
   class HttpRequestResponseList < BubyArrayWrapper
     def initialize(obj)
       HttpRequestResponseHelper.implant(obj[0]) if obj.size > 0
@@ -13,11 +15,12 @@ class Buby
   # @deprecated This will change to the new Buby::Implants style in the next
   #   release. The methods will be overwritten to be Ruby-like themselves. If
   #   the standard Java implententation is still desired, use the +__method+
-  #   version. (eg. __response or __request)
+  #   version. (eg. {#__response} or {#__request})
   module HttpRequestResponseHelper
 
     # returns the response as a Ruby String object - returns an empty string
     # if response is nil.
+    # @deprecated
     def response_str
       return response().nil? ? "" : ::String.from_java_bytes(response())
     end
@@ -48,6 +51,7 @@ class Buby
 
     # Returns the full request as a Ruby String - returns an empty string if 
     # request is nil.
+    # @deprecated
     def request_str
       return request().nil? ? "" : ::String.from_java_bytes(request())
     end

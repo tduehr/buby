@@ -29,7 +29,7 @@ class Buby
       #
       def analyzeRequest(*args)
         pp [:got_analyze_request, *args] if $DEBUG
-        args[-1] = args[-1].to_java_bytes if args[-1].kind_of?(String)
+        args[-1] = args[-1].to_java_bytes if args[-1].respond_to? :to_java_bytes
         Buby::Implants::RequestInfo.implant(__analyzeRequest(*args))
       end
 
