@@ -1,8 +1,9 @@
 require 'pp'
 require 'uri'
 require "buby.jar"
-require 'buby/context_menu_factory'
 require 'buby/implants'
+require 'buby/context_menu_factory'
+require 'buby/http_listener'
 
 import 'burp.BurpExtender'
 
