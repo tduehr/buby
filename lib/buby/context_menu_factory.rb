@@ -12,14 +12,12 @@ class Buby
     # details of the menu invocation.
     # Implementations should call super
     #
-    # @param invocation An object that implements the
-    # <code>IMessageEditorTabFactory</code> interface, which the extension can
-    # query to obtain details of the context menu invocation.
-    # @return A list of custom menu items (which may include sub-menus,
-    # checkbox menu items, etc.) that should be displayed. Extensions may
-    # return
-    # <code>null</code> from this method, to indicate that no menu items are
-    # required.
+    # @param [IContextMenuInvocation] invocation An object the extension can
+    #   query to obtain details of the context menu invocation.
+    # @return [Array<JMenuItem>] A list of custom menu items (which may include
+    #   sub-menus, checkbox menu items, etc.) that should be displayed.
+    #   Extensions may return +nil+ from this method, to indicate that no menu
+    #   items are required.
     #
     def self.createMenuItems invocation
       pp [:got_create_menu_items, invocation] if $DEBUG
