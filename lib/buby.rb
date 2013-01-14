@@ -87,6 +87,9 @@ class Buby
 
   # @deprecated moving to proper version module
   VERSION = Buby::Version::STRING
+  
+  # latest tested version of burp
+  COMPAT_VERSION = '1.5.04'
 
   # :stopdoc:
   # @deprecated to be removed next version
