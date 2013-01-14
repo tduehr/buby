@@ -65,9 +65,51 @@ begin
 rescue LoadError
 end
 
-require 'rake/javaextensiontask'
-Rake::JavaExtensionTask.new('buby', jeweler.gemspec)
+begin
+  require 'rake/javaextensiontask'
+  Rake::JavaExtensionTask.new('buby', jeweler.gemspec)
+  task :test => :compile
+  task :build => :compile
+rescue LoadError
+  warn 'rake-compiler not found. java compilation must be performed manually'
+end
 
-task :test => :compile
-task :build => :compile
+namespace :version do
+  task :nice do
+    version_hash = YAML.load_file 'VERSION.yml'
+    version_string = ""
+    version_string << version_hash[:major].to_s
+    version_string << ".#{version_hash[:minor].to_s}"
+    version_string << ".#{version_hash[:patch].to_s}"
+    version_string << ".#{version_hash[:build].to_s}" if version_hash[:build]
+    File.open('lib/buby/version.rb', 'w') do |file|
+      file.write <<EOS
+# GENERATED AUTOMATICALLY BY rake version:nice DO NOT EDIT!
+class Buby
+  module Version
+    STRING = #{version_string}
+    MAJOR = #{version_hash[:major].to_i}
+    MINOR = #{version_hash[:minor].to_i}
+    PATCH = #{version_hash[:patch].to_i}
+    BUILD = #{version_hash[:build].inspect}
+  end
+end
+EOS
+    end
+    jeweler.repo.add 'lib/buby/version.rb'
+    jeweler.repo.commit "fixup! Version bump to #{version_string}"
+    puts "Buby::Version updated to #{version_string}"
+  end
 
+  namespace :bump do
+    task :patch do
+      Rake::Task["version:nice"].invoke
+    end
+    task :patch do
+      Rake::Task["version:nice"].invoke
+    end
+    task :patch do
+      Rake::Task["version:nice"].invoke
+    end
+  end
+end

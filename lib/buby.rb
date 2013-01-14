@@ -85,19 +85,21 @@ class Buby
   autoload :IntruderPayloadGenerator, 'buby/intruder_payload_generator'
   autoload :IntruderPayloadProcessor, 'buby/intruder_payload_processor'
 
-  VERSION = 
-    if File.file?(f=::File.expand_path(File.join(::File.dirname(__FILE__), "../VERSION")))
-      File.read(f).chomp
-    end
+  # @deprecated moving to proper version module
+  VERSION = Buby::Version::STRING
 
   # :stopdoc:
+  # @deprecated to be removed next version
+  # @api private
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
+  # @deprecated to be removed next version
+  # @api private
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
   # :startdoc:
 
   def initialize(other=nil)
     if other
-      raise "arg 0 must be another kind of Buby" unless other.is_a? Buby
+      raise TypeError, "argument must be another kind of Buby, got #{other.class}" unless other.is_a? Buby
       @burp_extender = other.burp_extender
       @burp_callbacks = other.burp_callbacks
     end
