@@ -8,8 +8,6 @@ class Buby
     # This module is used to extend the JRuby proxy class returned by Burp.
     #
     module ContextMenuInvocation
-      include Buby::Implants::Proxy
-
       # Context menu is being invoked in a request editor.
       CONTEXT_MESSAGE_EDITOR_REQUEST = 0;
 
@@ -57,22 +55,31 @@ class Buby
         sil
       end
 
-      # Install ourselves into the current IContextMenuInvocation java class
-      # @param invocation IContextMenuInvocation
+      # Install ourselves into the current +IContextMenuInvocation+ java class
+      # @param [IContextMenuInvocation] curr
       #
       # @todo __persistent__?
-      def self.implant(invocation)
-        unless invocation.implanted? || invocation.nil?
-          pp [:implanting, invocation, invocation.class] if $DEBUG
-          invocation.class.class_eval do
-             alias_method :__getSelectedMessages, :getSelectedMessages
-             alias_method :__getSelectedIssues, :getSelectedIssues
-             include Burp::Implants::ContextMenuInvocation
-             rewrap_java_method :getSelectedMessages
-             rewrap_java_method :getSelectedIssues
+      def self.implant(context_menu_invocation)
+        unless context_menu_invocation.implanted? || context_menu_invocation.nil?
+          pp [:implanting, context_menu_invocation, context_menu_invocation.class] if 
+          context_menu_invocation.class.class_exec(context_menu_invocation) do |context_menu_invocation|
+            a_methods = %w{
+              getSelectedMessages
+              getSelectedIssues
+            }
+            a_methods.each do |meth|
+              alias_method "__"+meth.to_s, meth
+            end
+            include Buby::Implants::ContextMenuInvocation
+            a_methods.each do |meth|
+              java_class.ruby_names_for_java_method(meth).each do |ruby_meth|
+                define_method ruby_meth, Buby::Implants::curr_mod.instance_method(meth)
+              end
+            end
+            include Buby::Implants::Proxy
           end
         end
-        invocation
+        context_menu_invocation
       end
     end
   end

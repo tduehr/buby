@@ -4,7 +4,7 @@ require "buby.jar"
 require 'buby/context_menu_factory'
 require 'buby/implants'
 
-java_import 'Java::Burp::BurpExtender'
+import 'burp.BurpExtender'
 
 # Buby is a mash-up of the commercial security testing web proxy PortSwigger 
 # Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from 
@@ -103,7 +103,7 @@ class Buby
   # Makes this handler the active Ruby handler object for the BurpExtender
   # Java runtime. (there can be only one!)
   def activate!
-    BurpExtender.set_handler(self)
+    Java::Burp::BurpExtender.set_handler(self)
   end
 
   # Returns the internal reference to the BurpExtender instance. This
@@ -482,7 +482,7 @@ class Buby
   def setExtensionName(name)
     _check_and_callback(:setExtensionName, name)
   end
-  alias extension_name= setExtenstionName
+  alias extension_name= setExtensionName
   alias set_extension_name setExtensionName
 
   # This method is used to obtain an
@@ -554,7 +554,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerHttpListener(listener = nil, &block)
-    _check_and_callback(:registerHttpListener, listener || &block)
+    _check_and_callback(:registerHttpListener, listener || block)
   end
   alias register_http_listener registerHttpListener
 
@@ -570,7 +570,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerProxyListener(listener = nil, &block)
-    _check_and_callback(:registerProxyListener, listener || &block)
+    _check_and_callback(:registerProxyListener, listener || block)
   end
   alias register_proxy_listener registerProxyListener
 
@@ -586,7 +586,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerScannerListener(listener = nil, &block)
-    _check_and_callback(:registerScannerListener, listener || &block)
+    _check_and_callback(:registerScannerListener, listener || block)
   end
   alias register_scanner_listener registerScannerListener
 
@@ -600,7 +600,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerScopeChangeListener(listener = nil, &block)
-    _check_and_callback(:registerScopeChangeListener, listener || &block)
+    _check_and_callback(:registerScopeChangeListener, listener || block)
   end
 
   # This method is used to register a factory for custom context menu items.
@@ -619,7 +619,7 @@ class Buby
   #     wrapped properly.
   #
   def registerContextMenuFactory(factory = nil, &block)
-    _check_and_callback(:registerContextMenuFactory, factory || &block)
+    _check_and_callback(:registerContextMenuFactory, factory || block)
   end
   alias register_context_menu_factory registerContextMenuFactory
 
@@ -640,7 +640,7 @@ class Buby
   #     wrapped properly.
   #
   def registerMessageEditorTabFactory(factory = nil, &block)
-    _check_and_callback(:registerMessageEditorTabFactory, factory || &block)
+    _check_and_callback(:registerMessageEditorTabFactory, factory || block)
   end
   alias register_message_editor_tab_factory registerMessageEditorTabFactory
 
@@ -657,7 +657,7 @@ class Buby
   #     (Isn't JRuby fun?)
   #
   def registerScannerInsertionPointProvider(provider = nil, &block)
-    _check_and_callback(:registerScannerInsertionPointProvider, provider || &block)
+    _check_and_callback(:registerScannerInsertionPointProvider, provider || block)
   end
   alias register_scanner_insertion_point_provider registerScannerInsertionPointProvider
 
@@ -948,35 +948,35 @@ class Buby
     pp([:got_callbacks, cb]) if $DEBUG
   end
 
-  ACTION_FOLLOW_RULES              = BurpExtender::ACTION_FOLLOW_RULES
-  ACTION_DO_INTERCEPT              = BurpExtender::ACTION_DO_INTERCEPT
-  ACTION_DONT_INTERCEPT            = BurpExtender::ACTION_DONT_INTERCEPT
-  ACTION_DROP                      = BurpExtender::ACTION_DROP
-  ACTION_FOLLOW_RULES_AND_REHOOK   = BurpExtender::ACTION_FOLLOW_RULES_AND_REHOOK
-  ACTION_DO_INTERCEPT_AND_REHOOK   = BurpExtender::ACTION_DO_INTERCEPT_AND_REHOOK
-  ACTION_DONT_INTERCEPT_AND_REHOOK = BurpExtender::ACTION_DONT_INTERCEPT_AND_REHOOK
+  ACTION_FOLLOW_RULES              = Java::Burp::IInterceptedProxyMessage::ACTION_FOLLOW_RULES
+  ACTION_DO_INTERCEPT              = Java::Burp::IInterceptedProxyMessage::ACTION_DO_INTERCEPT
+  ACTION_DONT_INTERCEPT            = Java::Burp::IInterceptedProxyMessage::ACTION_DONT_INTERCEPT
+  ACTION_DROP                      = Java::Burp::IInterceptedProxyMessage::ACTION_DROP
+  ACTION_FOLLOW_RULES_AND_REHOOK   = Java::Burp::IInterceptedProxyMessage::ACTION_FOLLOW_RULES_AND_REHOOK
+  ACTION_DO_INTERCEPT_AND_REHOOK   = Java::Burp::IInterceptedProxyMessage::ACTION_DO_INTERCEPT_AND_REHOOK
+  ACTION_DONT_INTERCEPT_AND_REHOOK = Java::Burp::IInterceptedProxyMessage::ACTION_DONT_INTERCEPT_AND_REHOOK
   # Flag used to identify Burp Suite as a whole.
-  TOOL_SUITE                       = BurpExtender::TOOL_SUITE
+  TOOL_SUITE                       = Java::Burp::IBurpExtenderCallbacks::TOOL_SUITE
   # Flag used to identify the Burp Target tool.
-  TOOL_TARGET                      = BurpExtender::TOOL_TARGET
+  TOOL_TARGET                      = Java::Burp::IBurpExtenderCallbacks::TOOL_TARGET
   # Flag used to identify the Burp Proxy tool.
-  TOOL_PROXY                       = BurpExtender::TOOL_PROXY
+  TOOL_PROXY                       = Java::Burp::IBurpExtenderCallbacks::TOOL_PROXY
   # Flag used to identify the Burp Spider tool.
-  TOOL_SPIDER                      = BurpExtender::TOOL_SPIDER
+  TOOL_SPIDER                      = Java::Burp::IBurpExtenderCallbacks::TOOL_SPIDER
   # Flag used to identify the Burp Scanner tool.
-  TOOL_SCANNER                     = BurpExtender::TOOL_SCANNER
+  TOOL_SCANNER                     = Java::Burp::IBurpExtenderCallbacks::TOOL_SCANNER
   # Flag used to identify the Burp Intruder tool.
-  TOOL_INTRUDER                    = BurpExtender::TOOL_INTRUDER
+  TOOL_INTRUDER                    = Java::Burp::IBurpExtenderCallbacks::TOOL_INTRUDER
   # Flag used to identify the Burp Repeater tool.
-  TOOL_REPEATER                    = BurpExtender::TOOL_REPEATER
+  TOOL_REPEATER                    = Java::Burp::IBurpExtenderCallbacks::TOOL_REPEATER
   # Flag used to identify the Burp Sequencer tool.
-  TOOL_SEQUENCER                   = BurpExtender::TOOL_SEQUENCER
+  TOOL_SEQUENCER                   = Java::Burp::IBurpExtenderCallbacks::TOOL_SEQUENCER
   # Flag used to identify the Burp Decoder tool.
-  TOOL_DECODER                     = BurpExtender::TOOL_DECODER
+  TOOL_DECODER                     = Java::Burp::IBurpExtenderCallbacks::TOOL_DECODER
   # Flag used to identify the Burp Comparer tool.
-  TOOL_COMPARER                    = BurpExtender::TOOL_COMPARER
+  TOOL_COMPARER                    = Java::Burp::IBurpExtenderCallbacks::TOOL_COMPARER
   # Flag used to identify the Burp Extender tool.
-  TOOL_EXTENDER                    = BurpExtender::TOOL_EXTENDER
+  TOOL_EXTENDER                    = Java::Burp::IBurpExtenderCallbacks::TOOL_EXTENDER
 
   # Seems we need to specifically render our 'message' to a string here in
   # ruby. Otherwise there's flakiness when converting certain binary non-ascii

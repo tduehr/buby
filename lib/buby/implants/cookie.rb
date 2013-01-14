@@ -12,27 +12,33 @@ class Buby
       #
       def getExpiration
         ret = __getExpiration
-        ret.nil? ret : Time.at(ret.time/1000.0)
+        ret.nil? ? ret : Time.at(ret.time/1000.0)
       end
 
-      # Install ourselves into the current +IExtensionHelpers+ java class
+      # Install ourselves into the current +ICookie+ java class
       # @param [ICookie] cookie instance
       #
       # @todo __persistent__?
       def self.implant(cookie)
         unless cookie.implanted? || cookie.nil?
-          pp [:implanting, cookie, invocation.class] if $DEBUG
-          cookie.class.class_exec(self) do
-            methods = %w{
+          pp [:implanting, cookie, cookie.class] if $DEBUG
+          cookie.class.class_exec(cookie) do |cookie|
+            a_methods = %w{
               getExpiration
             }
-            methods.each do |meth|
-              alias_method "__"+meth, meth
+            a_methods.each do |meth|
+              pp ["__" + meth, self] if $DEBUG
+              alias_method "__"+meth.to_s, meth
             end
             include Buby::Implants::Cookie
-            methods.each do |meth|
-              rewrap_java_method meth
+            a_methods.each do |meth|
+              pp [meth, self] if $DEBUG
+              java_class.ruby_names_for_java_method(meth).each do |ruby_meth|
+                pp [ruby_meth, meth, self] if $DEBUG
+                define_method ruby_meth, Buby::Implants::Cookie.instance_method(meth)
+              end
             end
+            include Buby::Implants::Proxy
           end
         end
         cookie

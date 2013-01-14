@@ -22,11 +22,10 @@ class Buby
     module JavaClass
       def ruby_names_for_java_method meth
         self_java_ref = JRuby.reference(self).javaClass
-        java_meth = self_java_ref.getMethod(meth)
-        org.jruby.javasupport.JavaUtil.getRubyNamesForJavaName(java_meth.name, [java_meth])
+        target_methods = self_java_ref.getMethods.group_by{|jmeth| jmeth.name}[meth.to_s]
+        org.jruby.javasupport.JavaUtil.getRubyNamesForJavaName(target_methods.first.name, target_methods)
       end
 
-      private
       # copies wrapper_id method to java_id and all ruby-like aliases
       # used to re-attach java method proxies to new call wrapper
       #
@@ -44,12 +43,12 @@ class Object
   include Buby::Implants::Object
 end
 
-class Enumerable
+module Enumerable
   include Buby::Implants::Enumerable unless [].respond_to?(:each_with_object)
 end
 
 module Java
-  class JavaClass < Java::JavaObject
+  class JavaClass
     include Buby::Implants::JavaClass
   end
 end

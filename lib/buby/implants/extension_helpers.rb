@@ -8,8 +8,6 @@ class Buby
     # This module is used to extend the JRuby proxy class returned by Burp.
     #
     module ExtensionHelpers
-      include Buby::Implants::Proxy
-
       # This method can be used to analyze an HTTP request, and obtain various
       # key details about it. The resulting +IRequestInfo+ object
       # will not include the full request URL.
@@ -44,7 +42,7 @@ class Buby
       #
       def analyzeResponse(response)
         pp [:got_analyze_response, response] if $DEBUG
-        response = String.to_java_bytes if response.kind_of?(String)
+        response = response.to_java_bytes if response.respond_to? :to_java_bytes
         Buby::Implants::ResponseInfo.implant(__analyzeResponse(response))
       end
 
@@ -59,8 +57,8 @@ class Buby
       #
       def getRequestParameter(request, parameter_name)
         pp [:got_get_request_parameter, parameter_name, request] if $DEBUG
-        request = request.to_java_bytes if request.kind_of?(String)
-        __getRequestParameter(request, paramter_name)
+        request = request.to_java_bytes if request.respond_to? :to_java_bytes
+        __getRequestParameter(request, parameter_name)
       end
 
       # This method searches a piece of data for the first occurrence of a
@@ -242,41 +240,80 @@ class Buby
         base_request = base_request.to_java_bytes if base_request.respond_to? :to_java_bytes
         Buby::Implants::ScannerInsertionPoint.implant(__makeScannerInsertionPoint(insertion_point_name, base_request, from, to))
       end
-    end
 
-    # Install ourselves into the current +IExtensionHelpers+ java class
-    # @param [IExtensionHelpers] helpers
-    #
-    # @todo __persistent__?
-    def self.implant(helpers)
-      unless helpers.implanted? || helpers.nil?
-        pp [:implanting, helpers, invocation.class] if $DEBUG
-        helpers.class.class_exec(self) do
-          methods = %w{
-            analyzeRequest
-            analyzeResponse
-            getRequestParameter
-            indexOf
-            buildHttpMessage
-            buildHttpRequest
-            addParameter
-            removeParameter
-            updateParameter
-            toggleRequestMethod
-            buildHttpService
-            buildParameter
-            makeScannerInsertionPoint            
-          }
-          instance_methods.each do |meth|
+      def self.extend_proxy(arg)
+        pp [self, arg, arg.class]
+        a_methods = %w{
+          analyzeRequest
+          analyzeResponse
+          getRequestParameter
+          indexOf
+          buildHttpMessage
+          buildHttpRequest
+          addParameter
+          removeParameter
+          updateParameter
+          toggleRequestMethod
+          buildHttpService
+          buildParameter
+          makeScannerInsertionPoint            
+        }
+        a_methods.each do |meth|
+          pp ["__" + meth, self] if $DEBUG
+          arg.class_exec(meth) do |meth|
             alias_method "__"+meth.to_s, meth
           end
-          include Buby::Implants::ExtensionHelpers
-          instance_methods.each do |meth|
-            rewrap_java_method meth
+        end
+        a_methods.each do |meth|
+          pp [meth, self] if $DEBUG
+          arg.java_class.ruby_names_for_java_method(meth).each do |ruby_meth|
+            pp [ruby_meth, meth, self] if $DEBUG
+            arg.class_exec(ruby_meth, meth, instance_method(meth)) do |ruby_meth, meth_name, meth|
+              define_method meth_name, meth
+              # alias_method ruby_meth, "__"+meth unless ruby_meth == meth
+            end
           end
         end
+        include Buby::Implants::Proxy
       end
-      helpers
+
+      # Install ourselves into the current +IExtensionHelpers+ java class
+      # @param [IExtensionHelpers] helpers
+      #
+      # @todo __persistent__?
+      def self.implant(helpers)
+        unless helpers.implanted? || helpers.nil?
+          pp [:implanting, helpers, helpers.class] if $DEBUG
+          helpers.class.class_exec(helpers) do |helpers|
+            a_methods = %w{
+              analyzeRequest
+              analyzeResponse
+              getRequestParameter
+              indexOf
+              buildHttpMessage
+              buildHttpRequest
+              addParameter
+              removeParameter
+              updateParameter
+              toggleRequestMethod
+              buildHttpService
+              buildParameter
+              makeScannerInsertionPoint            
+            }
+            a_methods.each do |meth|
+              alias_method "__"+meth.to_s, meth
+            end
+            include Buby::Implants::ExtensionHelpers
+            a_methods.each do |meth|
+              java_class.ruby_names_for_java_method(meth).each do |ruby_meth|
+                define_method ruby_meth, Buby::Implants::ExtensionHelpers.instance_method(meth)
+              end
+            end
+            include Buby::Implants::Proxy
+          end
+        end
+        helpers
+      end
     end
   end
 end
