@@ -56,7 +56,7 @@ class Buby
       end
 
       # Install ourselves into the current +IContextMenuInvocation+ java class
-      # @param [IContextMenuInvocation] curr
+      # @param [IContextMenuInvocation] context_menu_invocation
       #
       # @todo __persistent__?
       def self.implant(context_menu_invocation)
