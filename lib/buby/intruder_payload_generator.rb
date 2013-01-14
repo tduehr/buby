@@ -4,6 +4,25 @@ class Buby
   # instance of this interface when required as part of a new Intruder attack.
   #
   class IntruderPayloadGenerator
+    include Java::Burp::IIntruderPayloadGenerator
+    include Java::Burp::IIntruderPayloadGeneratorFactory
+
+    # (see Buby::IntruderPayloadGeneratorFactory#getGeneratorName)
+    def self.getGeneratorName; self.name.to_java_string; end
+
+    # {include:Buby::IntruderPayloadGeneratorFactory#createNewInstance}
+    # @param (see Buby::IntruderPayloadGeneratorFactory#createNewInstance)
+    # @return (see #initialize)
+    def self.createNewInstance(attack)
+      Buby::Implants::IntruderAttack.implant(attack)
+      self.new(attack)
+    end
+
+    # @param (see Buby::IntruderPayloadGeneratorFactory#createNewInstance)
+    def initialize(attack)
+      @attack = attack
+    end
+
     # This method is used by Burp to determine whether the payload generator is
     # able to provide any further payloads.
     #
