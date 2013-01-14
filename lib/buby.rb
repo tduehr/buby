@@ -84,6 +84,7 @@ import 'burp.BurpExtender'
 class Buby
   autoload :IntruderPayloadGenerator, 'buby/intruder_payload_generator'
   autoload :IntruderPayloadProcessor, 'buby/intruder_payload_processor'
+  autoload :MessageEditorTab, 'buby/message_editor_tab'
 
   # @deprecated moving to proper version module
   VERSION = Buby::Version::STRING
