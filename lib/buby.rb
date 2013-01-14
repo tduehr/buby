@@ -442,8 +442,8 @@ class Buby
   # configuration.
   #
   # This method is only available with Burp 1.3.09+
-  def loadConfig(conf)
-    _check_and_callback(:loadConfig, conf)
+  def loadConfig(config)
+    _check_and_callback(:loadConfig, config)
   end
   alias load_config loadConfig
   alias config= loadConfig
