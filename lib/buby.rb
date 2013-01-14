@@ -770,7 +770,7 @@ class Buby
   #   its own UI.
   #
   def createMessageEditor(controller = nil, editable = true)
-    _check_and_callback(:createMessageEditor, controller, editable)
+    Buby::Implants::MessageEditor.implant _check_and_callback(:createMessageEditor, controller, editable)
   end
   alias create_message_editor createMessageEditor
 
