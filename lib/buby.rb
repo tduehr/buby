@@ -82,6 +82,7 @@ import 'burp.BurpExtender'
 #   Buby-namer.
 #
 class Buby
+  autoload :IntruderPayloadGenerator, 'buby/intruder_payload_generator'
 
   VERSION = 
     if File.file?(f=::File.expand_path(File.join(::File.dirname(__FILE__), "../VERSION")))
