@@ -33,7 +33,7 @@ class Buby
             include Buby::Implants::InterceptedProxyMessage
             a_methods.each do |meth|
               java_class.ruby_names_for_java_method(meth).each do |ruby_meth|
-                define_method ruby_meth, Buby::Implants::curr_mod.instance_method(meth)
+                define_method ruby_meth, Buby::Implants::InterceptedProxyMessage.instance_method(meth)
               end
             end
             include Buby::Implants::Proxy
