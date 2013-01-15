@@ -17,13 +17,13 @@ class Buby
       end
 
       # Install ourselves into the current +IInterceptedProxyMessage+ java class
-      # @param [IInterceptedProxyMessage] intercepted_proxy_message
+      # @param [IInterceptedProxyMessage] message
       #
       # @todo __persistent__?
-      def self.implant(intercepted_proxy_message)
-        unless intercepted_proxy_message.implanted? || intercepted_proxy_message.nil?
-          pp [:implanting, intercepted_proxy_message, intercepted_proxy_message.class] if 
-          intercepted_proxy_message.class.class_exec(intercepted_proxy_message) do |intercepted_proxy_message|
+      def self.implant(message)
+        unless message.implanted? || message.nil?
+          pp [:implanting, message, message.class] if 
+          message.class.class_exec(message) do |message|
             a_methods = %w{
               getMessageInfo
             }
@@ -39,9 +39,8 @@ class Buby
             include Buby::Implants::Proxy
           end
         end
-        intercepted_proxy_message
+        message
       end
-      
     end
   end
 end

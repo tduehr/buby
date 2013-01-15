@@ -39,13 +39,13 @@ class Buby
       end
 
       # Install ourselves into the current +IMessageEditor+ java class
-      # @param [IMessageEditor] message_editor
+      # @param [IMessageEditor] editor
       #
       # @todo __persistent__?
-      def self.implant(message_editor)
-        unless message_editor.implanted? || message_editor.nil?
-          pp [:implanting, message_editor, message_editor.class] if 
-          message_editor.class.class_exec(message_editor) do |message_editor|
+      def self.implant(editor)
+        unless editor.implanted? || editor.nil?
+          pp [:implanting, editor, editor.class] if 
+          editor.class.class_exec(editor) do |editor|
             a_methods = %w{
               setMessage
               getMessage
@@ -63,7 +63,7 @@ class Buby
             include Buby::Implants::Proxy
           end
         end
-        message_editor
+        editor
       end
       
     end

@@ -13,13 +13,13 @@ class Buby
       end
 
       # Install ourselves into the current +IIntruderAttack+ java class
-      # @param [IIntruderAttack] intruder_attack
+      # @param [IIntruderAttack] attack
       #
       # @todo __persistent__?
-      def self.implant(intruder_attack)
-        unless intruder_attack.implanted? || intruder_attack.nil?
-          pp [:implanting, intruder_attack, intruder_attack.class] if 
-          intruder_attack.class.class_exec(intruder_attack) do |intruder_attack|
+      def self.implant(attack)
+        unless attack.implanted? || attack.nil?
+          pp [:implanting, attack, attack.class] if 
+          attack.class.class_exec(attack) do |attack|
             a_methods = %w{
               getRequestTemplate
             }
@@ -35,7 +35,7 @@ class Buby
             include Buby::Implants::Proxy
           end
         end
-        intruder_attack
+        attack
       end
       
     end

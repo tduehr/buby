@@ -31,13 +31,13 @@ class Buby
       end
 
       # Install ourselves into the current +IMessageEditorController+ java class
-      # @param [IMessageEditorController] message_editor_controller
+      # @param [IMessageEditorController] controller
       #
       # @todo __persistent__?
-      def self.implant(message_editor_controller)
-        unless message_editor_controller.implanted? || message_editor_controller.nil?
-          pp [:implanting, message_editor_controller, message_editor_controller.class] if 
-          message_editor_controller.class.class_exec(message_editor_controller) do |message_editor_controller|
+      def self.implant(controller)
+        unless controller.implanted? || controller.nil?
+          pp [:implanting, controller, controller.class] if 
+          controller.class.class_exec(controller) do |controller|
             a_methods = %w{
               getRequest
               getResponse
@@ -54,7 +54,7 @@ class Buby
             include Buby::Implants::Proxy
           end
         end
-        message_editor_controller
+        controller
       end
     end
   end

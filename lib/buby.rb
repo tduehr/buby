@@ -2,8 +2,6 @@ require 'pp'
 require 'uri'
 require "buby.jar"
 require 'buby/implants'
-require 'buby/context_menu_factory'
-require 'buby/http_listener'
 
 import 'burp.BurpExtender'
 
@@ -82,8 +80,12 @@ import 'burp.BurpExtender'
 #   Buby-namer.
 #
 class Buby
+  autoload :ContextMenuFactory, 'buby/context_menu_factory'
+  autoload :HttpListener, 'buby/http_listener'
   autoload :IntruderPayloadGenerator, 'buby/intruder_payload_generator'
+  autoload :IntruderPayloadGeneratorFactory, 'buby/intruder_payload_generator_factory'
   autoload :IntruderPayloadProcessor, 'buby/intruder_payload_processor'
+  autoload :MessageEditorController, 'buby/message_editor_controller'
   autoload :MessageEditorTab, 'buby/message_editor_tab'
   autoload :MessageEditorTabFactory, 'buby/message_editor_tab_factory'
 

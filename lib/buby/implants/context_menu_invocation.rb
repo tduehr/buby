@@ -56,13 +56,13 @@ class Buby
       end
 
       # Install ourselves into the current +IContextMenuInvocation+ java class
-      # @param [IContextMenuInvocation] context_menu_invocation
+      # @param [IContextMenuInvocation] invocation
       #
       # @todo __persistent__?
-      def self.implant(context_menu_invocation)
-        unless context_menu_invocation.implanted? || context_menu_invocation.nil?
-          pp [:implanting, context_menu_invocation, context_menu_invocation.class] if 
-          context_menu_invocation.class.class_exec(context_menu_invocation) do |context_menu_invocation|
+      def self.implant(invocation)
+        unless invocation.implanted? || invocation.nil?
+          pp [:implanting, invocation, invocation.class] if 
+          invocation.class.class_exec(invocation) do |invocation|
             a_methods = %w{
               getSelectedMessages
               getSelectedIssues
@@ -79,7 +79,7 @@ class Buby
             include Buby::Implants::Proxy
           end
         end
-        context_menu_invocation
+        invocation
       end
     end
   end
