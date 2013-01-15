@@ -85,6 +85,7 @@ class Buby
   autoload :IntruderPayloadGenerator, 'buby/intruder_payload_generator'
   autoload :IntruderPayloadProcessor, 'buby/intruder_payload_processor'
   autoload :MessageEditorTab, 'buby/message_editor_tab'
+  autoload :MessageEditorTabFactory, 'buby/message_editor_tab_factory'
 
   # @deprecated moving to proper version module
   VERSION = Buby::Version::STRING

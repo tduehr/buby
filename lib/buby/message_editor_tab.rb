@@ -7,6 +7,19 @@ class Buby
   # @todo voodoo method wrapping
   class MessageEditorTab
     include Java::Burp::IMessageEditorTab
+    include Java::Burp::IMessageEditorTabFactory
+    
+    attr_acccessor :controller, :editable
+    # (see Buby::MessageEditorTabFactory#createNewInstance)
+    def initialize controller, editable
+      @controller = controller
+      @editable = editable
+    end
+
+    # (see Buby::MessageEditorTabFactory#createNewInstance)
+    def self.createNewInstance controller, editable
+      self.new controller, editable
+    end
 
     # This method returns the caption that should appear on the custom tab
     # when it is displayed.
