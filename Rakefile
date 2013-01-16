@@ -87,7 +87,7 @@ namespace :version do
 # GENERATED AUTOMATICALLY BY rake version:nice DO NOT EDIT!
 class Buby
   module Version
-    STRING = #{version_string}
+    STRING = "#{version_string}"
     MAJOR = #{version_hash[:major].to_i}
     MINOR = #{version_hash[:minor].to_i}
     PATCH = #{version_hash[:patch].to_i}

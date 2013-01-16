@@ -88,6 +88,7 @@ class Buby
   autoload :MessageEditorController, 'buby/message_editor_controller'
   autoload :MessageEditorTab, 'buby/message_editor_tab'
   autoload :MessageEditorTabFactory, 'buby/message_editor_tab_factory'
+  autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
   VERSION = Buby::Version::STRING
