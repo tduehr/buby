@@ -928,6 +928,7 @@ class Buby
   alias add_scan_issue addScanIssue
 
   ### Event Handlers ###
+  # @todo move event handler base logic to java side
 
   # This method is called by the BurpExtender java implementation upon 
   # initialization of the BurpExtender instance for Burp. The args parameter
@@ -947,6 +948,7 @@ class Buby
   # implementation of BurpExtender.
   #
   # The return value is ignored.
+  # @deprecated - nothing calls this anymore
   def evt_command_line_args args
     pp([:got_args, args]) if $DEBUG
   end
@@ -1179,9 +1181,32 @@ class Buby
   #   methods for accessing and manipulating various attributes of the message.
   #
   # @todo Bring IHttpRequestResponse helper up to date
+  # @note Changed in Burp 1.5.01+
+  # @deprecated This is the called by the legacy interface, use
+  #   {#process_http_method} instead
   def evt_http_message(tool_name, is_request, message_info)
     HttpRequestResponseHelper.implant(message_info)
-    pp([:got_http_message, tool_name, is_request, message_info]) if $DEBUG
+    pp([:got_evt_http_message, tool_name, is_request, message_info]) if $DEBUG
+  end
+
+
+  # This method is invoked when an HTTP request is about to be issued, and
+  # when an HTTP response has been received.
+  #
+  # @param [Fixnum] toolFlag A flag indicating the Burp tool that issued the
+  #   request. Burp tool flags are defined in the +IBurpExtenderCallbacks+
+  #   interface.
+  # @param [Boolean] messageIsRequest Flags whether the method is being invoked
+  #   for a request or response.
+  # @param [IHttpRequestResponse] messageInfo Details of the request / response
+  #   to be processed. Extensions can call the setter methods on this object to
+  #   update the current message and so modify Burp's behavior.
+  # @return [void]
+  # @note This is the 1.5.01+ version of this callback
+  #
+  def process_http_message(tool_name, is_request, message_info)
+    HttpRequestResponseHelper.implant(message_info)
+    pp([:got_process_http_message, tool_name, is_request, message_info]) if $DEBUG
   end
 
   # This method is invoked whenever Burp Scanner discovers a new, unique 

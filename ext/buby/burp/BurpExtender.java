@@ -16,10 +16,11 @@ import org.jruby.runtime.builtin.IRubyObject;
  * This is a complete implementation of the Burp Extender interfaces available
  * as of Burp Suite 1.4
  */
-public class BurpExtender implements IBurpExtender, IExtensionStateListener { 
+public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener { 
     public final static String INIT_METH =      "evt_extender_init";
     public final static String PROXYMSG_METH =  "evt_proxy_message_raw";
-    public final static String HTTPMSG_METH =   "evt_http_message";
+    public final static String L_HTTPMSG_METH = "evt_http_message";
+    public final static String HTTPMSG_METH =   "process_http_messge";
     public final static String SCANISSUE_METH = "evt_scan_issue";
     public final static String MAINARGS_METH =  "evt_commandline_args";
     public final static String REG_METH =       "evt_register_callbacks";
@@ -126,8 +127,9 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener {
     public void registerExtenderCallbacks(IBurpExtenderCallbacks cb) {
       if(r_obj != null && r_obj.respondsTo(REG_METH)) {
         cb.issueAlert("[BurpExtender] registering JRuby handler callbacks");
-        cb.setExtensionName("Buby");
+        cb.setExtensionName("Buby v" + r_obj.getType().defineOrGetModuleUnder("Version").getConstant("STRING"));
         cb.registerExtensionStateListener(this);
+        cb.registerHttpListener(this);
         
         r_obj.callMethod(ctx(r_obj), REG_METH, to_ruby(rt(r_obj), cb));
       }
@@ -224,6 +226,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener {
 
     /** 
      * Added in Burp 1.2.09 
+     * @note Changed in Burp 1.5.01+
      * No javadoc yet but here's what the PortSwigger dev blog has to say:
      *
      * The processHttpMessage method is invoked whenever any of Burp's tools 
@@ -232,15 +235,44 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener {
      * can be used to intercept and modify the HTTP traffic of all Burp 
      * tools.
      */
+    @deprecated
     public void processHttpMessage(
         String toolName, 
         boolean messageIsRequest, 
         IHttpRequestResponse messageInfo ) 
     {
-      if (r_obj != null && r_obj.respondsTo(HTTPMSG_METH)) {
+      if (r_obj != null && r_obj.respondsTo(L_HTTPMSG_METH)) {
         Ruby rt = rt(r_obj);
         IRubyObject http_msg[] = {
           to_ruby(rt, toolName),
+          to_ruby(rt, messageIsRequest),
+          to_ruby(rt, messageInfo)
+        };
+    
+        r_obj.callMethod(ctx(r_obj), L_HTTPMSG_METH, http_msg);
+      }
+    }
+
+     /**
+     * @note This is the 1.5.01+ version of this callback
+      * This method is invoked when an HTTP request is about to be issued, and
+      * when an HTTP response has been received.
+      *
+      * @param toolFlag A flag indicating the Burp tool that issued the request.
+      * Burp tool flags are defined in the
+      * <code>IBurpExtenderCallbacks</code> interface.
+      * @param messageIsRequest Flags whether the method is being invoked for a
+      * request or response.
+      * @param messageInfo Details of the request / response to be processed.
+      * Extensions can call the setter methods on this object to update the
+      * current message and so modify Burp's behavior.
+      */
+     public void processHttpMessage(int toolFlag, boolean messageIsRequest, IHttpRequestResponse messageInfo)
+    {
+      if (r_obj != null && r_obj.respondsTo(HTTPMSG_METH)) {
+        Ruby rt = rt(r_obj);
+        IRubyObject http_msg[] = {
+          to_ruby(rt, toolFlag),
           to_ruby(rt, messageIsRequest),
           to_ruby(rt, messageInfo)
         };
@@ -347,8 +379,6 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener {
     public void extensionUnloaded() {
       if (r_obj != null && r_obj.respondsTo(UNLOAD_METH))
         r_obj.callMethod(ctx(r_obj), UNLOAD_METH);
-      else 
-        applicationClosing();
     }
 }
 
