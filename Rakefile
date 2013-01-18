@@ -10,7 +10,7 @@ begin
     gem.name = "buby"
     gem.summary = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger}
     gem.description = %q{Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface.}
-    gem.email = "emonti@matasano.com, td@matasano.com"
+    gem.email = "td@matasano.com"
     gem.homepage = "http://tduehr.github.com/buby"
     gem.authors = ["Eric Monti, tduehr"]
     gem.platform = "java"
@@ -112,4 +112,36 @@ EOS
       Rake::Task["version:nice"].invoke
     end
   end
+end
+
+desc "Start Buby in interactive mode with all runtime dependencies loaded"
+task :test_console, [:script] do |t,args|
+  # TODO move to a command
+  dirs = ['ext', 'lib'].select { |dir| File.directory?(dir) }
+
+  original_load_path = $LOAD_PATH
+
+  cmd = if File.exist?('Gemfile')
+          require 'bundler'
+          Bundler.setup(:default)
+        end
+
+  # add the project code directories
+  $LOAD_PATH.unshift(*dirs)
+
+  # clear ARGV so IRB is not confused
+  ARGV.clear
+
+  require 'irb'
+
+  require 'burpsuite_pro_v1.5.04.jar'
+  require 'buby'
+  $burp = Buby.start_burp
+
+  # set the optional script to run
+  IRB.conf[:SCRIPT] = args.script
+  IRB.start
+
+  # return the $LOAD_PATH to it's original state
+  $LOAD_PATH.reject! { |path| !(original_load_path.include?(path)) }
 end
