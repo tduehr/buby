@@ -81,6 +81,7 @@ import 'burp.BurpExtender'
 #
 class Buby
   autoload :ContextMenuFactory, 'buby/context_menu_factory'
+  autoload :Cookie, 'buby/cookie'
   autoload :HttpListener, 'buby/http_listener'
   autoload :IntruderPayloadGenerator, 'buby/intruder_payload_generator'
   autoload :IntruderPayloadGeneratorFactory, 'buby/intruder_payload_generator_factory'
@@ -100,6 +101,7 @@ class Buby
   # @deprecated to be removed next version
   # @api private
   LIBPATH = ::File.expand_path(::File.dirname(__FILE__)) + ::File::SEPARATOR
+
   # @deprecated to be removed next version
   # @api private
   PATH = ::File.dirname(LIBPATH) + ::File::SEPARATOR
@@ -145,7 +147,7 @@ class Buby
   #  * positions of the insertion points that should be scanned. Each item in
   #  * the list must be an int[2] array containing the start and end offsets
   #  * for the insertion point. *1.4+* only
-  
+  #
   def doActiveScan(host, port, https, req, ip_off)
     req = req.to_java_bytes if req.is_a? String
     getBurpVersion ? _check_cb.doActiveScan(host, port, https, req, ip_off) : _check_cb.doActiveScan(host, port, https, req)
@@ -833,7 +835,7 @@ class Buby
   # <code>ISessionHandlingAction</code> can query and update the cookie jar
   # in order to handle unusual session handling mechanisms.
   #
-  # @param [ICookie] cookie An onject containing details of the cookie to be
+  # @param [ICookie] cookie An object containing details of the cookie to be
   #   updated. If the cookie jar already contains a cookie that matches the
   #   specified domain and name, then that cookie will be updated with the new
   #   value and expiration, unless the new value is +nil+, in which case the
@@ -841,6 +843,7 @@ class Buby
   #   cookie that matches the specified domain and name, then the cookie will
   #   be added.
   #
+  # @see Buby::Cookie
   def updateCookieJar(cookie)
     _check_and_callback(:updateCookieJar, cookie)
   end
