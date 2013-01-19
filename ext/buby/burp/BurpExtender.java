@@ -16,10 +16,11 @@ import org.jruby.runtime.builtin.IRubyObject;
  * This is a complete implementation of the Burp Extender interfaces available
  * as of Burp Suite 1.4
  */
-public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener { 
+public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener, IProxyListener { 
     public final static String INIT_METH =      "evt_extender_init";
-    public final static String PROXYMSG_METH =  "evt_proxy_message_raw";
+    public final static String L_PROXYMSG_METH =  "evt_proxy_message_raw";
     public final static String L_HTTPMSG_METH = "evt_http_message";
+    public final static String PROXYMSG_METH =  "process_proxy_message";
     public final static String HTTPMSG_METH =   "process_http_messge";
     public final static String SCANISSUE_METH = "evt_scan_issue";
     public final static String MAINARGS_METH =  "evt_commandline_args";
@@ -140,7 +141,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * response is received. 
      *
      * This implementation simply passes all arguments to the Ruby handler's 
-     * method defined by <code>PROXYMSG_METH</code> if both the handler and
+     * method defined by <code>L_PROXYMSG_METH</code> if both the handler and
      * its ruby method are defined.
      *
      * This allows Ruby implementations to perform logging functions, modify 
@@ -173,6 +174,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * in the <code>message</code> paramater, or (b) a different object 
      * containing a modified message.
      */
+    @Deprecated
     public byte[] processProxyMessage( 
         int messageReference, 
         boolean messageIsRequest, 
@@ -188,7 +190,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
         int[] action ) 
     {
 
-      if (r_obj != null && r_obj.respondsTo(PROXYMSG_METH)) {
+      if (r_obj != null && r_obj.respondsTo(L_PROXYMSG_METH)) {
         Ruby rt = rt(r_obj);
         // prepare an alternate action value to present to ruby
         IRubyObject r_action = to_ruby(rt, action);
@@ -215,13 +217,39 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
         // slurp back in the action value in-case it's been changed
         action[0] = ((int[])r_action.toJava(int[].class))[0];
 
-        IRubyObject ret = r_obj.callMethod(ctx(r_obj), PROXYMSG_METH, pxy_msg);
+        IRubyObject ret = r_obj.callMethod(ctx(r_obj), L_PROXYMSG_METH, pxy_msg);
         if(ret != r_msg) {
           return (byte []) ret.toJava(byte[].class);
         }
       }
 
       return message;
+    }
+
+    /**
+     * This method is invoked when an HTTP message is being processed by the
+     * Proxy.
+     *
+     * This method corresponds with Buby#process_proxy_message
+     *
+     * @param messageIsRequest Indicates whether the HTTP message is a request
+     * or a response.
+     * @param message An
+     * <code>IInterceptedProxyMessage</code> object that extensions can use to
+     * query and update details of the message, and control whether the message
+     * should be intercepted and displayed to the user for manual review or
+     * modification.
+     */
+    public void processProxyMessage(boolean messageIsRequest, IInterceptedProxyMessage message)
+    {
+      if (r_obj != null && r_obj.respondsTo(PROXYMSG_METH)) {
+        Ruby rt = rt(r_obj);
+        IRubyObject http_msg[] = {
+          to_ruby(rt, messageIsRequest),
+          to_ruby(rt, message)
+        };
+        r_obj.callMethod(ctx(r_obj), PROXYMSG_METH, http_msg);
+      }
     }
 
     /** 
@@ -235,7 +263,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * can be used to intercept and modify the HTTP traffic of all Burp 
      * tools.
      */
-    @deprecated
+    @Deprecated
     public void processHttpMessage(
         String toolName, 
         boolean messageIsRequest, 

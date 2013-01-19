@@ -2,7 +2,8 @@ require 'rubygems'
 require 'rake'
 require 'rake/clean'
 
-CLOBBER.add '**/*.class', '**/*.jar', "doc", '.yardoc'
+CLEAN.add 'tmp'
+CLOBBER.add '**/*.class', '**/buby.jar', "doc", '.yardoc'
 
 begin
   require 'jeweler'

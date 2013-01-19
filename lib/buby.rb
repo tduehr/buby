@@ -1139,6 +1139,8 @@ class Buby
   #   message[0..4] = "HEAD "
   #   return message.dup
   #
+  # @deprecated Legacy - Use {Buby#process_proxy_message} or
+  #   {Buby::ProxyListener}
   def evt_proxy_message msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action
     pp([ (is_req)? :got_proxy_request : :got_proxy_response,
          [:msg_ref, msg_ref], 
@@ -1157,6 +1159,21 @@ class Buby
     return message
   end
 
+  # This method is invoked when an HTTP message is being processed by the Proxy.
+  #
+  # @param [Boolean] messageIsRequest Indicates whether the HTTP message is a
+  #   request or a response.
+  # @param [IInterceptedProxyMessage] message An +IInterceptedProxyMessage+
+  #   object that extensions can use to query and update details of the
+  #   message, and control whether the message should be intercepted and
+  #   displayed to the user for manual review or modification.
+  # @return [void]
+  #
+  # @see Buby::ProxyListener
+  def process_proxy_message(messageIsRequest, message)
+    pp [:got_processProxyMessage] if $debug
+    Buby::Implants::InterceptedProxyMessage.implant message
+  end
 
   # This method is invoked whenever any of Burp's tools makes an HTTP request 
   # or receives a response. This is effectively a generalised version of the 
