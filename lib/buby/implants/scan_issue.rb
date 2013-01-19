@@ -1,13 +1,11 @@
 require 'uri'
 
 class Buby
-
   class ScanIssuesList < BubyArrayWrapper
     def initialize(obj)
       ScanIssueHelper.implant(obj[0]) if obj.size > 0 
       super(obj)
     end
-
   end
 
   module ScanIssueHelper

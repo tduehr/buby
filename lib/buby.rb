@@ -90,6 +90,8 @@ class Buby
   autoload :MessageEditorTab, 'buby/message_editor_tab'
   autoload :MessageEditorTabFactory, 'buby/message_editor_tab_factory'
   autoload :Parameter, 'buby/parameter'
+  autoload :ProxyListener, 'buby/proxy_listener'
+  autoload :ScanIssue, 'buby/scan_issue'
   autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
