@@ -89,6 +89,7 @@ class Buby
   autoload :MessageEditorController, 'buby/message_editor_controller'
   autoload :MessageEditorTab, 'buby/message_editor_tab'
   autoload :MessageEditorTabFactory, 'buby/message_editor_tab_factory'
+  autoload :Parameter, 'buby/parameter'
   autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
@@ -1207,7 +1208,7 @@ class Buby
   # @return [void]
   # @note This is the 1.5.01+ version of this callback
   #
-  def process_http_message(tool_name, is_request, message_info)
+  def process_http_message(toolFlag, messageIsRequest, messageInfo)
     HttpRequestResponseHelper.implant(message_info)
     pp([:got_process_http_message, tool_name, is_request, message_info]) if $DEBUG
   end

@@ -50,7 +50,8 @@ class Buby
       # within an HTTP request. <b>Note:</b> Use {#analyzeRequest} to obtain
       # details of all parameters within the request.
       #
-      # @param [String, Array<byte>] request The request to be inspected for the specified parameter.
+      # @param [String, Array<byte>] request The request to be inspected for the
+      #   specified parameter.
       # @param [String] parameter_name The name of the parameter to retrieve.
       # @return [IParameter] object that can be queried to obtain details
       #   about the parameter, or +nil+ if the parameter was not found.
@@ -58,7 +59,7 @@ class Buby
       def getRequestParameter(request, parameter_name)
         pp [:got_get_request_parameter, parameter_name, request] if $DEBUG
         request = request.to_java_bytes if request.respond_to? :to_java_bytes
-        __getRequestParameter(request, parameter_name)
+        Buby::Implants::Parameter.implant(__getRequestParameter(request, parameter_name))
       end
 
       # This method searches a piece of data for the first occurrence of a
@@ -114,8 +115,8 @@ class Buby
       #
       # @param [String, Array<byte>, IHttpRequestResponse] request The request
       #   to which the parameter should be added.
-      # @param [IParameter] parameter An +IParameter+ object containing details
-      #   of the parameter to be added. Supported parameter types are:
+      # @param [IParameter, Hash] parameter An +IParameter+ object containing
+      #   details of the parameter to be added. Supported parameter types are:
       #   * +PARAM_URL+
       #   * +PARAM_BODY+
       #   * +PARAM_COOKIE+
@@ -126,6 +127,7 @@ class Buby
         pp [:got_addParameter, parameter, request] if $DEBUG
         request = request.request if request.kind_of? Java::Burp::IHttpRequestResponse
         request = request.to_java_bytes if request.respond_to? :to_java_bytes
+        parameter = Buby::Parameter::Base.new parameter if parameter.kind_of? Hash
         String.from_java_bytes(__addParameter(request, parameter))
       end
 
@@ -134,8 +136,8 @@ class Buby
       #
       # @param [String, Array<byte>, IHttpRequestResponse] request The request
       #   from which the parameter should be removed.
-      # @param [IParameter] parameter Object containing details of the parameter
-      #   to be removed. Supported parameter types are:
+      # @param [IParameter, Hash] parameter Object containing details of the
+      #   parameter to be removed. Supported parameter types are:
       #   * +PARAM_URL+
       #   * +PARAM_BODY+
       #   * +PARAM_COOKIE+
@@ -146,6 +148,7 @@ class Buby
         pp [:got_addParameter, parameter, request] if $DEBUG
         request = request.request if request.kind_of? Java::Burp::IHttpRequestResponse
         request = request.to_java_bytes if request.respond_to? :to_java_bytes
+        parameter = Buby::Parameter::Base.new parameter if parameter.kind_of? Hash
         String.from_java_bytes(__removeParameter(request, parameter))
       end
 
@@ -159,8 +162,8 @@ class Buby
       #
       # @param [String, Array<byte>, IHttpRequestResponse] request The request
       #   containing the parameter to be updated.
-      # @param [IParameter] parameter Object containing details of the parameter
-      #   to be updated. Supported parameter types are:
+      # @param [IParameter, Hash] parameter Object containing details of the
+      #   parameter to be updated. Supported parameter types are:
       #   * +PARAM_URL+
       #   * +PARAM_BODY+
       #   * +PARAM_COOKIE+
@@ -171,6 +174,7 @@ class Buby
         pp [:got_updateParameter, parameter, request] if $DEBUG
         request = request.request if request.kind_of? Java::Burp::IHttpRequestResponse
         request = request.to_java_bytes if request.respond_to? :to_java_bytes
+        parameter = Buby::Parameter::Base.new parameter if parameter.kind_of? Hash
         String.from_java_bytes(__updateParameter(request, parameter))
       end
 
