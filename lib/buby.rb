@@ -79,6 +79,7 @@ import 'burp.BurpExtender'
 #   to type and say out-loud. Mike Tracy gets full credit as official 
 #   Buby-namer.
 #
+# @todo move more to Java side
 class Buby
   autoload :ContextMenuFactory, 'buby/context_menu_factory'
   autoload :Cookie, 'buby/cookie'
@@ -92,6 +93,7 @@ class Buby
   autoload :Parameter, 'buby/parameter'
   autoload :ProxyListener, 'buby/proxy_listener'
   autoload :ScanIssue, 'buby/scan_issue'
+  autoload :ScannerCheck, 'buby/scanner_check'
   autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
