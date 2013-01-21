@@ -95,6 +95,7 @@ class Buby
   autoload :ScanIssue, 'buby/scan_issue'
   autoload :ScannerCheck, 'buby/scanner_check'
   autoload :Version, 'buby/version'
+  autoload :ScannerInsertionPoint, 'buby/scanner_insertion_point'
 
   # @deprecated moving to proper version module
   VERSION = Buby::Version::STRING
