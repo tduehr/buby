@@ -94,8 +94,10 @@ class Buby
   autoload :ProxyListener, 'buby/proxy_listener'
   autoload :ScanIssue, 'buby/scan_issue'
   autoload :ScannerCheck, 'buby/scanner_check'
-  autoload :Version, 'buby/version'
   autoload :ScannerInsertionPoint, 'buby/scanner_insertion_point'
+  autoload :ScannerListener, 'buby/scanner_listener'
+  autoload :ScanQueueItem, 'buby/scan_queue_item'
+  autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
   VERSION = Buby::Version::STRING
@@ -1247,9 +1249,27 @@ class Buby
   # Parameters:
   # * issue = an instance of the IScanIssue Java class with methods for viewing
   #   information on the scan issue that was generated.
+  # @todo move implant to new way...
   def evt_scan_issue(issue)
     ScanIssueHelper.implant(issue)
     pp([:got_scan_issue, issue]) if $DEBUG
+  end
+
+
+  # This method is invoked when a new issue is added to Burp Scanner's
+  # results.
+  #
+  # @param [IScanIssue] issue An +IScanIssue+ object that the extension can
+  #   query to obtain details about the new issue.
+  #
+  # @return [void]
+  #
+  # @abstract
+  # @note This maps to the newScanIssue callback in IScannerListener implemented
+  #   by the Java side.
+  def new_scan_issue(issue)
+    pp [:got_newScanIssue, issue] if $DEBUG
+    ScanIssueHelper.implant issue
   end
 
   # This method is called by BurpExtender right before closing the

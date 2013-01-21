@@ -16,13 +16,14 @@ import org.jruby.runtime.builtin.IRubyObject;
  * This is a complete implementation of the Burp Extender interfaces available
  * as of Burp Suite 1.4
  */
-public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener, IProxyListener { 
+public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener, IProxyListener, IScannerListener { 
     public final static String INIT_METH =      "evt_extender_init";
     public final static String L_PROXYMSG_METH =  "evt_proxy_message_raw";
     public final static String L_HTTPMSG_METH = "evt_http_message";
     public final static String PROXYMSG_METH =  "process_proxy_message";
     public final static String HTTPMSG_METH =   "process_http_messge";
-    public final static String SCANISSUE_METH = "evt_scan_issue";
+    public final static String L_SCANISSUE_METH = "evt_scan_issue";
+    public final static String SCANISSUE_METH = "new_scan_issue";
     public final static String MAINARGS_METH =  "evt_commandline_args";
     public final static String REG_METH =       "evt_register_callbacks";
     public final static String CLOSE_METH =     "evt_application_closing";
@@ -131,6 +132,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
         cb.setExtensionName("Buby v" + r_obj.getType().defineOrGetModuleUnder("Version").getConstant("STRING"));
         cb.registerExtensionStateListener(this);
         cb.registerHttpListener(this);
+        cb.registerScannerListener(this);
         
         r_obj.callMethod(ctx(r_obj), REG_METH, to_ruby(rt(r_obj), cb));
       }
@@ -319,6 +321,8 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
     public void newScanIssue(IScanIssue issue) {
       if (r_obj != null && r_obj.respondsTo(SCANISSUE_METH))
         r_obj.callMethod(ctx(r_obj), SCANISSUE_METH, to_ruby(rt(r_obj), issue));
+      if (r_obj != null && r_obj.respondsTo(L_SCANISSUE_METH))
+        r_obj.callMethod(ctx(r_obj), L_SCANISSUE_METH, to_ruby(rt(r_obj), issue));
     }
 
 

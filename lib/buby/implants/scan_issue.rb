@@ -8,6 +8,7 @@ class Buby
     end
   end
 
+  # @deprecated this will change to the new style in the next release
   module ScanIssueHelper
     # Returns a Ruby URI object derived from the java.net.URL object
     def uri
