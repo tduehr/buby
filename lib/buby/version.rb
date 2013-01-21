@@ -1,4 +1,3 @@
-# GENERATED AUTOMATICALLY BY rake version:nice DO NOT EDIT!
 class Buby
   module Version
     STRING = "1.5.0"

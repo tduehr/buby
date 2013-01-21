@@ -85,7 +85,6 @@ namespace :version do
     version_string << ".#{version_hash[:build].to_s}" if version_hash[:build]
     File.open('lib/buby/version.rb', 'w') do |file|
       file.write <<EOS
-# GENERATED AUTOMATICALLY BY rake version:nice DO NOT EDIT!
 class Buby
   module Version
     STRING = "#{version_string}"
