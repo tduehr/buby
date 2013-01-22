@@ -97,6 +97,7 @@ class Buby
   autoload :ScannerInsertionPoint, 'buby/scanner_insertion_point'
   autoload :ScannerListener, 'buby/scanner_listener'
   autoload :ScanQueueItem, 'buby/scan_queue_item'
+  autolaod :ScopeChangeListener, 'buby/scope_change_listener'
   autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
