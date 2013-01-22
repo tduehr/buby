@@ -145,20 +145,72 @@ class Buby
     @burp_callbacks or raise "Burp callbacks have not been set"
   end
 
-  # Send an HTTP request to the Burp Scanner tool to perform an active 
-  # vulnerability scan.
-  #  * host = The hostname of the remote HTTP server.
-  #  * port = The port of the remote HTTP server.
-  #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req  = The full HTTP request. (String or Java bytes[])
-  #  * ip_off = A list of index pairs representing the
-  #  * positions of the insertion points that should be scanned. Each item in
-  #  * the list must be an int[2] array containing the start and end offsets
-  #  * for the insertion point. *1.4+* only
+  # This method can be used to send an HTTP request to the Burp Scanner tool
+  # to perform an active vulnerability scan. If the request is not within the
+  # current active scanning scope, the user will be asked if they wish to
+  # proceed with the scan.
   #
-  def doActiveScan(host, port, https, req, ip_off)
-    req = req.to_java_bytes if req.is_a? String
-    getBurpVersion ? _check_cb.doActiveScan(host, port, https, req, ip_off) : _check_cb.doActiveScan(host, port, https, req)
+  # @overload doActiveScan(host, port, useHttps, request, insertionPointOffsets = nil)
+  #   @param [String] host The hostname of the remote HTTP server.
+  #   @param [Fixnum] port The port of the remote HTTP server.
+  #   @param [Boolean] useHttps Flags whether the protocol is HTTPS or HTTP.
+  #   @param [String, Array<byte>] request The full HTTP request.
+  #   @param [Array<Array<Fixnum>>] insertionPointOffsets A list of index pairs
+  #     representing the positions of the insertion points that should be
+  #     scanned. Each item in the list must be an +int\[2]+ array containing the
+  #     start and end offsets for the insertion point.
+  # @overload doActiveScan(request, insertionPointOffsets = nil)
+  #   @param [IHttpRequestResponse] request Request object containing details
+  #     about the request to scan.
+  #   @param [Array<Array<Fixnum>>] insertionPointOffsets A list of index pairs
+  #     representing the positions of the insertion points that should be
+  #     scanned. Each item in the list must be an +int\[2]+ array containing the
+  #     start and end offsets for the insertion point.
+  # @overload doActiveScan(url, insertionPointOffsets = nil)
+  #   @param [String, URI, java.net.URL] url Build a +GET+ request and scan url.
+  #   @param [Array<Array<Fixnum>>] insertionPointOffsets A list of index pairs
+  #     representing the positions of the insertion points that should be
+  #     scanned. Each item in the list must be an +int\[2]+ array containing the
+  #     start and end offsets for the insertion point.
+  # @return [IScanQueueItem] The resulting scan queue item.
+  #
+  def doActiveScan(*args)
+    host, port, https, req, ip_off = args
+    case args.size
+    when 1,2
+      req = args.first
+      ip_off = args[1]
+      if req.kind_of? Java::Burp::IHttpRequestResponse
+        serv = req.getHttpService
+        https = serv.getProtocol == "https"
+        host = serv.getHost
+        port = serv.getPort
+        req = req.request
+      else
+        url = (req.kind_of? URI || req.kind_of? Java::JavaNet::URL) ? req || Java::JavaNet::URL.new req.to_s
+        req = getHelpers.buildHttpRequest req
+        host = url.host
+        port = url.port
+        if url.scheme.downcase == "https"
+          https = true
+          port = 443 if port == -1
+        else
+          https = false
+          port = 80 if port == -1
+        end
+      end
+    when 4,5
+      host, port, https, req, ip_off = args
+    else
+      raise ArgumentError
+    end
+    req = req.to_java_bytes if req.respond_to? :to_java_bytes
+    scanq = if getBurpVersion
+      _check_cb.doActiveScan(host, port, https, req, ip_off)
+    else
+      _check_cb.doActiveScan(host, port, https, req)
+    end
+    Buby::Implants::ScanQueueItem.implant scanq
   end
   alias do_active_scan doActiveScan
   alias active_scan doActiveScan
