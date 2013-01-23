@@ -98,6 +98,7 @@ class Buby
   autoload :ScannerListener, 'buby/scanner_listener'
   autoload :ScanQueueItem, 'buby/scan_queue_item'
   autolaod :ScopeChangeListener, 'buby/scope_change_listener'
+  autoload :SessionHandlingAction, 'buby/session_handling_action'
   autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
