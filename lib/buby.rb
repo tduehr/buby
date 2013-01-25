@@ -97,7 +97,7 @@ class Buby
   autoload :ScannerInsertionPoint, 'buby/scanner_insertion_point'
   autoload :ScannerInsertionPointProvider, 'buby/scanner_insertion_point_provider'
   autoload :ScannerListener, 'buby/scanner_listener'
-  autolaod :ScopeChangeListener, 'buby/scope_change_listener'
+  autoload :ScopeChangeListener, 'buby/scope_change_listener'
   autoload :SessionHandlingAction, 'buby/session_handling_action'
   autoload :Version, 'buby/version'
 
@@ -189,7 +189,7 @@ class Buby
         port = serv.getPort
         req = req.request
       else
-        url = (req.kind_of? URI || req.kind_of? Java::JavaNet::URL) ? req || Java::JavaNet::URL.new req.to_s
+        url = (req.kind_of?(URI) || req.kind_of?(Java::JavaNet::URL)) ? req : Java::JavaNet::URL.new(req.to_s)
         req = getHelpers.buildHttpRequest req
         host = url.host
         port = url.port
