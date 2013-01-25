@@ -99,6 +99,7 @@ class Buby
   autoload :ScannerListener, 'buby/scanner_listener'
   autoload :ScopeChangeListener, 'buby/scope_change_listener'
   autoload :SessionHandlingAction, 'buby/session_handling_action'
+  autoload :Tab, 'buby/tab'
   autoload :Version, 'buby/version'
 
   # @deprecated moving to proper version module
