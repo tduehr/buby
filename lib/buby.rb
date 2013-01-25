@@ -922,7 +922,7 @@ class Buby
   #
   def saveToTempFile(buffer)
     buffer = buffer.to_java_bytes if buffer.respond_to? :to_java_bytes
-    _check_and_callback(:saveToTempFile, buffer)
+    Buby::Implants::TempFile.implant(_check_and_callback(:saveToTempFile, buffer))
   end
   alias save_to_temp_file saveToTempFile
 
