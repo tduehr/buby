@@ -5,7 +5,7 @@ class Buby
   # target scope.
   #
   # @todo improve listener classes with 1.9 instance_exec goodness next version
-  def ScopeChangeListener
+  class ScopeChangeListener
     include Java::Burp::IScopeChangeListener
 
     # This method is invoked whenever a change occurs to Burp's suite-wide

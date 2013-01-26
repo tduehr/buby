@@ -5,7 +5,7 @@ class Buby
   #
   # @todo voodoo function wrapping?
   class IntruderPayloadProcessor
-    include Java::Burp::IntruderPayloadProcessor
+    include Java::Burp::IIntruderPayloadProcessor
 
     # This method is used by Burp to obtain the name of the payload processor.
     # This will be displayed as an option within the Intruder UI when the user

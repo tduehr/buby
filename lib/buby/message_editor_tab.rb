@@ -9,7 +9,7 @@ class Buby
     include Java::Burp::IMessageEditorTab
     include Java::Burp::IMessageEditorTabFactory
     
-    attr_acccessor :controller, :editable
+    attr_accessor :controller, :editable
     # (see Buby::MessageEditorTabFactory#createNewInstance)
     def initialize controller, editable
       @controller = controller
