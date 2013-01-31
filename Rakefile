@@ -15,7 +15,8 @@ begin
     gem.homepage = "http://tduehr.github.com/buby"
     gem.authors = ["Eric Monti, tduehr"]
     gem.platform = "java"
-    gem.files.include "**/*.jar"
+    gem.files.include "**/buby.jar"
+    gem.files.include "**/burp_interfaces.jar"
     gem.test_files = ["test/buby_test.rb"]
     gem.rdoc_options = ["--main", "README.rdoc"]
     gem.extra_rdoc_files = ["History.txt", "README.rdoc", "bin/buby"]
@@ -68,7 +69,10 @@ end
 
 begin
   require 'rake/javaextensiontask'
-  Rake::JavaExtensionTask.new('buby', jeweler.gemspec)
+  Rake::JavaExtensionTask.new('burp_interfaces', jeweler.gemspec)
+  Rake::JavaExtensionTask.new('buby', jeweler.gemspec) do |jet|
+    jet.classpath = "lib/burp_interfaces.jar"
+  end
   task :test => :compile
   task :build => :compile
 rescue LoadError
@@ -135,6 +139,8 @@ task :test_console, [:script] do |t,args|
   require 'irb'
 
   require 'burpsuite_pro_v1.5.04.jar'
+  require 'burp_interfaces.jar'
+  require 'buby.jar'
   require 'buby'
   $burp = Buby.start_burp
 
