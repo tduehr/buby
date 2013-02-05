@@ -1,6 +1,6 @@
 #!/usr/bin/env jruby
 
-require 'burb_interfaces.jar'
+require 'burp_interfaces.jar'
 require 'buby.jar'
 require 'buby'
 require 'irb'
