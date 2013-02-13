@@ -1,7 +1,5 @@
 package burp;
 
-//import javax.annotation.PostConstruct; 
-
 import burp.*;
 
 import org.jruby.*;
@@ -63,7 +61,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * However, it is also possible to set this afterwards and even swap in 
      * new objects during runtime.
      */
-    public static void set_handler(IRubyObject hnd) { r_obj = hnd; }
+    public static void setHandler(IRubyObject hnd) { r_obj = hnd; }
 
     /** 
      * Returns the internal Ruby handler reference. 
@@ -71,7 +69,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * The handler is the ruby class or module used for proxying BurpExtender 
      * events into a ruby runtime.
      */
-    public static IRubyObject get_handler() { return r_obj; }
+    public static IRubyObject getHandler() { return r_obj; }
 
 
     /** 
