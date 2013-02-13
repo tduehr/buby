@@ -34,15 +34,17 @@ I will keep the API provided by earlier Buby versions and mark methods deprecate
 
 Methods removed/deprecated in 1.5.01 interfaces:
 * IBurpExtenderCallbacks.setCommandLineArgs (removed no replacement)
-* IBurpExtenderCallbacks.applicationClosing (removed use IExtensionStateListener instead))
-* IBurpExtenderCallbacks.getParameters (deprecated)
-* IBurpExtenderCallbacks.getHeaders (deprecated)
-* IBurpExtenderCallbacks.registerMenuItem (deprecated)
-* IMenuItemHandler (deprecated)
+* IBurpExtenderCallbacks.applicationClosing (removed use IExtensionStateListener instead)
+* IBurpExtenderCallbacks.getParameters (deprecated, use IExtensionHelpers analyze methods instead)
+* IBurpExtenderCallbacks.getHeaders (deprecated, use IExtensionHelpers analyze methods instead)
+* IBurpExtenderCallbacks.registerMenuItem (deprecated, use IBurpExtenderCalbacks.registerContextMenuFactory instead)
+* IMenuItemHandler (deprecated, use IContextMenuFactory instead)
 
-For now, extensionUnloaded will fail over to applicationClosing. The deprecated methods will, for now call the equivalent methods on IBurpExtenderCallbacks. At some point soon they'll forward the calls to the correct interface before being removed entirely in favor of the new interfaces.
+The deprecated getPatameters and getHeaders methods will, for now, call the equivalent methods on IBurpExtenderCallbacks. At some point soon they'll forward the calls to the correct interface before being removed entirely in favor of the new interfaces.
 
-... And one more thing. The next version of buby will require JRuby 1.7.0+. It won't use 1.9 syntax for a few releases. So, extensions that require 1.8 will still work for a while. Just don't forget to add the `--1.8` switch to JRuby when starting buby.
+In 2.0 bin/buby to use a bash script as the primary starting point for the current script - which will be renamed to bin/buby.rb
+
+... And one more thing. The next version of buby will require JRuby 1.7.0+. It won't use 1.9 syntax for a little while. So, extensions that require 1.8 will still work for now. Just don't forget to add the `--1.8` switch to JRuby when starting buby.
 
 == REQUIREMENTS:
 
@@ -77,7 +79,7 @@ Here are manual instructions if you want or need to build things yourself:
 ==== Step 2. Compile BurpExtender.java. Include jruby.jar in the classpath:
 
 Install the development dependencies:
-  jruby -S gem install jeweler rake-compile
+  jruby -S gem install jeweler rake-compiler
 
 ==== Step 3. Build with rake
 
