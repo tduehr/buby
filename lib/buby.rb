@@ -1,9 +1,13 @@
 require 'pp'
 require 'uri'
-require "buby.jar"
 require 'buby/implants'
 
-import 'burp.BurpExtender'
+# load the Burp extender interfaces if they're not already accessible
+begin
+  Java::Burp::IBurpExtender
+rescue NameError
+  require 'burp_interfaces.jar'
+end
 
 # Buby is a mash-up of the commercial security testing web proxy PortSwigger 
 # Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from 
@@ -128,8 +132,9 @@ class Buby
 
   # Makes this handler the active Ruby handler object for the BurpExtender
   # Java runtime. (there can be only one!)
-  def activate!
-    Java::Burp::BurpExtender.set_handler(self)
+  # @param extender Buby's BurpExtender interface
+  def activate!(extender)
+    extender.set_handler(self)
   end
 
   # Returns the internal reference to the BurpExtender instance. This
@@ -1441,23 +1446,38 @@ class Buby
 
   # Prepares the java BurpExtender implementation with a reference
   # to self as the module handler and launches burp suite.
-  def start_burp(args=[])
-    activate!()
-    Java::Burp::StartBurp.main(args.to_java(:string))
+  # @param extender Buby exender interface
+  def start(extender = nil, args = [])
+    # so we don't get error when this file is loaded
+    extender ||= legacy_mode? ? Java.burp.BurpExtender : Object.const_get(:BurpExtender)
+    activate!(extender)
+    Java.burp.StartBurp.main(args.to_java(:string)) if legacy_mode?
     return self
   end
 
-  # Starts burp using a supplied handler class, 
-  #  h_class = Buby or a derived class. instance of which will become handler.
-  #  args = arguments to Burp
-  #  init_args = arguments to the handler constructor
+  # @deprecated Use Buby#start instead
+  alias start_burp start
+
+  # Starts burp using a supplied handler class
   #
-  #  Returns the handler instance
-  def self.start_burp(h_class=nil, init_args=nil, args=nil)
+  # @param extender Buby BurpExtender to use for callbacks
+  # @param [Class] h_class Buby or a derived class. instance of which will
+  #   become handler.
+  # @param [Array<String>] args arguments to Burp
+  # @param init_args arguments to the handler constructor
+  #
+  #  @return Buby handler instance
+  def self.start(extender = nil, h_class=nil, init_args=nil, args=nil)
     h_class ||= self
     init_args ||= []
     args ||= []
-    h_class.new(*init_args).start_burp(args)
+    h_class.new(*init_args).start_burp(extender, args)
+  end
+
+  # @see Buby.start
+  # @deprecated Use Buby.start instead
+  def self.start_burp(extender = nil, h_class = nil, init_args = nil, args = nil)
+    self.start(extender, h_class, init_args, args)
   end
 
   # Attempts to load burp with require and confirm it provides the required 
@@ -1475,11 +1495,26 @@ class Buby
   # Checks the Java namespace to see if Burp has been loaded.
   def self.burp_loaded?
     @burp_loaded ||= begin
-      java_import 'burp.StartBurp'
+      Java.burp.StartBurp
       true
     rescue NameError
       false
     end
+  end
+
+  # determines if we're running in legacy mode
+  # @return [Class, nil]
+  def self.legacy_mode?
+    @legacy ||= begin
+      Java.burp.BurpExtender
+    rescue NameError
+      false
+    end
+    @legacy
+  end
+
+  def legacy_mode?
+    self.class.legacy_mode?
   end
 
   ### Extra cruft added by Mr Bones:
@@ -1488,6 +1523,8 @@ class Buby
   # they will be joined to the end of the libray path using
   # <tt>File.join</tt>.
   #
+  # @deprecated
+  # @api private
   def self.libpath( *args )
     args.empty? ? LIBPATH : ::File.join(LIBPATH, args.flatten)
   end
@@ -1496,6 +1533,8 @@ class Buby
   # they will be joined to the end of the path using
   # <tt>File.join</tt>.
   #
+  # @deprecated
+  # @api private
   def self.path( *args )
     args.empty? ? PATH : ::File.join(PATH, args.flatten)
   end
@@ -1505,6 +1544,8 @@ class Buby
   # in. Optionally, a specific _directory_ name can be passed in such that
   # the _filename_ does not have to be equivalent to the directory.
   #
+  # @deprecated
+  # @api private
   def self.require_all_libs_relative_to( fname, dir = nil )
     dir ||= ::File.basename(fname, '.*')
     search_me = ::File.expand_path(
@@ -1514,12 +1555,3 @@ class Buby
   end
 
 end # Buby
-
-
-# Try requiring 'burp.jar' from the Ruby lib-path
-unless Buby.burp_loaded?
-  begin require "burp.jar" 
-  rescue LoadError 
-  end
-end
-
