@@ -5,14 +5,14 @@
 
 Gem::Specification.new do |s|
   s.name = "buby"
-  s.version = "1.3.3"
+  s.version = "1.5.0.pre1"
   s.platform = "java"
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Monti, tduehr"]
-  s.date = "2012-12-14"
+  s.date = "2013-02-14"
   s.description = "Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface."
-  s.email = "emonti@matasano.com, td@matasano.com"
+  s.email = "td@matasano.com"
   s.executables = ["buby"]
   s.extra_rdoc_files = [
     "History.txt",
@@ -23,22 +23,93 @@ Gem::Specification.new do |s|
     "History.txt",
     "README.rdoc",
     "Rakefile",
-    "VERSION",
+    "VERSION.yml",
     "bin/buby",
     "buby.gemspec",
-    "java/buby.jar",
-    "java/src/BurpExtender.java",
-    "java/src/burp/IBurpExtender.java",
-    "java/src/burp/IBurpExtenderCallbacks.java",
-    "java/src/burp/IHttpRequestResponse.java",
-    "java/src/burp/IMenuItemHandler.java",
-    "java/src/burp/IScanIssue.java",
-    "java/src/burp/IScanQueueItem.java",
+    "ext/buby/burp/BurpExtender.java",
+    "ext/burp_interfaces/burp/IBurpExtender.java",
+    "ext/burp_interfaces/burp/IBurpExtenderCallbacks.java",
+    "ext/burp_interfaces/burp/IContextMenuFactory.java",
+    "ext/burp_interfaces/burp/IContextMenuInvocation.java",
+    "ext/burp_interfaces/burp/ICookie.java",
+    "ext/burp_interfaces/burp/IExtensionHelpers.java",
+    "ext/burp_interfaces/burp/IExtensionStateListener.java",
+    "ext/burp_interfaces/burp/IHttpListener.java",
+    "ext/burp_interfaces/burp/IHttpRequestResponse.java",
+    "ext/burp_interfaces/burp/IHttpRequestResponsePersisted.java",
+    "ext/burp_interfaces/burp/IHttpRequestResponseWithMarkers.java",
+    "ext/burp_interfaces/burp/IHttpService.java",
+    "ext/burp_interfaces/burp/IInterceptedProxyMessage.java",
+    "ext/burp_interfaces/burp/IIntruderAttack.java",
+    "ext/burp_interfaces/burp/IIntruderPayloadGenerator.java",
+    "ext/burp_interfaces/burp/IIntruderPayloadGeneratorFactory.java",
+    "ext/burp_interfaces/burp/IIntruderPayloadProcessor.java",
+    "ext/burp_interfaces/burp/IMenuItemHandler.java",
+    "ext/burp_interfaces/burp/IMessageEditor.java",
+    "ext/burp_interfaces/burp/IMessageEditorController.java",
+    "ext/burp_interfaces/burp/IMessageEditorTab.java",
+    "ext/burp_interfaces/burp/IMessageEditorTabFactory.java",
+    "ext/burp_interfaces/burp/IParameter.java",
+    "ext/burp_interfaces/burp/IProxyListener.java",
+    "ext/burp_interfaces/burp/IRequestInfo.java",
+    "ext/burp_interfaces/burp/IResponseInfo.java",
+    "ext/burp_interfaces/burp/IScanIssue.java",
+    "ext/burp_interfaces/burp/IScanQueueItem.java",
+    "ext/burp_interfaces/burp/IScannerCheck.java",
+    "ext/burp_interfaces/burp/IScannerInsertionPoint.java",
+    "ext/burp_interfaces/burp/IScannerInsertionPointProvider.java",
+    "ext/burp_interfaces/burp/IScannerListener.java",
+    "ext/burp_interfaces/burp/IScopeChangeListener.java",
+    "ext/burp_interfaces/burp/ISessionHandlingAction.java",
+    "ext/burp_interfaces/burp/ITab.java",
+    "ext/burp_interfaces/burp/ITempFile.java",
+    "ext/burp_interfaces/burp/ITextEditor.java",
+    "lib/buby.jar",
     "lib/buby.rb",
-    "lib/buby/extends.rb",
-    "lib/buby/extends/buby_array_wrapper.rb",
-    "lib/buby/extends/http_request_response.rb",
-    "lib/buby/extends/scan_issue.rb",
+    "lib/buby/context_menu_factory.rb",
+    "lib/buby/cookie.rb",
+    "lib/buby/http_listener.rb",
+    "lib/buby/implants.rb",
+    "lib/buby/implants/buby_array_wrapper.rb",
+    "lib/buby/implants/context_menu_invocation.rb",
+    "lib/buby/implants/cookie.rb",
+    "lib/buby/implants/extension_helpers.rb",
+    "lib/buby/implants/http_request_response.rb",
+    "lib/buby/implants/intercepted_proxy_message.rb",
+    "lib/buby/implants/intruder_attack.rb",
+    "lib/buby/implants/jruby.rb",
+    "lib/buby/implants/message_editor.rb",
+    "lib/buby/implants/message_editor_controller.rb",
+    "lib/buby/implants/parameter.rb",
+    "lib/buby/implants/request_info.rb",
+    "lib/buby/implants/response_info.rb",
+    "lib/buby/implants/scan_issue.rb",
+    "lib/buby/implants/scan_queue_item.rb",
+    "lib/buby/implants/scanner_insertion_point.rb",
+    "lib/buby/implants/temp_file.rb",
+    "lib/buby/implants/text_editor.rb",
+    "lib/buby/intruder_payload_generator.rb",
+    "lib/buby/intruder_payload_generator_factory.rb",
+    "lib/buby/intruder_payload_processor.rb",
+    "lib/buby/message_editor_controller.rb",
+    "lib/buby/message_editor_tab.rb",
+    "lib/buby/message_editor_tab_factory.rb",
+    "lib/buby/parameter.rb",
+    "lib/buby/parameter/base.rb",
+    "lib/buby/parameter/body.rb",
+    "lib/buby/parameter/cookie.rb",
+    "lib/buby/parameter/url.rb",
+    "lib/buby/proxy_listener.rb",
+    "lib/buby/scan_issue.rb",
+    "lib/buby/scanner_check.rb",
+    "lib/buby/scanner_insertion_point.rb",
+    "lib/buby/scanner_insertion_point_provider.rb",
+    "lib/buby/scanner_listener.rb",
+    "lib/buby/scope_change_listener.rb",
+    "lib/buby/session_handling_action.rb",
+    "lib/buby/tab.rb",
+    "lib/buby/version.rb",
+    "lib/burp_interfaces.jar",
     "samples/drb_buby.rb",
     "samples/drb_sample_cli.rb",
     "samples/mechanize_burp.rb",
@@ -50,7 +121,7 @@ Gem::Specification.new do |s|
   ]
   s.homepage = "http://tduehr.github.com/buby"
   s.rdoc_options = ["--main", "README.rdoc"]
-  s.require_paths = ["lib", "java", "java"]
+  s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
   s.summary = "Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger"
   s.test_files = ["test/buby_test.rb"]
@@ -59,9 +130,12 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_development_dependency(%q<rake-compiler>, ["~> 0.8.1"])
     else
+      s.add_dependency(%q<rake-compiler>, ["~> 0.8.1"])
     end
   else
+    s.add_dependency(%q<rake-compiler>, ["~> 0.8.1"])
   end
 end
 
