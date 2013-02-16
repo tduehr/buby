@@ -44,7 +44,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(editor)
         unless editor.implanted? || editor.nil?
-          pp [:implanting, editor, editor.class] if 
+          pp [:implanting, editor, editor.class] if $DEBUG
           editor.class.class_exec(editor) do |editor|
             a_methods = %w{
               setMessage

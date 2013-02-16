@@ -68,7 +68,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(point)
         unless point.implanted? || point.nil?
-          pp [:implanting, point, point.class] if 
+          pp [:implanting, point, point.class] if $DEBUG
           point.class.class_exec(point) do |point|
             a_methods = %w{
               buildRequest

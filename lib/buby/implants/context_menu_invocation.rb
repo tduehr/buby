@@ -61,7 +61,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(invocation)
         unless invocation.implanted? || invocation.nil?
-          pp [:implanting, invocation, invocation.class] if 
+          pp [:implanting, invocation, invocation.class] if $DEBUG
           invocation.class.class_exec(invocation) do |invocation|
             a_methods = %w{
               getSelectedMessages

@@ -36,7 +36,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(controller)
         unless controller.implanted? || controller.nil?
-          pp [:implanting, controller, controller.class] if 
+          pp [:implanting, controller, controller.class] if $DEBUG
           controller.class.class_exec(controller) do |controller|
             a_methods = %w{
               getRequest

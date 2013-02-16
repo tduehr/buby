@@ -21,7 +21,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(info)
         unless info.implanted? || info.nil?
-          pp [:implanting, info, info.class] if 
+          pp [:implanting, info, info.class] if $DEBUG
           info.class.class_exec(info) do |info|
             a_methods = %w{
               getCookies

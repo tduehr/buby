@@ -58,7 +58,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(parameter)
         unless parameter.implanted? || parameter.nil?
-          pp [:implanting, parameter, parameter.class] if 
+          pp [:implanting, parameter, parameter.class] if $DEBUG
           parameter.class.class_exec(parameter) do |parameter|
             a_methods = %w{
               getNameStart

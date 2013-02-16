@@ -22,7 +22,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(message)
         unless message.implanted? || message.nil?
-          pp [:implanting, message, message.class] if 
+          pp [:implanting, message, message.class] if $DEBUG
           message.class.class_exec(message) do |message|
             a_methods = %w{
               getMessageInfo

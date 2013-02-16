@@ -18,7 +18,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(attack)
         unless attack.implanted? || attack.nil?
-          pp [:implanting, attack, attack.class] if 
+          pp [:implanting, attack, attack.class] if $DEBUG
           attack.class.class_exec(attack) do |attack|
             a_methods = %w{
               getRequestTemplate

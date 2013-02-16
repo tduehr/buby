@@ -20,7 +20,7 @@ class Buby
       # @todo __persistent__?
       def self.implant(file)
         unless file.implanted? || file.nil?
-          pp [:implanting, file, file.class] if 
+          pp [:implanting, file, file.class] if $DEBUG
           file.class.class_exec(file) do |file|
             a_methods = %w{
               getBuffer
