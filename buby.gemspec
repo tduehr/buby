@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = "buby"
-  s.version = "1.5.0.pre1"
+  s.version = "1.5.0.pre2"
   s.platform = "java"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Monti, tduehr"]
-  s.date = "2013-02-14"
+  s.date = "2013-02-19"
   s.description = "Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface."
   s.email = "td@matasano.com"
   s.executables = ["buby"]
@@ -122,7 +122,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://tduehr.github.com/buby"
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
-  s.rubygems_version = "1.8.24"
+  s.rubygems_version = "1.8.25"
   s.summary = "Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger"
   s.test_files = ["test/buby_test.rb"]
 
