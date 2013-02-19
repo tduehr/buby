@@ -8,12 +8,14 @@ class Buby
   # their own implementations of this interface
   #
   class ScanIssue
+    include Java::Burp::IScanIssue
+
     attr_accessor :uri, :name, :type, :severity, :confidence, :ibackground
     attr_accessor :rbackground, :idetail, :rdetail, :messages, :service
 
     # @param [Hash] hash
     def initialize hash
-      @uri = hash[:uri].kind_of? URI ? hash[:uri] : hash[:uri].to_s
+      @uri = hash[:uri].kind_of?(URI) ? hash[:uri] : hash[:uri].to_s
       @name = hash[:name]
       @type = hash[:type]
       @severity = hash[:severity]
@@ -28,9 +30,9 @@ class Buby
 
     # This method returns the URL for which the issue was generated.
     #
-    # @return [Java::Net::URL] The URL for which the issue was generated.
+    # @return [Java::JavaNet::URL] The URL for which the issue was generated.
     #
-    def getUrl; Java::Net::URL.new @uri.to_s; end
+    def getUrl; Java::JavaNet::URL.new @uri.to_s; end
 
     # This method returns the name of the issue type.
     #

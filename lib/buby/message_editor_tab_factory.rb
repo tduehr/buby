@@ -6,6 +6,8 @@ class Buby
   #
   # @abstract
   class MessageEditorTabFactory
+    include Java::Burp::IMessageEditorTabFactory
+
     # Burp will call this method once for each HTTP message editor, and the
     # factory should provide a new instance of an +IMessageEditorTab+ object.
     #

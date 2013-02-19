@@ -5,6 +5,16 @@ class Buby
     # call {Buby#createTextEditor} to obtain an instance of this interface.
     #
     module TextEditor
+
+      # This method is used to update the currently displayed text in the editor.
+      #
+      # @param txt [String] The text to be displayed.
+      # @return [void]
+      #
+      def setText(txt)
+        __setText(txt.to_java_bytes)
+      end
+
       # This method is used to retrieve the currently displayed text.
       #
       # @return [String] The currently displayed text.
@@ -31,6 +41,7 @@ class Buby
           pp [:implanting, editor, editor.class] if $DEBUG
           editor.class.class_exec(editor) do |editor|
             a_methods = %w{
+              setText
               getText
               getSelectedText
             }

@@ -4,6 +4,8 @@ class Buby
   # +burp.ICookie+ interface
   #
   class Cookie < CGI::Cookie
+    include Java::Burp::ICookie
+
     # This method is used to retrieve the domain for which the cookie is in
     # scope. 
     #

@@ -5,6 +5,7 @@ class Buby
   # custom Scanner insertion points.
   #
   class ScannerInsertionPointProvider
+    include Java::Burp::IScannerInsertionPointProvider
 
     # When a request is actively scanned, the Scanner will invoke this method,
     # and the provider should provide a list of custom insertion points that

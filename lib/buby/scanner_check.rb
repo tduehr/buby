@@ -8,6 +8,7 @@ class Buby
   # @todo DSL methods
   class ScannerCheck
     include Java::Burp::IScannerCheck
+
     REPORT_EXISTING = -1
     REPORT_BOTH     =  0
     REPORT_NEW      =  1
@@ -47,7 +48,7 @@ class Buby
     # @param [IScannerInsertionPoint] insertionPoint An object that can be
     #   queried to obtain details of the insertion point being tested, and can
     #   be used to build scan requests for particular payloads.
-    # @return [IScanIssue, nil] A list of +IScanIssue+ objects, or +nil+ if no
+    # @return [Array<IScanIssue>, nil] A list of +IScanIssue+ objects, or +nil+ if no
     #   issues are identified.
     #
     # @abstract subclass and call +super+

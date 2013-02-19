@@ -5,7 +5,8 @@ import burp.*;
 import org.jruby.*;
 import org.jruby.javasupport.JavaUtil;
 import org.jruby.runtime.ThreadContext; 
-import org.jruby.runtime.builtin.IRubyObject; 
+import org.jruby.runtime.builtin.IRubyObject;
+import org.jruby.RubyBoolean;
 
 /**
  * This is an implementation of the BurpExtender/IBurpExtender interface
@@ -15,17 +16,23 @@ import org.jruby.runtime.builtin.IRubyObject;
  * as of Burp Suite 1.4
  */
 public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener, IProxyListener, IScannerListener { 
-    public final static String INIT_METH =      "evt_extender_init";
-    public final static String L_PROXYMSG_METH =  "evt_proxy_message_raw";
-    public final static String L_HTTPMSG_METH = "evt_http_message";
+
+    // Legacy callbacks
+    public final static String L_CLOSE_METH     = "evt_application_closing";
+    public final static String L_HTTPMSG_METH   = "evt_http_message";
+    public final static String L_INIT_METH      = "evt_extender_init";
+    public final static String L_MAINARGS_METH  = "evt_commandline_args";
+    public final static String L_PROXYMSG_METH  = "evt_proxy_message_raw";
+    public final static String L_SCANISSUE_METH = "evt_scan_issue";
+    public final static String L_REG_METH =       "evt_register_callbacks";
+
+    // new callbacks
+    public final static String INIT_METH =      "extender_initialize";
     public final static String PROXYMSG_METH =  "process_proxy_message";
     public final static String HTTPMSG_METH =   "process_http_messge";
-    public final static String L_SCANISSUE_METH = "evt_scan_issue";
     public final static String SCANISSUE_METH = "new_scan_issue";
-    public final static String MAINARGS_METH =  "evt_commandline_args";
-    public final static String REG_METH =       "evt_register_callbacks";
-    public final static String CLOSE_METH =     "evt_application_closing";
-    public final static String UNLOAD_METH =    "evt_extension_unloaded";
+    public final static String REG_METH =       "register_callbacks";
+    public final static String UNLOAD_METH =    "extension_unloaded";
 
     // Flag used to identify Burp Suite as a whole.
     public static final int TOOL_SUITE = 0x00000001;
@@ -83,6 +90,8 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
     public BurpExtender() {
       if (r_obj !=null && r_obj.respondsTo(INIT_METH))
         r_obj.callMethod(ctx(r_obj), INIT_METH, to_ruby(rt(r_obj), this));
+      if (r_obj !=null && r_obj.respondsTo(L_INIT_METH))
+        r_obj.callMethod(ctx(r_obj), L_INIT_METH, to_ruby(rt(r_obj), this));
     }
 
 
@@ -92,7 +101,7 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * startup. 
      *
      * This implementation invokes the method defined by 
-     * <code>MAINARGS_METH</code> in the Ruby handler if both the handler
+     * <code>L_MAINARGS_METH</code> in the Ruby handler if both the handler
      * and its ruby method are defined.
      *
      * It allows Ruby implementations to control aspects of their behaviour at 
@@ -105,8 +114,8 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * @param args The command-line arguments passed to Burp Suite on startup.
      */
     public void setCommandLineArgs(String[] args) {
-      if(r_obj != null && r_obj.respondsTo(MAINARGS_METH))
-        r_obj.callMethod(ctx(r_obj), MAINARGS_METH, to_ruby(rt(r_obj), args));
+      if(r_obj != null && r_obj.respondsTo(L_MAINARGS_METH))
+        r_obj.callMethod(ctx(r_obj), L_MAINARGS_METH, to_ruby(rt(r_obj), args));
     }
   
     /**
@@ -125,14 +134,24 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * <code>IBurpExtenderCallbacks</code> interface.
      */
     public void registerExtenderCallbacks(IBurpExtenderCallbacks cb) {
-      if(r_obj != null && r_obj.respondsTo(REG_METH)) {
-        cb.issueAlert("[BurpExtender] registering JRuby handler callbacks");
+      if(r_obj != null) {
+        // TODO should look for Buby class instead
         cb.setExtensionName("Buby v" + r_obj.getType().defineOrGetModuleUnder("Version").getConstant("STRING"));
+        cb.issueAlert("[BurpExtender] registering JRuby handler callbacks");
         cb.registerExtensionStateListener(this);
         cb.registerHttpListener(this);
         cb.registerScannerListener(this);
-        
-        r_obj.callMethod(ctx(r_obj), REG_METH, to_ruby(rt(r_obj), cb));
+        boolean respondsLegacyRegister = r_obj.respondsTo(L_REG_METH);
+        boolean respondsRegister = r_obj.respondsTo(REG_METH);
+
+        IRubyObject args[] = {to_ruby(rt(r_obj), cb), RubyBoolean.newBoolean(rt(r_obj), false)};
+        if(respondsLegacyRegister && respondsRegister){
+          r_obj.callMethod(ctx(r_obj), REG_METH, args[0]);
+          r_obj.callMethod(ctx(r_obj), L_REG_METH, args);
+        } else if(respondsRegister){
+          r_obj.callMethod(ctx(r_obj), REG_METH, args[0]);
+        } else if(respondsLegacyRegister)
+          r_obj.callMethod(ctx(r_obj), L_REG_METH, args[0]);
       }
     }
 
@@ -327,15 +346,15 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
     /**
      * This method is invoked immediately before Burp Suite exits. 
      * This implementation simply invokes the Ruby handler's method defined
-     * by <code>CLOSE_METH</code> if both the handler and its ruby method are
+     * by <code>L_CLOSE_METH</code> if both the handler and its ruby method are
      * defined.
      *
      * This allows implementations to carry out any clean-up actions necessary
      * (e.g. flushing log files or closing database resources, etc.).
      */
     public void applicationClosing() {
-      if (r_obj != null && r_obj.respondsTo(CLOSE_METH))
-        r_obj.callMethod(ctx(r_obj), CLOSE_METH);
+      if (r_obj != null && r_obj.respondsTo(L_CLOSE_METH))
+        r_obj.callMethod(ctx(r_obj), L_CLOSE_METH);
     }
 
     // Private method to return the ThreadContext for a given ruby object.

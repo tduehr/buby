@@ -6,6 +6,8 @@ class Buby
   # HTTP listener.
   # 
   class HttpListener
+    include Java::Burp::IHttpListener
+
     # This method is invoked when an HTTP request is about to be issued, and
     # when an HTTP response has been received.
     #

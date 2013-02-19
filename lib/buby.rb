@@ -134,7 +134,7 @@ class Buby
   # Java runtime. (there can be only one!)
   # @param extender Buby's BurpExtender interface
   def activate!(extender)
-    extender.set_handler(self)
+    extender.handler = self
   end
 
   # Returns the internal reference to the BurpExtender instance. This
@@ -999,7 +999,7 @@ class Buby
   alias add_scan_issue addScanIssue
 
   ### Event Handlers ###
-  # @todo move event handler base logic to java side
+  # @todo move basic event handler logic to extender side
 
   # This method is called by the BurpExtender java implementation upon 
   # initialization of the BurpExtender instance for Burp. The args parameter
@@ -1007,7 +1007,20 @@ class Buby
   # so that implementations can access and extend its public interfaces.
   #
   # The return value is ignored.
+  # @deprecated
   def evt_extender_init ext
+    @burp_extender = ext
+    pp([:got_extender, ext]) if $DEBUG
+  end
+
+  # This method is called by the BurpExtender implementations upon
+  # initialization of the BurpExtender instance for Burp. The args parameter
+  # is passed with a instance of the newly initialized BurpExtender instance
+  # so that implementations can access and extend its public interfaces.
+  #
+  # @param [IBurpExtender] ext
+  # @return [void]
+  def extender_initialize ext
     @burp_extender = ext
     pp([:got_extender, ext]) if $DEBUG
   end
@@ -1024,18 +1037,39 @@ class Buby
     pp([:got_args, args]) if $DEBUG
   end
 
-  # This method is called by BurpExtender on startup to register Burp's 
+  # This method is called by BurpExtender on startup to register Burp's
   # IBurpExtenderCallbacks interface object.
   #
-  # This maps to the 'registerExtenderCallbacks' method in the Java 
+  # This maps to the 'registerExtenderCallbacks' method in the Java
   # implementation of BurpExtender.
   #
   # The return value is ignored.
-  def evt_register_callbacks cb
+  # @deprecated
+  # @param cb [IBurpExtenderCallbacks] callbacks presented by burp
+  # @param alert [Boolean]
+  # @return [IBurpExtenderCallbacks] cb
+  def evt_register_callbacks cb, alert = true
+    cb.issueAlert("[JRuby::#{self.class}] registered callback") if alert
+    pp([:got_evt_register_callbacks, cb]) if $DEBUG
     @burp_callbacks = cb
-    cb.issueAlert("[JRuby::#{self.class}] registered callback")
-    pp([:got_callbacks, cb]) if $DEBUG
   end
+
+  # This method is called by BurpExtender on startup to register Burp's
+  # IBurpExtenderCallbacks interface object.
+  #
+  # This maps to the 'registerExtenderCallbacks' method in the Java
+  # implementation of BurpExtender.
+  #
+  # @param cb [IBurpExtenderCallbacks] callbacks presented by burp
+  # @param alert [Boolean]
+  # @return [IBurpExtenderCallbacks] cb
+  def register_callbacks callbacks, alert = true
+    callbacks.issueAlert("[JRuby::#{self.class}] registered callback") if alert
+    pp([:got_register_callbacks, callbacks]) if $DEBUG
+    evt_register_callbacks(callbacks, false) if respond_to? :evt_register_callbacks
+    @burp_callbacks = callbacks
+  end
+
 
   ACTION_FOLLOW_RULES              = Java::Burp::IInterceptedProxyMessage::ACTION_FOLLOW_RULES
   ACTION_DO_INTERCEPT              = Java::Burp::IInterceptedProxyMessage::ACTION_DO_INTERCEPT
@@ -1310,6 +1344,7 @@ class Buby
   # * issue = an instance of the IScanIssue Java class with methods for viewing
   #   information on the scan issue that was generated.
   # @todo move implant to new way...
+  # @deprecated
   def evt_scan_issue(issue)
     ScanIssueHelper.implant(issue)
     pp([:got_scan_issue, issue]) if $DEBUG
@@ -1326,7 +1361,7 @@ class Buby
   #
   # @abstract
   # @note This maps to the newScanIssue callback in IScannerListener implemented
-  #   by the Java side.
+  #   by the BurpExtender side.
   def new_scan_issue(issue)
     pp [:got_newScanIssue, issue] if $DEBUG
     ScanIssueHelper.implant issue
@@ -1335,15 +1370,23 @@ class Buby
   # This method is called by BurpExtender right before closing the
   # application. Implementations can use this method to perform cleanup
   # tasks such as closing files or databases before exit.
+  # @deprecated
   def evt_application_closing 
+    pp([:got_app_close]) if $DEBUG
+  end
+
+  # This method is called by BurpExtender right before closing the
+  # application. Implementations can use this method to perform cleanup
+  # tasks such as closing files or databases before exit.
+  def application_closing 
     pp([:got_app_close]) if $DEBUG
   end
 
   # This method is called by BurpExtender right before unloading the
   # extension. Implementations can use this method to perform cleanup
   # tasks such as closing files or databases before exit.
-  def evt_extension_unloaded 
-    pp([:got_ext_unload]) if $DEBUG
+  def extension_unloaded
+    pp([:got_extension_unloaded]) if $DEBUG
   end
 
   ### Sugar/Convenience methods

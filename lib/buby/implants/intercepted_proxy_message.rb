@@ -6,6 +6,14 @@ class Buby
     # receive details of proxy messages using this interface.
     #
     module InterceptedProxyMessage
+      FOLLOW_RULES              = Java::Burp::IInterceptedProxyMessage::ACTION_FOLLOW_RULES
+      DO_INTERCEPT              = Java::Burp::IInterceptedProxyMessage::ACTION_DO_INTERCEPT
+      DONT_INTERCEPT            = Java::Burp::IInterceptedProxyMessage::ACTION_DONT_INTERCEPT
+      DROP                      = Java::Burp::IInterceptedProxyMessage::ACTION_DROP
+      FOLLOW_RULES_AND_REHOOK   = Java::Burp::IInterceptedProxyMessage::ACTION_FOLLOW_RULES_AND_REHOOK
+      DO_INTERCEPT_AND_REHOOK   = Java::Burp::IInterceptedProxyMessage::ACTION_DO_INTERCEPT_AND_REHOOK
+      DONT_INTERCEPT_AND_REHOOK = Java::Burp::IInterceptedProxyMessage::ACTION_DONT_INTERCEPT_AND_REHOOK
+
       # This method retrieves details of the intercepted message.
       #
       # @return [IHttpRequestResponse] object containing details of the
