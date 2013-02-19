@@ -138,7 +138,7 @@ task :test_console, [:script] do |t,args|
 
   require 'irb'
 
-  require 'burpsuite_pro_v1.5.04.jar'
+  require File.basename Dir.glob('lib/burpsuite_pro_*.jar').last
   require 'burp_interfaces.jar'
   require 'buby.jar'
   require 'buby'
