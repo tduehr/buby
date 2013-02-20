@@ -245,42 +245,6 @@ class Buby
         Buby::Implants::ScannerInsertionPoint.implant(__makeScannerInsertionPoint(insertion_point_name, base_request, from, to))
       end
 
-      def self.extend_proxy(arg)
-        pp [self, arg, arg.class]
-        a_methods = %w{
-          analyzeRequest
-          analyzeResponse
-          getRequestParameter
-          indexOf
-          buildHttpMessage
-          buildHttpRequest
-          addParameter
-          removeParameter
-          updateParameter
-          toggleRequestMethod
-          buildHttpService
-          buildParameter
-          makeScannerInsertionPoint            
-        }
-        a_methods.each do |meth|
-          pp ["__" + meth, self] if $DEBUG
-          arg.class_exec(meth) do |meth|
-            alias_method "__"+meth.to_s, meth
-          end
-        end
-        a_methods.each do |meth|
-          pp [meth, self] if $DEBUG
-          arg.java_class.ruby_names_for_java_method(meth).each do |ruby_meth|
-            pp [ruby_meth, meth, self] if $DEBUG
-            arg.class_exec(ruby_meth, meth, instance_method(meth)) do |ruby_meth, meth_name, meth|
-              define_method meth_name, meth
-              # alias_method ruby_meth, "__"+meth unless ruby_meth == meth
-            end
-          end
-        end
-        include Buby::Implants::Proxy
-      end
-
       # Install ourselves into the current +IExtensionHelpers+ java class
       # @param [IExtensionHelpers] helpers
       #
