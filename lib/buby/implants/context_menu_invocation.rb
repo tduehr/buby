@@ -41,13 +41,41 @@ class Buby
       # Context menu is being invoked in a search results window.
       CONTEXT_SEARCH_RESULTS = 10;
 
+      # This method can be used to retrieve details of the HTTP requests /
+      # responses that were shown or selected by the user when the context menu
+      # was invoked.
+      #
+      # @note For performance reasons, the objects returned from this method are
+      #   tied to the originating context of the messages within the Burp UI.
+      #   For example, if a context menu is invoked on the Proxy intercept
+      #   panel, then the +IHttpRequestResponse+ returned by this method will
+      #   reflect the current contents of the interception panel, and this will
+      #   change when the current message has been forwarded or dropped. If your
+      #   extension needs to store details of the message for which the context
+      #   menu has been invoked, then you should query those details from the
+      #   +IHttpRequestResponse+ at the time of invocation, or you should use
+      #   +IBurpExtenderCallbacks.saveBuffersToTempFiles()+ to create a
+      #   persistent read-only copy of the +IHttpRequestResponse+.
+      #
+      # @return [Array<IHttpRequestResponse>,nil] An array of objects
+      #   representing the items that were shown or selected by the user when
+      #   the context menu was invoked. This method returns +nil+ if no messages
+      #   are applicable to the invocation.
+      #
       def getSelectedMessages
         pp [:got_get_selected_messages] if $DEBUG
         hrrl = __getSelectedMessages
         HttpRequestResponseHelper.implant(hrrl.first)
         hrrl
       end
-    
+
+      # This method can be used to retrieve details of the Scanner issues that
+      # were selected by the user when the context menu was invoked.
+      #
+      # @return [Array<IScanIssue>,nil] The issues that were selected by the
+      #   user when the context menu was invoked. This method returns +nil+ if
+      #   no Scanner issues are applicable to the invocation.
+      #
       def getSelectedIssues
         pp [:got_get_selected_issues] if $DEBUG
         sil = __getSelectedIssues

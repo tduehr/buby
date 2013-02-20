@@ -110,7 +110,7 @@ class Buby
   VERSION = Buby::Version::STRING
   
   # latest tested version of burp
-  COMPAT_VERSION = '1.5.04'
+  COMPAT_VERSION = '1.5.05'
 
   # :stopdoc:
   # @deprecated to be removed next version
@@ -1388,6 +1388,24 @@ class Buby
   def extension_unloaded
     pp([:got_extension_unloaded]) if $DEBUG
   end
+
+  # This method is used to unload the extension from Burp Suite.
+  #
+  def unloadExtension
+    _check_and_callback(:unloadExtension)
+  end
+  alias unload_extension unloadExtension
+
+  # This method returns the command line arguments that were passed to Burp
+  # on startup.
+  #
+  # @return [Array<String>] The command line arguments that were passed to Burp on startup.
+  #
+  def getCommandLineArguments
+    _check_and_callback(:getCommandLineArguments)
+  end
+  alias get_command_line_arguments getCommandLineArguments
+  alias command_line_arguments getCommandLineArguments
 
   ### Sugar/Convenience methods
 
