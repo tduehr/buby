@@ -1060,7 +1060,7 @@ class Buby
   # This maps to the 'registerExtenderCallbacks' method in the Java
   # implementation of BurpExtender.
   #
-  # @param cb [IBurpExtenderCallbacks] callbacks presented by burp
+  # @param callbacks [IBurpExtenderCallbacks] callbacks presented by burp
   # @param alert [Boolean]
   # @return [IBurpExtenderCallbacks] cb
   def register_callbacks callbacks, alert = true

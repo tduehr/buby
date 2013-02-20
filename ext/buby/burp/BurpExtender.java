@@ -134,13 +134,12 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
      * <code>IBurpExtenderCallbacks</code> interface.
      */
     public void registerExtenderCallbacks(IBurpExtenderCallbacks cb) {
+      cb.setExtensionName("Buby");
+      cb.issueAlert("[BurpExtender] registering JRuby handler callbacks");
+      cb.registerExtensionStateListener(this);
+      cb.registerHttpListener(this);
+      cb.registerScannerListener(this);
       if(r_obj != null) {
-        // TODO should look for Buby class instead
-        cb.setExtensionName("Buby v" + r_obj.getType().defineOrGetModuleUnder("Version").getConstant("STRING"));
-        cb.issueAlert("[BurpExtender] registering JRuby handler callbacks");
-        cb.registerExtensionStateListener(this);
-        cb.registerHttpListener(this);
-        cb.registerScannerListener(this);
         boolean respondsLegacyRegister = r_obj.respondsTo(L_REG_METH);
         boolean respondsRegister = r_obj.respondsTo(REG_METH);
 
