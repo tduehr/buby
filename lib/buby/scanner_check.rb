@@ -1,6 +1,6 @@
 class Buby
   # Extensions can implement this interface and then call
-  # {Burp#registerScannerCheck} to register a custom Scanner check. When
+  # {Buby#registerScannerCheck} to register a custom Scanner check. When
   # performing scanning, Burp will ask the check to perform active or passive
   # scanning on the base request, and report any Scanner issues that are
   # identified.
