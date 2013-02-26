@@ -7,6 +7,8 @@ import org.jruby.javasupport.JavaUtil;
 import org.jruby.runtime.ThreadContext; 
 import org.jruby.runtime.builtin.IRubyObject;
 import org.jruby.RubyBoolean;
+import java.util.List;
+import javax.swing.JMenuItem;
 
 /**
  * This is an implementation of the BurpExtender/IBurpExtender interface
@@ -15,7 +17,7 @@ import org.jruby.RubyBoolean;
  * This is a complete implementation of the Burp Extender interfaces available
  * as of Burp Suite 1.4
  */
-public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener, IProxyListener, IScannerListener { 
+public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHttpListener, IProxyListener, IScannerListener, IContextMenuFactory, IScopeChangeListener { 
 
     // Legacy callbacks
     public final static String L_CLOSE_METH     = "evt_application_closing";
@@ -24,15 +26,20 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
     public final static String L_MAINARGS_METH  = "evt_commandline_args";
     public final static String L_PROXYMSG_METH  = "evt_proxy_message_raw";
     public final static String L_SCANISSUE_METH = "evt_scan_issue";
-    public final static String L_REG_METH =       "evt_register_callbacks";
+    public final static String L_REG_METH       = "evt_register_callbacks";
 
-    // new callbacks
-    public final static String INIT_METH =      "extender_initialize";
-    public final static String PROXYMSG_METH =  "process_proxy_message";
-    public final static String HTTPMSG_METH =   "process_http_messge";
-    public final static String SCANISSUE_METH = "new_scan_issue";
-    public final static String REG_METH =       "register_callbacks";
-    public final static String UNLOAD_METH =    "extension_unloaded";
+    // new style callbacks
+    public final static String INIT_METH        = "extender_initialize";
+    public final static String REG_METH         = "register_callbacks";
+    public final static String PROXYMSG_METH    = "process_proxy_message";
+    public final static String HTTPMSG_METH     = "process_http_messge";
+    public final static String SCANISSUE_METH   = "new_scan_issue";
+
+    // new callback methods
+    public final static String UNLOAD_METH      = "extension_unloaded";
+    public final static String MENUFAC_METH     = "create_menu_items";
+    public final static String SCOPE_METH       = "scope_changed";
+    
 
     // Flag used to identify Burp Suite as a whole.
     public static final int TOOL_SUITE = 0x00000001;
@@ -139,6 +146,8 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
       cb.registerExtensionStateListener(this);
       cb.registerHttpListener(this);
       cb.registerScannerListener(this);
+      cb.registerContextMenuFactory(this);
+      cb.registerScopeChangeListener(this);
       if(r_obj != null) {
         boolean respondsLegacyRegister = r_obj.respondsTo(L_REG_METH);
         boolean respondsRegister = r_obj.respondsTo(REG_METH);
@@ -427,6 +436,37 @@ public class BurpExtender implements IBurpExtender, IExtensionStateListener, IHt
     public void extensionUnloaded() {
       if (r_obj != null && r_obj.respondsTo(UNLOAD_METH))
         r_obj.callMethod(ctx(r_obj), UNLOAD_METH);
+    }
+
+    /**
+     * This method will be called by Burp when the user invokes a context menu
+     * anywhere within Burp. The factory can then provide any custom context
+     * menu items that should be displayed in the context menu, based on the
+     * details of the menu invocation.
+     *
+     * @param invocation An object that implements the
+     * <code>IMessageEditorTabFactory</code> interface, which the extension can
+     * query to obtain details of the context menu invocation.
+     * @return A list of custom menu items (which may include sub-menus,
+     * checkbox menu items, etc.) that should be displayed. Extensions may
+     * return
+     * <code>null</code> from this method, to indicate that no menu items are
+     * required.
+     */
+    public List<JMenuItem> createMenuItems(IContextMenuInvocation invocation) {
+      // IRubyObject ret = null;
+      if (r_obj != null && r_obj.respondsTo(MENUFAC_METH))
+        return (RubyArray)r_obj.callMethod(ctx(r_obj), MENUFAC_METH, to_ruby(rt(r_obj), invocation));
+      return null;
+    }
+
+    /**
+     * This method is invoked whenever a change occurs to Burp's suite-wide
+     * target scope.
+     */
+    public void scopeChanged() {
+      if (r_obj != null && r_obj.respondsTo(SCOPE_METH))
+        r_obj.callMethod(ctx(r_obj), SCOPE_METH);
     }
 }
 

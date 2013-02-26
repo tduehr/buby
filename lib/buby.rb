@@ -1305,7 +1305,7 @@ class Buby
   # @todo Bring IHttpRequestResponse helper up to date
   # @note Changed in Burp 1.5.01+
   # @deprecated This is the called by the legacy interface, use
-  #   {#process_http_method} instead
+  #   {#process_http_message} instead
   def evt_http_message(tool_name, is_request, message_info)
     HttpRequestResponseHelper.implant(message_info)
     pp([:got_evt_http_message, tool_name, is_request, message_info]) if $DEBUG
@@ -1327,8 +1327,8 @@ class Buby
   # @note This is the 1.5.01+ version of this callback
   #
   def process_http_message(toolFlag, messageIsRequest, messageInfo)
-    HttpRequestResponseHelper.implant(message_info)
-    pp([:got_process_http_message, tool_name, is_request, message_info]) if $DEBUG
+    HttpRequestResponseHelper.implant(messageInfo)
+    pp([:got_process_http_message, toolFlag, isRequest, messageInfo]) if $DEBUG
   end
 
   # This method is invoked whenever Burp Scanner discovers a new, unique 
