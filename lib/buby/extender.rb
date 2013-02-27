@@ -9,7 +9,7 @@ class Buby
   #   deprecated evt_* callbacks, only the new versions.
   #
   # @todo move implant logic to extender interfaces
-  class Extender
+  module Extender
     include Java::Burp::IBurpExtender
     include Java::Burp::IExtensionStateListener
     include Java::Burp::IProxyListener
