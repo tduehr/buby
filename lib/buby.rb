@@ -1328,7 +1328,7 @@ class Buby
   #
   def process_http_message(toolFlag, messageIsRequest, messageInfo)
     HttpRequestResponseHelper.implant(messageInfo)
-    pp([:got_process_http_message, toolFlag, isRequest, messageInfo]) if $DEBUG
+    pp([:got_process_http_message, toolFlag, messageIsRequest, messageInfo]) if $DEBUG
   end
 
   # This method is invoked whenever Burp Scanner discovers a new, unique 
