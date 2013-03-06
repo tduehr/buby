@@ -1,6 +1,7 @@
 require 'buby/burp_extender/context_menu'
 
 class BurpExtender
+  # @api private
   class ContextMenuFactory
     attr_accessor :burp
     include Java::Burp::IContextMenuFactory

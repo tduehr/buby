@@ -13,10 +13,9 @@ end
 #
 class BurpExtender
   include Buby::Extender
-  include Java::Burp::ITab
   include Java::Burp::IBurpExtender
 
-  @@handler = Buby.new
+  @@handler ||= Buby.new
 
   # ExtensionHelpers for internal reference
   attr_reader :helpers
@@ -26,13 +25,15 @@ class BurpExtender
   attr_accessor :interactive
   # Set $DEBUG on start.
   attr_accessor :debug
-  # Run interactive session in a window
+  # Run interactive session in a window instead of a tab.
   attr_accessor :windowed
   # Allow proxy interception on load.
   attr_accessor :intercept
   # Unload the extension when exiting irb. Defaults to nil. The values +exit+
   #   and +unload+ will close Burp and unload Buby, respectively.
   attr_accessor :on_quit
+
+  attr_accessor :frame
 
   # save the current BurpExtender settings to the preferences cache
   def save_settings!
@@ -48,7 +49,7 @@ class BurpExtender
     @callbacks.saveExtensionSetting('debug', @debug ? @debug.to_s : nil)
     @callbacks.saveExtensionSetting('windowed', @windowed ? @windowed.to_s : nil)
     case @on_quit
-    when 'exit', 'quit', nil
+    when 'exit', 'unload', nil
       @callbacks.saveExtensionSetting('on_quit', @on_quit)
     else
       @callbacks.saveExtensionSetting('on_quit', @on_quit.to_s)
@@ -58,45 +59,62 @@ class BurpExtender
   # @group Internals
   # @see Buby::Extender#registerExtenderCallbacks
   def registerExtenderCallbacks(callbacks)
-    puts @@handler.methods.inspect
     @@handler.extender_initialize self
     @callbacks = callbacks
     @helpers = @callbacks.helpers
     @callbacks.setExtensionName("Buby")
 
-    @intercept = @callbacks.loadExtensionSetting('intercept')
-    @interactive = @callbacks.loadExtensionSetting('interactive')
-    @debug = true || @callbacks.loadExtensionSetting('debug')
-    @windowed = @callbacks.loadExtensionSetting('windowed')
-    @on_quit = @callbacks.loadExtensionSetting('on_quit')
+    sys_properties = Java::JavaLang::System.getProperties
 
-    $DEBUG = 1 if @debug
-    @callbacks.setProxyInterceptionEnabled false unless @intercept
+    @intercept = sys_properties.getProperty("burp.buby.intercept", nil) || @callbacks.loadExtensionSetting('intercept')
+    @interactive = sys_properties.getProperty("burp.buby.interactive", nil) || @callbacks.loadExtensionSetting('interactive') || 'irb'
+    @debug = sys_properties.getProperty("burp.buby.debug", nil) || @callbacks.loadExtensionSetting('debug')
+    @windowed = sys_properties.getProperty("burp.buby.windowed", nil) || @callbacks.loadExtensionSetting('windowed') || 'false'
+    @on_quit = sys_properties.getProperty("burp.buby.on_quit", nil) || @callbacks.loadExtensionSetting('on_quit') || 'unload'
 
-    require 'buby'
-    unless @interactive == 'none'
-      require 'buby/burp_extender/console_pane'
-      @pane = ConsolePane.new
+    $DEBUG = @debug unless @debug && @debug.match(/\Afalse\Z/i)
+    @callbacks.setProxyInterceptionEnabled false unless @intercept &&  @intercept.match(/\A(?:false|f|n|no|off)\Z/i)
 
-      @callbacks.customizeUiComponent @pane
-      if @windowed
-        @frame = javax.swing.JFrame.new("Buby #{@interactive || 'IRB'} Console (tab will autocomplete)")
-        @frame.set_size(700, 600)
-        @frame.content_pane.add(@pane)
-        java.awt.EventQueue.invoke_later {
-          @frame.visible = true
-        }
-        @callbacks.customizeUiComponent @frame
-      else
-        require 'buby/burp_extender/console_tab'
-        @tab = BurpExtender::ConsoleTab.new @pane
-        @callbacks.addSuiteTab self
-      end
-    end
+    init_console unless @interactive == 'none'
 
     $burp = @@handler
 
     super
+
+    @main_menu = Java::JavaAwt::Frame.getFrames.map{|x| x.getMenuBar }.compact.find_all do |mb|
+      labels = mb.getMenuCount.times.map{|x| mb.getMenu(x).label}
+      !(labels & ["Burp", "Intruder", "Repeater", "Window", "Help"]).empty?
+    end.first
+
+    if @main_menu # awt based laf
+      require 'buby/burp_extender/menu_item'
+      require 'buby/burp_extender/menu'
+      @menu = BurpExtender::Menu.new self
+      @menu.add(BurpExtender::MenuItem.new('Toggle console mode', self) do |event|
+        burp = event.source.burp
+        burp.toggle_windowed
+      end)
+      pref_menu = BurpExtender::Menu.new self, "Preferences.."
+    else
+      # swing based laf ... isn't Java ...great...
+
+      require 'buby/burp_extender/jmenu_item'
+      require 'buby/burp_extender/jmenu'
+
+      @main_menu = Java::JavaAwt::Frame.getFrames.map{|x| x.getJMenuBar if x.respond_to?(:getJMenuBar)}.compact.find_all do |mb|
+        labels = mb.getMenuCount.times.map{|x| mb.getMenu(x).label}
+        !(labels & ["Burp", "Intruder", "Repeater", "Window", "Help"]).empty?
+      end.first
+
+      @menu = BurpExtender::JMenu.new self
+      @menu.add(BurpExtender::JMenuItem.new('Toggle console mode', self) do |event|
+        burp = event.source.burp
+        burp.toggle_windowed
+      end)
+      pref_menu = BurpExtender::JMenu.new self, "Preferences.."
+    end
+
+    @main_menu.add @menu
 
     @callbacks.registerContextMenuFactory ContextMenuFactory.new(self)
     @callbacks.getStderr.flush
@@ -112,28 +130,29 @@ class BurpExtender
     end
   end
 
+  def toggle_windowed
+    if @frame
+      move_to_tab
+    else
+      move_to_window
+    end
+  end
+
   def move_to_tab
-    if @windowed
-      java.awt.EventQueue.invoke_later {
-        @frame.visible = false
+    require 'buby/burp_extender/console_tab'
+    @tab = BurpExtender::ConsoleTab.new @pane
+    @callbacks.addSuiteTab @tab
+    if @frame
+      Java::JavaAwt::EventQueue.invoke_later {
+        @frame.dispose if @frame
+        @frame = nil
       }
-      @callbacks.addSuiteTab self
-      @windowed = false
     end
   end
 
   def move_to_window
-    unless @windowed
-      @frame = javax.swing.JFrame.new('JRuby IRB Console (tab will autocomplete)')
-      @frame.set_size(700, 600)
-      @frame.content_pane.add(@pane)
-
-      java.awt.EventQueue.invoke_later {
-        @frame.visible = true
-      }
-      @callbacks.removeSuiteTab self
-      @windowed = true
-    end
+    @callbacks.removeSuiteTab @tab if @tab
+    create_frame
   end
 
   # Starts an IRB Session
@@ -141,65 +160,81 @@ class BurpExtender
     require 'irb'
     require 'irb/completion'
 
-    @interactive_running = true
-    puts "Starting IRB: Global $burp is set to #{$burp.inspect}"
-    IRB.start(__FILE__)
-    @interactive_running = false
-    quitting
+    unless @interactive_running
+      @interactive_running = true
+      puts "Starting IRB: Global $burp is set to #{$burp.inspect}"
+      IRB.start(__FILE__)
+      quitting
+    end
   end
 
   def start_pry
     require 'pry'
 
-    @interactive_running = true
-    puts "Starting Pry: Global $burp is set to #{$burp.inspect}"
-    Pry.start
-    @interactive_running = false
-    quitting
+    unless @interactive_running
+      @interactive_running = true
+      puts "Starting Pry: Global $burp is set to #{$burp.inspect}"
+      ENV['TERM'] = 'dumb'
+      Pry.color = false
+
+      # Pry makes a bunch of invalid assumptions. This seems to be the best we can do for now.
+      Pry.toplevel_binding.pry
+      quitting
+    end
   end
 
   def quitting
+    @interactive_running = false
+
     case @on_quit
     when 'exit'
       @callbacks.exitSuite
     when 'unload'
       @callbacks.unloadExtension
     else
-      if @frame
-        java.awt.EventQueue.invoke_later {
-          @frame.dispose
-          @frame = nil
-        }
-      else
-        @callbacks.removeSuiteTab self
-      end
+      unload_ui
     end
   end
 
   def extensionUnloaded
+    super
+    unload_ui
+  end
+
+  private
+  def unload_ui
     if @frame
-      java.awt.EventQueue.invoke_later {
-        @frame.dispose
+      Java::JavaAwt::EventQueue.invoke_later {
+        @frame.dispose if @frame
         @frame = nil
       }
     end
-    
-    super
+
+    @main_menu.remove @menu
+    @callbacks.removeSuiteTab @tab if @tab
+    @pane = nil
   end
 
-  # @group Tab
-  def getUiComponent
-    @pane
+  def init_console
+    require 'buby/burp_extender/console_pane'
+    @pane = ConsolePane.new
+
+    @callbacks.customizeUiComponent @pane
+    if @windowed
+      create_frame
+    else
+      require 'buby/burp_extender/console_tab'
+      @tab = BurpExtender::ConsoleTab.new @pane
+      @callbacks.addSuiteTab @tab
+    end
   end
 
-  def getTabCaption
-    "Buby v#{Buby::Version::STRING}"
-  end
-
-  # Try to find preferred font family, use otherwise -- err --  otherwise
-  def find_font(otherwise, style, size, *families)
-    avail_families = java.awt.GraphicsEnvironment.local_graphics_environment.available_font_family_names
-    fontname = families.find(proc {otherwise}) { |name| avail_families.include? name }
-    java.awt.Font.new(fontname, style, size)
+  def create_frame
+    require 'buby/burp_extender/console_frame'
+    unless @frame
+      @frame = BurpExtender::ConsoleFrame.new self, @pane do |event|
+        @frame = nil if event.getID == Java::JavaAwtEvent::WindowEvent::WINDOW_CLOSED
+      end
+    end
   end
 end

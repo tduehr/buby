@@ -15,6 +15,8 @@ class Buby
     include Java::Burp::IProxyListener
     include Java::Burp::IHttpListener
     include Java::Burp::IScannerListener
+    include Java::Burp::IScopeChangeListener
+    include Java::Burp::IContextMenuFactory
 
     # @group Buby internals
     # Internal reference to ruby handler class (usually {Buby})
@@ -69,6 +71,8 @@ class Buby
       callbacks.registerExtensionStateListener(self)
       callbacks.registerHttpListener(self)
       callbacks.registerScannerListener(self)
+      callbacks.registerContextMenuFactory self
+      callbacks.registerScopeChangeListener self
       @@handler.register_callbacks(callbacks) if @@handler.respond_to? :register_callbacks
     end
 
@@ -120,6 +124,33 @@ class Buby
     #
     def newScanIssue(issue)
       @@handler.new_scan_issue(issue) if @@handler.respond_to? :new_scan_issue
+    end
+
+    # This method will be called by Burp when the user invokes a context menu
+    # anywhere within Burp. The factory can then provide any custom context menu
+    # items that should be displayed in the context menu, based on the details
+    # of the menu invocation.
+    #
+    # @param [IContextMenuInvocation] invocation An object the extension can
+    #   query to obtain details of the context menu invocation.
+    # @return [Array<JMenuItem>, nil] A list of custom menu items (which may
+    #   include sub-menus, checkbox menu items, etc.) that should be displayed.
+    #   Extensions may return +nil+ from this method, to indicate that no menu
+    #   items are required.
+    #
+    # @abstract
+    def createMenuItems invocation
+      @@handler.create_menu_items(invocation) if @@handler.respond_to? :create_menu_items
+    end
+
+    # This method is invoked whenever a change occurs to Burp's suite-wide
+    # target scope.
+    #
+    # @return [void]
+    #
+    # @abstract
+    def scopeChanged
+      @@handler.scope_changed if @@handler.respond_to? :scope_changed
     end
   end
 end

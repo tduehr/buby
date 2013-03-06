@@ -1,5 +1,6 @@
 class BurpExtender
-  class ContextMenuItem < javax.swing.JMenuItem
+  # @api private
+  class ContextMenuItem < Java::JavaxSwing::JMenuItem
     attr_accessor :invocation, :burp
     def initialize text, burp_extender, invocation, &block
       super text

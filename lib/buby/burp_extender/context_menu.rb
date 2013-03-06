@@ -1,14 +1,16 @@
 require 'buby/burp_extender/context_menu_item'
 
+# @api private
 class BurpExtender
-  class ContextMenu < javax.swing.JMenu
+  # @api private
+  class ContextMenu < Java::JavaxSwing::JMenu
     attr_accessor :burp, :invocation
     def initialize burp_extender, invocation
       @burp = burp_extender
       @invocation = invocation
       super 'Buby'
 
-      if @burp.windowed
+      if @burp.frame
         self.add(ContextMenuItem.new('Move console to tab', @burp, @invocation) do |event|
           burp = event.source.burp
           invocation = event.source.invocation
