@@ -2,6 +2,10 @@ require 'buby'
 require 'buby/extender'
 require 'pp'
 require 'buby/burp_extender/context_menu_factory'
+require 'buby/burp_extender/jmenu_item'
+require 'buby/burp_extender/jmenu'
+require 'buby/burp_extender/jcheck_box_menu_item'
+
 
 if ARGV.empty?
   # default options, esp. useful for jrubyw
@@ -34,6 +38,7 @@ class BurpExtender
   attr_accessor :on_quit
 
   attr_accessor :frame
+  attr_accessor :pane
 
   # save the current BurpExtender settings to the preferences cache
   def save_settings!
@@ -60,6 +65,7 @@ class BurpExtender
   # @see Buby::Extender#registerExtenderCallbacks
   def registerExtenderCallbacks(callbacks)
     @@handler.extender_initialize self
+    @interactive_sessions = 0
     @callbacks = callbacks
     @helpers = @callbacks.helpers
     @callbacks.setExtensionName("Buby")
@@ -75,66 +81,150 @@ class BurpExtender
     $DEBUG = @debug unless @debug && @debug.match(/\Afalse\Z/i)
     @callbacks.setProxyInterceptionEnabled false unless @intercept &&  @intercept.match(/\A(?:false|f|n|no|off)\Z/i)
 
-    init_console unless @interactive == 'none'
-
     $burp = @@handler
 
     super
 
-    @main_menu = Java::JavaAwt::Frame.getFrames.map{|x| x.getMenuBar }.compact.find_all do |mb|
+    @main_menu = Java::JavaAwt::Frame.getFrames.map{|x| x.getJMenuBar if x.respond_to?(:getJMenuBar)}.compact.find_all do |mb|
       labels = mb.getMenuCount.times.map{|x| mb.getMenu(x).label}
       !(labels & ["Burp", "Intruder", "Repeater", "Window", "Help"]).empty?
     end.first
 
-    if @main_menu # awt based laf
-      require 'buby/burp_extender/menu_item'
-      require 'buby/burp_extender/menu'
-      @menu = BurpExtender::Menu.new self
-      @menu.add(BurpExtender::MenuItem.new('Toggle console mode', self) do |event|
-        burp = event.source.burp
-        burp.toggle_windowed
-      end)
-      pref_menu = BurpExtender::Menu.new self, "Preferences.."
-    else
-      # swing based laf ... isn't Java ...great...
+    @menu = BurpExtender::JMenu.new self
+    @menu.add(tcm = BurpExtender::JMenuItem.new('Toggle console mode', self) do |event|
+      self.toggle_windowed
+    end)
 
-      require 'buby/burp_extender/jmenu_item'
-      require 'buby/burp_extender/jmenu'
+    pref_menu = BurpExtender::JMenu.new self, "Preferences.."
 
-      @main_menu = Java::JavaAwt::Frame.getFrames.map{|x| x.getJMenuBar if x.respond_to?(:getJMenuBar)}.compact.find_all do |mb|
-        labels = mb.getMenuCount.times.map{|x| mb.getMenu(x).label}
-        !(labels & ["Burp", "Intruder", "Repeater", "Window", "Help"]).empty?
-      end.first
+    interact = BurpExtender::JMenu.new self, "Interactive..."
 
-      @menu = BurpExtender::JMenu.new self
-      @menu.add(BurpExtender::JMenuItem.new('Toggle console mode', self) do |event|
-        burp = event.source.burp
-        burp.toggle_windowed
-      end)
-      pref_menu = BurpExtender::JMenu.new self, "Preferences.."
+    mode_group = Java::JavaxSwing::ButtonGroup.new
+
+    mode = BurpExtender::JMenu.new self, "Mode"
+    %w{irb pry none}.each do |md|
+      mode_item = Java::JavaxSwing::JRadioButtonMenuItem.new md
+      mode_item.action_command = md
+      # mode_item.selected = (@interactive == md)
+      mode_item.addActionListener do |event|
+        @callbacks.saveExtensionSetting('interactive', event.action_command)
+        @interactive = event.action_command
+      end
+      mode_group.add mode_item
+      mode.add mode_item
     end
+    interact.add mode
+
+    quit_group = Java::JavaxSwing::ButtonGroup.new
+
+    oq = BurpExtender::JMenu.new self, "On quit"
+    %w{exit unload none}.each do |md|
+      menu_item = Java::JavaxSwing::JRadioButtonMenuItem.new md
+      menu_item.action_command = md
+      # menu_item.selected = (@on_quit == md)
+      menu_item.addActionListener do |event|
+        @callbacks.saveExtensionSetting('on_quit', event.action_command)
+        @on_quit = event.action_command
+      end
+      quit_group.add menu_item
+      oq.add menu_item
+    end
+    interact.add oq
+
+    windowd = BurpExtender::JCheckBoxMenuItem.new(self, "Windowed", (@windowed && (@windowed != 'false'))) do |event|
+      enabl = event.source.state
+
+      @windowed = enabl
+      if enabl
+        @callbacks.saveExtensionSetting('windowed', 'true')
+        self.move_to_window
+      else
+        @callbacks.saveExtensionSetting('windowed', nil)
+        self.move_to_tab
+      end
+    end
+
+    interact.add windowd
+    pref_menu.add interact
+
+    dbg = BurpExtender::JCheckBoxMenuItem.new self, "$DEBUG"  do |event|
+      enabl = event.source.state
+      @debug = enabl
+      @callbacks.saveExtensionSetting('debug', enabl ? 'true' : nil)
+      $DEBUG = enabl ? 1 : nil
+    end
+
+    interc = BurpExtender::JCheckBoxMenuItem.new self, "Disable intercept on start"  do |event|
+      enabl = event.source.state
+      if enabl
+        @intercept = nil
+        @callbacks.saveExtensionSetting('intercept', nil)
+      else
+        @intercept = true
+        @callbacks.saveExtensionSetting('intercept', 'true')
+      end
+    end
+    pref_menu.add interc
+
+    dbg.state = !!$DEBUG
+    pref_menu.add dbg
+
+    @menu.add pref_menu
 
     @main_menu.add @menu
 
-    @callbacks.registerContextMenuFactory ContextMenuFactory.new(self)
+    @menu.addChangeListener do |event|
+      if @menu.isSelected
+        mode.getMenuComponents.each do |menu|
+          menu.selected = (@interactive == menu.action_command)
+        end
+
+        oq.getMenuComponents.each do |menu|
+          menu.selected = (@on_quit == menu.action_command)
+        end
+
+        if @frame
+          tcm.text = 'Move console to tab'
+        elsif @interactive_running
+          tcm.text = 'Move console to window'
+        else
+          tcm.text = 'Start interactive session'
+        end
+
+        dbg.state = !!(@debug && (@debug != 'false'))
+        interc.state = !(@intercept && (@intercept != 'false'))
+        windowd.state = !!(@windowed && (@windowed != 'false'))
+      end
+    end
+
     @callbacks.getStderr.flush
-    case @interactive
-    when 'irb', nil
-      start_irb
-    when 'pry'
-      start_pry
-    when 'none'
-    else
-      @callbacks.getStderr.write "Unknown interactive setting #{@interactive.dump}. Starting IRB".to_java_bytes
-      start_irb
+    @callbacks.getStdout.flush
+    start_interactive  unless @interactive == 'none'
+  end
+
+  def start_interactive(allow_multiple = false)
+    unless @interactive_sessions.nonzero? || allow_multiple
+      init_console
+      case @interactive
+      when 'irb', nil
+        start_irb
+      when 'pry'
+        start_pry
+      when 'none'
+      else
+        @callbacks.getStderr.write "Unknown interactive setting #{@interactive.dump}. Starting IRB".to_java_bytes
+        start_irb
+      end
     end
   end
 
   def toggle_windowed
     if @frame
       move_to_tab
-    else
+    elsif @interactive_running
       move_to_window
+    else
+      start_interactive
     end
   end
 
@@ -162,6 +252,7 @@ class BurpExtender
 
     unless @interactive_running
       @interactive_running = true
+      @interactive_sessions += 1
       puts "Starting IRB: Global $burp is set to #{$burp.inspect}"
       IRB.start(__FILE__)
       quitting
@@ -188,7 +279,8 @@ class BurpExtender
 
     case @on_quit
     when 'exit'
-      @callbacks.exitSuite
+      @callbacks.exitSuite true
+      unload_ui # just in case closing is cancelled, we need to kill the frame and tab
     when 'unload'
       @callbacks.unloadExtension
     else
@@ -199,6 +291,11 @@ class BurpExtender
   def extensionUnloaded
     super
     unload_ui
+    unload_menu
+  end
+
+  def inspect
+    "<#{self.class}:0x#{self.hash.to_s(16)} @interactive=#{@interactive.inspect}, @windowed=#{@windowed.inspect}, @on_quit=#{@on_quit.inspect}, @intercept=#{@intercept.inspect}, @debug=#{@debug.inspect}, @callbacks=#{@callbacks.inspect}, @helpers=#{@helpers.inspect}>"
   end
 
   private
@@ -209,7 +306,9 @@ class BurpExtender
         @frame = nil
       }
     end
+  end
 
+  def unload_menu
     @main_menu.remove @menu
     @callbacks.removeSuiteTab @tab if @tab
     @pane = nil
@@ -220,7 +319,7 @@ class BurpExtender
     @pane = ConsolePane.new
 
     @callbacks.customizeUiComponent @pane
-    if @windowed
+    if @windowed && @windowed != 'false'
       create_frame
     else
       require 'buby/burp_extender/console_tab'
