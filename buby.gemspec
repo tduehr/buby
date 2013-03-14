@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = "buby"
-  s.version = "1.5.0.pre2"
+  s.version = "1.5.0.pre3"
   s.platform = "java"
 
   s.required_rubygems_version = Gem::Requirement.new("> 1.3.1") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Monti, tduehr"]
-  s.date = "2013-02-19"
+  s.date = "2013-03-14"
   s.description = "Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface."
   s.email = "td@matasano.com"
   s.executables = ["buby"]
@@ -64,10 +64,22 @@ Gem::Specification.new do |s|
     "ext/burp_interfaces/burp/ITab.java",
     "ext/burp_interfaces/burp/ITempFile.java",
     "ext/burp_interfaces/burp/ITextEditor.java",
-    "lib/buby.jar",
     "lib/buby.rb",
+    "lib/buby/burp_extender.rb",
+    "lib/buby/burp_extender/console_frame.rb",
+    "lib/buby/burp_extender/console_pane.rb",
+    "lib/buby/burp_extender/console_tab.rb",
+    "lib/buby/burp_extender/context_menu.rb",
+    "lib/buby/burp_extender/context_menu_factory.rb",
+    "lib/buby/burp_extender/context_menu_item.rb",
+    "lib/buby/burp_extender/jcheck_box_menu_item.rb",
+    "lib/buby/burp_extender/jmenu.rb",
+    "lib/buby/burp_extender/jmenu_item.rb",
+    "lib/buby/burp_extender/menu.rb",
+    "lib/buby/burp_extender/menu_item.rb",
     "lib/buby/context_menu_factory.rb",
     "lib/buby/cookie.rb",
+    "lib/buby/extender.rb",
     "lib/buby/http_listener.rb",
     "lib/buby/implants.rb",
     "lib/buby/implants/buby_array_wrapper.rb",
@@ -109,7 +121,6 @@ Gem::Specification.new do |s|
     "lib/buby/session_handling_action.rb",
     "lib/buby/tab.rb",
     "lib/buby/version.rb",
-    "lib/burp_interfaces.jar",
     "samples/drb_buby.rb",
     "samples/drb_sample_cli.rb",
     "samples/mechanize_burp.rb",
