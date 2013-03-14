@@ -481,8 +481,8 @@ class Buby
   #
   # This method is only available with Burp 1.3.07+ and is deprecated in 1.5.01.
   #
-  def registerMenuItem(menuItemCaption, menuItemHandler)
-    _check_and_callback(:registerMenuItem, menuItemCaption, menuItemHandler)
+  def registerMenuItem(menuItemCaption, menuItemHandler = nil, &block)
+    _check_and_callback(:registerMenuItem, menuItemCaption, (block_given? ? &block : menuItemHandler))
     issueAlert("Handler #{menuItemHandler} registered for \"#{menuItemCaption}\"")
   end
   alias register_menu_item registerMenuItem
@@ -578,7 +578,7 @@ class Buby
   # building and analyzing HTTP requests.
   #
   def getHelpers
-    Buby::Implants::ExtensionHelpers.implant(_check_and_callback(:getHelpers))
+    @helpers ||= Buby::Implants::ExtensionHelpers.implant(_check_and_callback(:getHelpers))
   end
   alias helpers getHelpers
   alias get_helpers getHelpers
@@ -591,7 +591,7 @@ class Buby
   #
   # @todo double check
   def getStdout
-    _check_and_callback(:getStdout)
+    @stdout ||= _check_and_callback(:getStdout)
   end
   alias stdout getStdout
   alias get_stdout getStdout
@@ -604,7 +604,7 @@ class Buby
   # @return [OutputStream] The extension's standard error stream.
   #
   def getStderr
-    _check_and_callback(:getStderr)
+    @stderr ||= _check_and_callback(:getStderr)
   end
   alias stderr getStderr
   alias get_stderr getStderr
@@ -623,7 +623,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerExtensionStateListener(listener = nil, &block)
-    _check_and_callback(:registerExtensionStateListener, listener || block)
+    _check_and_callback(:registerExtensionStateListener, (block_given? ? &block : listener))
   end
   alias register_extension_state_listener registerExtensionStateListener
 
@@ -639,7 +639,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerHttpListener(listener = nil, &block)
-    _check_and_callback(:registerHttpListener, listener || block)
+    _check_and_callback(:registerHttpListener, (block_given? ? &block : listener))
   end
   alias register_http_listener registerHttpListener
 
@@ -655,7 +655,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerProxyListener(listener = nil, &block)
-    _check_and_callback(:registerProxyListener, listener || block)
+    _check_and_callback(:registerProxyListener, (block_given? ? &block : listener))
   end
   alias register_proxy_listener registerProxyListener
 
@@ -671,7 +671,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerScannerListener(listener = nil, &block)
-    _check_and_callback(:registerScannerListener, listener || block)
+    _check_and_callback(:registerScannerListener, (block_given? ? &block : listener))
   end
   alias register_scanner_listener registerScannerListener
 
@@ -685,7 +685,7 @@ class Buby
   #    (Isn't JRuby fun?)
   #
   def registerScopeChangeListener(listener = nil, &block)
-    _check_and_callback(:registerScopeChangeListener, listener || block)
+    _check_and_callback(:registerScopeChangeListener, (block_given? ? &block : listener))
   end
 
   # This method is used to register a factory for custom context menu items.
@@ -704,7 +704,7 @@ class Buby
   #     wrapped properly.
   #
   def registerContextMenuFactory(factory = nil, &block)
-    _check_and_callback(:registerContextMenuFactory, factory || block)
+    _check_and_callback(:registerContextMenuFactory, (block_given? ? &block : factory))
   end
   alias register_context_menu_factory registerContextMenuFactory
 
@@ -725,7 +725,7 @@ class Buby
   #     wrapped properly.
   #
   def registerMessageEditorTabFactory(factory = nil, &block)
-    _check_and_callback(:registerMessageEditorTabFactory, factory || block)
+    _check_and_callback(:registerMessageEditorTabFactory, (block_given? ? &block : factory))
   end
   alias register_message_editor_tab_factory registerMessageEditorTabFactory
 
@@ -742,7 +742,7 @@ class Buby
   #     (Isn't JRuby fun?)
   #
   def registerScannerInsertionPointProvider(provider = nil, &block)
-    _check_and_callback(:registerScannerInsertionPointProvider, provider || block)
+    _check_and_callback(:registerScannerInsertionPointProvider, (block_given? ? &block : provider))
   end
   alias register_scanner_insertion_point_provider registerScannerInsertionPointProvider
 
@@ -752,8 +752,8 @@ class Buby
   #
   # @param [IScannerCheck] check An object that performs a given check.
   #
-  def registerScannerCheck(check)
-    _check_and_callback(:registerScannerCheck, check)
+  def registerScannerCheck(check = nil, &block)
+    _check_and_callback(:registerScannerCheck, (block_given? ? &block : check))
   end
   alias register_scanner_check registerScannerCheck
 
@@ -768,8 +768,8 @@ class Buby
   #   generating intruder payloads.
   #
   # @todo Test - block version may work here
-  def registerIntruderPayloadGeneratorFactory(factory)
-    _check_and_callback(:registerIntruderPayloadGeneratorFactory, factory)
+  def registerIntruderPayloadGeneratorFactory(factory = nil, &block)
+    _check_and_callback(:registerIntruderPayloadGeneratorFactory, (block_given? ? &block : factory))
   end
   alias register_intruder_payload_generator_factory registerIntruderPayloadGeneratorFactory
 
@@ -782,7 +782,7 @@ class Buby
   #
   # @todo Test - block version may work here
   def registerIntruderPayloadProcessor(processor)
-    _check_and_callback(:registerIntruderPayloadProcessor, processor)
+    _check_and_callback(:registerIntruderPayloadProcessor, (block_given? ? &block : processor))
   end
   alias register_intruder_payload_processor registerIntruderPayloadProcessor
 
@@ -795,7 +795,7 @@ class Buby
   #
   # @todo Test - block version may work here
   def registerSessionHandlingAction(action)
-    _check_and_callback(:registerSessionHandlingAction, action)
+    _check_and_callback(:registerSessionHandlingAction, (block_given? ? &block : action))
   end
   alias register_session_handling_action registerSessionHandlingAction
 
