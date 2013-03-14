@@ -241,7 +241,7 @@ class Buby
   # Exclude the specified URL from the Suite-wide scope.
   #  * url = The URL to exclude from the Suite-wide scope.
   def excludeFromScope(url)
-    url = java.net.URL.new(url) if url.is_a? String
+    url = Java::JavaNet::URL.new(url) if url.is_a? String
     _check_cb.excludeFromScope(url)
   end
   alias exclude_from_scope excludeFromScope
@@ -250,7 +250,7 @@ class Buby
   # Include the specified URL in the Suite-wide scope.
   #  * url = The URL to exclude in the Suite-wide scope.
   def includeInScope(url)
-    url = java.net.URL.new(url) if url.is_a? String
+    url = Java::JavaNet::URL.new(url) if url.is_a? String
     _check_cb.includeInScope(url)
   end
   alias include_in_scope includeInScope 
@@ -261,7 +261,7 @@ class Buby
   #
   # Returns: true / false
   def isInScope(url)
-    url = java.net.URL.new(url) if url.is_a? String
+    url = Java::JavaNet::URL.new(url) if url.is_a? String
     _check_cb.isInScope(url)
   end
   alias is_in_scope isInScope
@@ -341,7 +341,7 @@ class Buby
   # Send a seed URL to the Burp Spider tool.
   #  * url = The new seed URL to begin spidering from.
   def sendToSpider(url)
-    url = java.net.URL.new(url) if url.is_a? String
+    url = Java::JavaNet::URL.new(url) if url.is_a? String
     _check_cb.sendToSpider(url)
   end
   alias send_to_spider sendToSpider
@@ -401,7 +401,7 @@ class Buby
   #
   # * filename = path and filename of the file to restore from
   def restoreState(filename)
-    _check_and_callback(:restoreState, java.io.File.new(filename))
+    _check_and_callback(:restoreState, Java::JavaIo::File.new(filename))
   end
   alias restore_state restoreState
 
@@ -412,7 +412,7 @@ class Buby
   #
   # * filename = path and filename of the file to save to
   def saveState(filename)
-    _check_and_callback(:saveState, java.io.File.new(filename))
+    _check_and_callback(:saveState, Java::JavaIo::File.new(filename))
   end
   alias save_state saveState
 

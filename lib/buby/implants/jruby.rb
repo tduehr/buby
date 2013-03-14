@@ -1,20 +1,29 @@
 class Buby
   module Implants
     module Object
-      def java_proxy?
-        false
+      def implanted?(klass = nil)
+        self.class.ancestors.include?(klass)
       end
 
-      def implanted?
-        false
+      def unique_methods regular = true
+        klass = self.class
+        meths = self.methods regular
+        while (klass != ::Object)
+          meths -= JRuby.reference(klass).getMethods.each_with_object([]){|meth, arr| arr << meth.first.intern if meth.last.kind_of?(Java::OrgJrubyInternalRuntimeMethods::AliasMethod)}
+          klass = klass.superclass
+        end
+        meths
       end
     end
 
-    module Enumerable
-      # XXX backport for 1.8.7
-      def each_with_object(memo)
-        inject(memo) do |memo, obj|
-          yield obj, memo
+    unless [].respond_to?(:each_with_object)
+      module Enumerable
+        # XXX backport for 1.8.7
+        def each_with_object(memo)
+          inject(memo) do |memo, item|
+            yield item, memo
+            memo
+          end
         end
       end
     end
@@ -23,7 +32,7 @@ class Buby
       def ruby_names_for_java_method meth
         self_java_ref = JRuby.reference(self).javaClass
         target_methods = self_java_ref.getMethods.group_by{|jmeth| jmeth.name}[meth.to_s]
-        org.jruby.javasupport.JavaUtil.getRubyNamesForJavaName(target_methods.first.name, target_methods)
+        Java::OrgJrubyJavasupport::JavaUtil.getRubyNamesForJavaName(target_methods.first.name, target_methods)
       end
 
       # copies wrapper_id method to java_id and all ruby-like aliases
