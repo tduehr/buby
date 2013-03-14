@@ -55,7 +55,6 @@ class Buby
       # Install ourselves into the current +IParameter+ java class
       # @param [IParameter] parameter
       #
-      # @todo __persistent__?
       def self.implant(parameter)
         unless parameter.implanted? || parameter.nil?
           pp [:implanting, parameter, parameter.class] if $DEBUG

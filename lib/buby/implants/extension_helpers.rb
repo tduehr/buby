@@ -248,7 +248,6 @@ class Buby
       # Install ourselves into the current +IExtensionHelpers+ java class
       # @param [IExtensionHelpers] helpers
       #
-      # @todo __persistent__?
       def self.implant(helpers)
         unless helpers.implanted? || helpers.nil?
           pp [:implanting, helpers, helpers.class] if $DEBUG

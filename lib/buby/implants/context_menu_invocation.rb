@@ -86,7 +86,6 @@ class Buby
       # Install ourselves into the current +IContextMenuInvocation+ java class
       # @param [IContextMenuInvocation] invocation
       #
-      # @todo __persistent__?
       def self.implant(invocation)
         unless invocation.implanted? || invocation.nil?
           pp [:implanting, invocation, invocation.class] if $DEBUG

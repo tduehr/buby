@@ -33,7 +33,6 @@ class Buby
       # Install ourselves into the current +IMessageEditorController+ java class
       # @param [IMessageEditorController] controller
       #
-      # @todo __persistent__?
       def self.implant(controller)
         unless controller.implanted? || controller.nil?
           pp [:implanting, controller, controller.class] if $DEBUG

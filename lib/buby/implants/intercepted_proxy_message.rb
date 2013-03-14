@@ -27,7 +27,6 @@ class Buby
       # Install ourselves into the current +IInterceptedProxyMessage+ java class
       # @param [IInterceptedProxyMessage] message
       #
-      # @todo __persistent__?
       def self.implant(message)
         unless message.implanted? || message.nil?
           pp [:implanting, message, message.class] if $DEBUG

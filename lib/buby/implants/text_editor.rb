@@ -35,7 +35,6 @@ class Buby
       # Install ourselves into the current +ITextEditor+ java class
       # @param [ITextEditor] editor
       #
-      # @todo __persistent__?
       def self.implant(editor)
         unless editor.implanted? || editor.nil?
           pp [:implanting, editor, editor.class] if $DEBUG

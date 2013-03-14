@@ -15,7 +15,6 @@ class Buby
       # Install ourselves into the current +IIntruderAttack+ java class
       # @param [IIntruderAttack] attack
       #
-      # @todo __persistent__?
       def self.implant(attack)
         unless attack.implanted? || attack.nil?
           pp [:implanting, attack, attack.class] if $DEBUG

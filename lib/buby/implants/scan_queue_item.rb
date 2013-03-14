@@ -26,7 +26,6 @@ class Buby
       # Install ourselves into the current +IScanQueueItem+ java class
       # @param [IScanQueueItem] item
       #
-      # @todo __persistent__?
       def self.implant(item)
         unless item.implanted? || item.nil?
           pp [:implanting, item, item.class] if $DEBUG

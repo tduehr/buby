@@ -17,7 +17,6 @@ class Buby
       # Install ourselves into the current +ITempFile+ java class
       # @param [ITempFile] file
       #
-      # @todo __persistent__?
       def self.implant(file)
         unless file.implanted? || file.nil?
           pp [:implanting, file, file.class] if $DEBUG

@@ -18,7 +18,6 @@ class Buby
       # Install ourselves into the current +ICookie+ java class
       # @param [ICookie] cookie instance
       #
-      # @todo __persistent__?
       def self.implant(cookie)
         unless cookie.implanted? || cookie.nil?
           pp [:implanting, cookie, cookie.class] if $DEBUG

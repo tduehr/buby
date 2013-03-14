@@ -65,7 +65,6 @@ class Buby
       # Install ourselves into the current +IScannerInsertionPoint+ java class
       # @param [IScannerInsertionPoint] point
       #
-      # @todo __persistent__?
       def self.implant(point)
         unless point.implanted? || point.nil?
           pp [:implanting, point, point.class] if $DEBUG

@@ -20,7 +20,6 @@ class Buby
       # Install ourselves into the current +IRequestInfo+ java class
       # @param [IRequestInfo] info
       #
-      # @todo __persistent__?
       def self.implant(info)
         unless info.implanted? || info.nil?
           pp [:implanting, info, info.class] if $DEBUG

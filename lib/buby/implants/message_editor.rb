@@ -41,7 +41,6 @@ class Buby
       # Install ourselves into the current +IMessageEditor+ java class
       # @param [IMessageEditor] editor
       #
-      # @todo __persistent__?
       def self.implant(editor)
         unless editor.implanted? || editor.nil?
           pp [:implanting, editor, editor.class] if $DEBUG
