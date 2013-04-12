@@ -1547,10 +1547,10 @@ class Buby
   def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
     ret = []
     search_proxy_history(statefile, urlrx) do |hrr|
-      if heads=hrr.rsp_headers
-        ret += heads.select do |h| 
-          h[0].downcase == 'set-cookie' and (not block_given? or yield(h[1]))
-        end.map{|h| h[1]}
+      if (resp = hrr.response)
+        ret += helpers.analyzeResponse(resp).getCookies.select do |c| 
+          (cookie.nil? or c.match(cookie)) && (not block_given? or yield(c))
+        end
       end
     end
     return ret
