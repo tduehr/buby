@@ -1,4 +1,5 @@
-require 'CGI'
+require 'cgi'
+
 class Buby
   # This class is used to hold details about an HTTP cookie. Implements the
   # +burp.ICookie+ interface
