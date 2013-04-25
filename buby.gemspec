@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = "buby"
-  s.version = "1.5.0"
+  s.version = "1.5.1"
   s.platform = "java"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -64,6 +64,7 @@ Gem::Specification.new do |s|
     "ext/burp_interfaces/burp/ITab.java",
     "ext/burp_interfaces/burp/ITempFile.java",
     "ext/burp_interfaces/burp/ITextEditor.java",
+    "lib/buby.jar",
     "lib/buby.rb",
     "lib/buby/burp_extender.rb",
     "lib/buby/burp_extender/console_frame.rb",
@@ -121,6 +122,7 @@ Gem::Specification.new do |s|
     "lib/buby/session_handling_action.rb",
     "lib/buby/tab.rb",
     "lib/buby/version.rb",
+    "lib/burp_interfaces.jar",
     "samples/drb_buby.rb",
     "samples/drb_sample_cli.rb",
     "samples/mechanize_burp.rb",
