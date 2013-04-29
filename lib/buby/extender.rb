@@ -22,26 +22,6 @@ class Buby
     # Internal reference to ruby handler class (usually {Buby})
     @@handler = nil
 
-    # Returns the internal Ruby handler reference. 
-    #
-    # The handler is the ruby class or module used for proxying BurpExtender 
-    # events into a ruby runtime. Usually, this is Buby or a subclass.
-    #
-    def self.handler
-      @@handler
-    end
-
-    # Sets an internal reference to the ruby handler class or module to use for
-    # proxied BurpExtender events into a ruby runtime.
-    #
-    # Generally, this should probably be called in {#registerExtenderCallbacks}.
-    # However, it is also possible to set this afterwards and even swap in new
-    # objects during runtime.
-    #
-    def self.handler=(hndlr)
-      @@handler = hndlr
-    end
-
     def handler
       @@handler
     end
@@ -151,6 +131,32 @@ class Buby
     # @abstract
     def scopeChanged
       @@handler.scope_changed if @@handler.respond_to? :scope_changed
+    end
+
+    def self.included klass
+      klass.extend ExtenderMethods
+    end
+
+    module ExtenderMethods
+      # Returns the internal Ruby handler reference. 
+      #
+      # The handler is the ruby class or module used for proxying BurpExtender 
+      # events into a ruby runtime. Usually, this is Buby or a subclass.
+      #
+      def handler
+        @@handler
+      end
+
+      # Sets an internal reference to the ruby handler class or module to use for
+      # proxied BurpExtender events into a ruby runtime.
+      #
+      # Generally, this should probably be called in {#registerExtenderCallbacks}.
+      # However, it is also possible to set this afterwards and even swap in new
+      # objects during runtime.
+      #
+      def handler=(hndlr)
+        @@handler = hndlr
+      end
     end
   end
 end
