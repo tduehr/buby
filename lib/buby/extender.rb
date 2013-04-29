@@ -138,6 +138,8 @@ class Buby
     end
 
     module ExtenderMethods
+      @@handler = nil
+
       # Returns the internal Ruby handler reference. 
       #
       # The handler is the ruby class or module used for proxying BurpExtender 
