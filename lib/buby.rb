@@ -1010,13 +1010,15 @@ class Buby
   # @param [Array<Array<Fixnum>>] requestMarkers A list of index pairs
   #   representing the offsets of markers to be applied to the request message.
   #   Each item in the list must be an +int[2]+ array containing the start and
-  #   end offsets for the marker. This parameter is optional and may be +nil+ if
-  #   no request markers are required.
+  #   end offsets for the marker. The markers in the list should be in sequence
+  #   and not overlapping. This parameter is optional and may be +nil+ if no
+  #   response markers are required.
   # @param [Array<Array<Fixnum>>] responseMarkers A list of index pairs
   #   representing the offsets of markers to be applied to the response message.
   #   Each item in the list must be an +int[2]+ array containing the start and
-  #   end offsets for the marker. This parameter is optional and may be +nil+ if
-  #   no response markers are required.
+  #   end offsets for the marker. The markers in the list should be in sequence
+  #   and not overlapping. This parameter is optional and may be +nil+ if no
+  #   response markers are required.
   # @return [IHttpRequestResponseWithMarkers] A marked request/response pair.
   #
   # @todo Bring IHttpRequestResponse helper up to date
@@ -1459,6 +1461,22 @@ class Buby
   end
   alias get_command_line_arguments getCommandLineArguments
   alias command_line_arguments getCommandLineArguments
+
+  # This method is used to generate a report for the specified Scanner
+  # issues. The report format can be specified. For all other reporting
+  # options, the default settings that appear in the reporting UI wizard are
+  # used.
+  #
+  # @param [String] format The format to be used in the report. Accepted values are HTML and XML.
+  # @param [Array<IScanIssue>] issues The Scanner issues to be reported.
+  # @param [String, java.io.File] file The file to which the report will be saved.
+  # @return [void]
+  #
+  def generateScanReport(format, issues, file)
+    file = Java::JavaIo::File.new file if file.kind_of?(String)
+    _check_and_callback(:generateScanReport, format, issues, file)
+  end
+  alias generate_scan_report generateScanReport
 
   ### Sugar/Convenience methods
 

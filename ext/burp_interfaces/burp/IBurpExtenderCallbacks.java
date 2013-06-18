@@ -560,6 +560,19 @@ public interface IBurpExtenderCallbacks
     IScanIssue[] getScanIssues(String urlPrefix);
 
     /**
+     * This method is used to generate a report for the specified Scanner
+     * issues. The report format can be specified. For all other reporting
+     * options, the default settings that appear in the reporting UI wizard are
+     * used.
+     *
+     * @param format The format to be used in the report. Accepted values are
+     * HTML and XML.
+     * @param issues The Scanner issues to be reported.
+     * @param file The file to which the report will be saved.
+     */
+    void generateScanReport(String format, IScanIssue[] issues, java.io.File file);
+
+    /**
      * This method is used to retrieve the contents of Burp's session handling
      * cookie jar. Extensions that provide an
      * <code>ISessionHandlingAction</code> can query and update the cookie jar
@@ -703,13 +716,15 @@ public interface IBurpExtenderCallbacks
      * @param requestMarkers A list of index pairs representing the offsets of
      * markers to be applied to the request message. Each item in the list must
      * be an int[2] array containing the start and end offsets for the marker.
-     * This parameter is optional and may be <code>null</code> if no request
-     * markers are required.
+     * The markers in the list should be in sequence and not overlapping. This
+     * parameter is optional and may be <code>null</code> if no request markers
+     * are required.
      * @param responseMarkers A list of index pairs representing the offsets of
      * markers to be applied to the response message. Each item in the list must
      * be an int[2] array containing the start and end offsets for the marker.
-     * This parameter is optional and may be <code>null</code> if no response
-     * markers are required.
+     * The markers in the list should be in sequence and not overlapping. This
+     * parameter is optional and may be <code>null</code> if no response markers
+     * are required.
      * @return An object that implements the
      * <code>IHttpRequestResponseWithMarkers</code> interface.
      */
