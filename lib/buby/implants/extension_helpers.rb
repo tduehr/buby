@@ -210,7 +210,7 @@ class Buby
       #
       def buildHttpService(host, port, protocol)
         pp [:got_buildHttpService, host, port, protocol] if $DEBUG
-        Buby::Implants::HttpService.implant(__buildHttpService(host, port, protocol))
+        __buildHttpService(host, port, protocol)
       end
 
       # This method constructs an +IParameter+ object based on the details
@@ -263,7 +263,6 @@ class Buby
               removeParameter
               updateParameter
               toggleRequestMethod
-              buildHttpService
               buildParameter
               makeScannerInsertionPoint            
             }
