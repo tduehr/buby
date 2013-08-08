@@ -8,6 +8,16 @@ class Buby
     # This module is used to extend the JRuby proxy class returned by Burp.
     #
     module ExtensionHelpers
+      PARAM_TYPES = {
+        'url' => 0,
+        'body' => 1,
+        'cookie' => 2,
+        'xml' => 3,
+        'xml_attr' => 4,
+        'multipart_attr' => 5,
+        'json' => 6
+      }
+
       # This method can be used to analyze an HTTP request, and obtain various
       # key details about it. The resulting +IRequestInfo+ object
       # will not include the full request URL.
@@ -36,14 +46,21 @@ class Buby
       # This method can be used to analyze an HTTP response, and obtain various
       # key details about it.
       #
-      # @param [String, Array<byte>] response The response to be analyzed.
-      # @return [IResponseInfo] object (wrapped with Ruby goodness) that can be
-      #   queried to obtain details about the response.
+      # @overload analyzeResponse(response)
+      #   @param [String, Array<byte>] response The response to be analyzed.
+      #   @return [IResponseInfo] object (wrapped with Ruby goodness) that
+      #     can be queried to obtain details about the response.
+      # @overload analyzeResponse(response)
+      #   @param [IHttpRequestResponse] response The response to be analyzed.
+      #   @return [IResponseInfo, nil] Object (wrapped with Ruby goodness) that
+      #     can be queried to obtain details about the response. Returns +nil+
+      #     when +response+ is nil.
       #
       def analyzeResponse(response)
         pp [:got_analyze_response, response] if $DEBUG
+        response = response.response if response.respond_to? :response
         response = response.to_java_bytes if response.respond_to? :to_java_bytes
-        Buby::Implants::ResponseInfo.implant(__analyzeResponse(response))
+        Buby::Implants::ResponseInfo.implant(__analyzeResponse(response)) if response
       end
 
       # This method can be used to retrieve details of a specified parameter
@@ -208,7 +225,7 @@ class Buby
       #   @param [Boolean] use_https Flags whether the HTTP service protocol is HTTPS or HTTP.
       # @return [IHttpService] object based on the details provided.
       #
-      def buildHttpService(host, port, protocol)
+      def buildHttpService(host, port = 80, protocol = false)
         pp [:got_buildHttpService, host, port, protocol] if $DEBUG
         __buildHttpService(host, port, protocol)
       end
@@ -223,6 +240,7 @@ class Buby
       # @return [IParameter] object based on the details provided.
       def buildParameter(name, value, type)
         pp [:got_buildParameter, name, value, type] if $DEBUG
+        ptype = TYPE_HASH[ptype.to_s] unless ptype.kind_of?(Fixnum)
         Buby::Implants::Parameter.implant(__buildParameter(name, value, type))
       end
 
@@ -231,8 +249,8 @@ class Buby
       #  point based on a fixed payload location within a base request.
       #
       # @param [String] insertion_point_name The name of the insertion point.
-      # @param [String, Array<byte>, IHttpRequestResponse] base_request The request from which to
-      #  build scan requests.
+      # @param [String, Array<byte>, IHttpRequestResponse] base_request The
+      #   request from which to build scan requests.
       # @param [Fixnum] from The offset of the start of the payload location.
       # @param [Fixnum] to The offset of the end of the payload location.
       # @return [IScannerInsertionPoint] object based on the details provided.
