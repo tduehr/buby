@@ -393,6 +393,13 @@ public interface IBurpExtenderCallbacks
             List<int[]> payloadPositionOffsets);
 
     /**
+     * This method can be used to send data to the Comparer tool.
+     *
+     * @param data The data to be sent to Comparer.
+     */
+    void sendToComparer(byte[] data);
+
+    /**
      * This method can be used to send a seed URL to the Burp Spider tool. If
      * the URL is not within the current Spider scope, the user will be asked if
      * they wish to add the URL to the scope. If the Spider is not currently

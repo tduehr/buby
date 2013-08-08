@@ -110,7 +110,7 @@ class Buby
   VERSION = Buby::Version::STRING
   
   # latest tested version of burp
-  COMPAT_VERSION = '1.5.05'
+  COMPAT_VERSION = '1.5.14'
 
   # :stopdoc:
   # @deprecated to be removed next version
@@ -324,6 +324,20 @@ class Buby
   end
   alias send_to_intruder sendToIntruder
   alias intruder sendToIntruder
+
+  # This method can be used to send data to the Comparer tool.
+  #
+  # @overload sendToComparer(data)
+  #   @param [Array<Byte>, String] data The data to be sent to Comparer.
+  # @overload sendToComparer(data)
+  #   @param [IHttpRequestResponse] data Request to be sent to Comparer.
+  #
+  def sendToComparer(data)
+    data = data.request if request.kind_of? Java::Burp::IHttpRequestResponse
+    data = data.to_java_bytes if request.respond_to? :to_java_bytes
+    _check_and_callback(:sendToComparer, data)
+  end
+  alias send_to_comparer sendToComparer
 
   # Send an HTTP request to the Burp Repeater tool.
   #  * host  = The hostname of the remote HTTP server.
