@@ -45,6 +45,16 @@ class Buby
         end
       end
     end
+
+    module URL
+      def inspect
+        if $DEBUG
+          super.insert(-2, ": #{self.to_s} ")
+        else
+          self.to_s
+        end
+      end
+    end
   end
 end
 
@@ -57,6 +67,12 @@ module Enumerable
 end
 
 module Java
+  module JavaNet
+    class URL
+      include Buby::Implants::URL
+    end
+  end
+
   class JavaClass
     include Buby::Implants::JavaClass
   end
