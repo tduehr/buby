@@ -28,6 +28,8 @@ The java BurpExtender included with Buby is an implementation of IBurpExtender w
 
 == Caveat
 
+Note: 1.6 fixes a bug were some of the newer wrapper methods return the native Java arrays. This haas been corrected to return the appropriate HttpRequestResponseList or ScanIssuesList object. In 2.0 these methods will return the correct Java/JRuby arrays. These were originally created to make nice Ruby Array-like objects but are no longer needed.
+
 Burp's extension interfaces have changed significantly in 1.5.01. I don't yet know how compatible this will be with Burp versions 1.5.0 and lower going forward. If you want compatibility with Burp Suite versions 1.5.0 and earlier stick with Buby version 1.3.3 or prior.
 
 I will keep the API provided by earlier Buby versions and mark methods deprecated as required. Hopefully, I'll be able to keep them around for a while so old buby scripts will continue to work for a while.
@@ -40,9 +42,9 @@ Methods removed/deprecated in 1.5.01 interfaces:
 * IBurpExtenderCallbacks.registerMenuItem (deprecated, use IBurpExtenderCalbacks.registerContextMenuFactory instead)
 * IMenuItemHandler (deprecated, use IContextMenuFactory instead)
 
-The deprecated getPatameters and getHeaders methods will, for now, call the equivalent methods on IBurpExtenderCallbacks. At some point soon they'll forward the calls to the correct interface before being removed entirely in favor of the new interfaces.
+The deprecated getParameters and getHeaders methods will, for now, call the equivalent methods on IBurpExtenderCallbacks. At some point soon they'll forward the calls to the correct interface before being removed entirely in favor of the new interfaces.
 
-In 2.0 bin/buby to use a bash script as the primary starting point for the current script - which will be renamed to bin/buby.rb
+In 2.0 bin/buby to use a bash script as the primary starting point for the current script - which will be renamed to bin/buby.rb. I may also just leave it as it is; the new Ruby extension stuff is quite nice.
 
 ... And one more thing. The next version of buby will require JRuby 1.7.0+. It won't use 1.9 syntax for a little while. So, extensions that require 1.8 will still work for now. Just don't forget to add the `--1.8` switch to JRuby when starting buby.
 

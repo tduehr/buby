@@ -57,30 +57,26 @@ class Buby
       #   +IBurpExtenderCallbacks.saveBuffersToTempFiles()+ to create a
       #   persistent read-only copy of the +IHttpRequestResponse+.
       #
-      # @return [Array<IHttpRequestResponse>,nil] An array of objects
+      # @return [HttpRequestResponseList,nil] An array of objects
       #   representing the items that were shown or selected by the user when
       #   the context menu was invoked. This method returns +nil+ if no messages
       #   are applicable to the invocation.
       #
       def getSelectedMessages
         pp [:got_get_selected_messages] if $DEBUG
-        hrrl = __getSelectedMessages
-        HttpRequestResponseHelper.implant(hrrl.first)
-        hrrl
+        HttpRequestResponseList.new(__getSelectedMessages)
       end
 
       # This method can be used to retrieve details of the Scanner issues that
       # were selected by the user when the context menu was invoked.
       #
-      # @return [Array<IScanIssue>,nil] The issues that were selected by the
+      # @return [ScanIssuesList,nil] The issues that were selected by the
       #   user when the context menu was invoked. This method returns +nil+ if
       #   no Scanner issues are applicable to the invocation.
       #
       def getSelectedIssues
         pp [:got_get_selected_issues] if $DEBUG
-        sil = __getSelectedIssues
-        ScanIssueHelper.implant(sil.first)
-        sil
+        ScanIssuesList.new(__getSelectedIssues)
       end
 
       # Install ourselves into the current +IContextMenuInvocation+ java class

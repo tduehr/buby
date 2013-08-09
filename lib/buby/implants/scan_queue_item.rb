@@ -16,11 +16,12 @@ class Buby
       #   {Buby::ScannerListener} to get details only of unique, newly
       #   discovered Scanner issues post-consolidation.
       #
-      # @return [Array<IScanIssue>] Details of the issues generated for the scan
+      # @return [ScanIssuesList] Details of the issues generated for the scan
       #   queue item.
       #
       def getIssues
-        __getIssues.tap{|issues| Buby::ScanIssueHelper.implant issues.first}
+        # __getIssues.tap{|issues| Buby::ScanIssueHelper.implant issues.first}
+        ScanIssuesList.new __getIssues
       end
 
       # Install ourselves into the current +IScanQueueItem+ java class
