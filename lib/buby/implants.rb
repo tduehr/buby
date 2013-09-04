@@ -1,4 +1,5 @@
 class Buby
+  # @todo document
   module Implants
     module Proxy
       def implanted?

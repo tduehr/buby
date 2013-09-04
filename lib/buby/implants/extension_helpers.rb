@@ -54,7 +54,7 @@ class Buby
       #   @param [IHttpRequestResponse] response The response to be analyzed.
       #   @return [IResponseInfo, nil] Object (wrapped with Ruby goodness) that
       #     can be queried to obtain details about the response. Returns +nil+
-      #     when +response+ is nil.
+      #     when +response+ is +nil+.
       #
       def analyzeResponse(response)
         pp [:got_analyze_response, response] if $DEBUG
@@ -83,14 +83,18 @@ class Buby
       # specified pattern. It works on byte-based data in a way that is similar
       # to the way the native Java method +String.indexOf()+ works on
       # String-based data.
+      #
       # @note This method is only wrapped for testing purposes. There are better ways to do this in the JRuby runtime.
       #
       # @param [String, Array<byte>] data The data to be searched.
       # @param [String, Array<byte>] pattern The pattern to be searched for.
-      # @param [Boolean] case_sensitive Flags whether or not the search is case-sensitive.
-      # @param [Fixnum] from The offset within +data+ where the search should begin.
+      # @param [Boolean] case_sensitive Flags whether or not the search is
+      #   case-sensitive.
+      # @param [Fixnum] from The offset within +data+ where the search should
+      #   begin.
       # @param [Fixnum] to The offset within +data+ where the search should end.
-      # @return The offset of the first occurrence of the pattern within the specified bounds, or nil if no match is found.
+      # @return [Fixnum, nil] The offset of the first occurrence of the pattern
+      #   within the specified bounds, or +nil+ if no match is found.
       #
       def indexOf(data, pattern, case_sensitive, from, to)
         pp [:got_index_of, case_sensitive, from, to, data, pattern] if $DEBUG
@@ -202,7 +206,7 @@ class Buby
       #
       # @param [String, Array<byte>, IHttpRequestResponse] request The HTTP
       #  request whose method should be toggled.
-      # @return [String} A new HTTP request using the toggled method.
+      # @return [String] A new HTTP request using the toggled method.
       #
       # @todo Switch IHttpRequestResponse to new Buby::Implants functionality (2.0)
       def toggleRequestMethod(request)
@@ -282,7 +286,7 @@ class Buby
               updateParameter
               toggleRequestMethod
               buildParameter
-              makeScannerInsertionPoint            
+              makeScannerInsertionPoint
             }
             a_methods.each do |meth|
               alias_method "__"+meth.to_s, meth

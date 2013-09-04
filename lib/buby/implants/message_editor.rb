@@ -64,7 +64,7 @@ class Buby
         end
         editor
       end
-      
+
     end
   end
 end

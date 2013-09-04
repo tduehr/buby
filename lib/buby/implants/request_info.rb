@@ -41,7 +41,7 @@ class Buby
         end
         info
       end
-      
+
     end
   end
 end

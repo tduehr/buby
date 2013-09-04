@@ -1,7 +1,7 @@
 class Buby
   module Implants
     # This interface is used to hold details about an HTTP request parameter.
-    # 
+    #
     module Parameter
 
       # This method is used to retrieve the start offset of the parameter name
