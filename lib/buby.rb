@@ -9,11 +9,11 @@ rescue NameError
   require 'burp_interfaces.jar'
 end
 
-# Buby is a mash-up of the commercial security testing web proxy PortSwigger 
-# Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from 
+# Buby is a mash-up of the commercial security testing web proxy PortSwigger
+# Burp Suite(tm) allowing you to add scripting to Burp. Burp is driven from
 # and tied to JRuby with a Java extension using the BurpExtender API.
 #
-# The Buby class is an abstract implementation of a BurpExtender ruby handler. 
+# The Buby class is an abstract implementation of a BurpExtender ruby handler.
 # Included are several abstract event handlers used from the BurpExtender
 # java implementation:
 # * evt_extender_init
@@ -28,8 +28,8 @@ end
 # * evt_scan_issue
 #
 #
-# This class also exposes several methods to access Burp functionality 
-# and user interfaces through the IBurpExtenderCallbacks interface 
+# This class also exposes several methods to access Burp functionality
+# and user interfaces through the IBurpExtenderCallbacks interface
 # (note, several abbreviated aliases also exist for each):
 # * doActiveScan
 # * doPassiveScan
@@ -42,10 +42,10 @@ end
 # * sendToRepeater
 # * sendToSpider
 #
-# Buby also provides front-end ruby methods for the various callback methods 
+# Buby also provides front-end ruby methods for the various callback methods
 # supported by Burp. New callbacks have been cropping up in newer Burp versions
-# frequently. 
-# 
+# frequently.
+#
 # Available since Burp 1.2.09:
 # * getProxyHistory
 # * getSiteMap
@@ -60,30 +60,27 @@ end
 # Available since Burp 1.2.17:
 # * exitSuite
 #
-# If you wish to access any of the IBurpExtenderCallbacks methods directly. 
+# If you wish to access any of the IBurpExtenderCallbacks methods directly.
 # You can use 'burp_callbacks' to obtain a reference.
 #
-# Credit:
-# * Burp and Burp Suite are trade-marks of PortSwigger Ltd.
-#     Copyright 2011 PortSwigger Ltd. All rights reserved.
-#     See http://portswigger.net for license terms.
+# == CREDIT:
+# Burp and Burp Suite are trademarks of PortSwigger(ltd)
+#   Copyright 2013 PortSwigger Ltd. All rights reserved.
+#   See http://portswigger.net for license terms.
 #
-# * This ruby library and the accompanying BurpExtender.java implementation 
-#   were written by Eric Monti @ Matasano Security. 
+# This JRuby library and the accompanying Java and JRuby BurpExtender
+# implementations were written by Timur Duehr @ Matasano Security. The original
+# version of this library and BurpExtender.java implementation was written by
+# Eric Monti @ Matasano Security. Matasano Security claims no professional or
+# legal affiliation with PortSwigger LTD.
 #
-#   Matasano claims no professional or legal affiliation with PortSwigger LTD. 
-#   nor do we sell or officially endorse any of their products.
+# However, the authors would like to express their personal and professional
+# respect and admiration to Burp's authors and appreciation to PortSwigger for
+# the availability of the IBurpExtender extension API and its continued
+# improvement. The availability of this interface goes a long way to helping
+# make Burp Suite a truly first-class application.
 #
-#   However, this author would like to express his personal and professional 
-#   respect and appreciation for their making available the BurpExtender 
-#   extension API. The availability of this interface in an already great tool
-#   goes a long way to make Burp Suite a truly first-class application.
-#
-# * Forgive the name. It won out over "Burb" and "BurpRub". It's just easier 
-#   to type and say out-loud. Mike Tracy gets full credit as official 
-#   Buby-namer.
-#
-# @todo move more to Java side
+# @todo move more to BurpExtender side
 class Buby
   autoload :ContextMenuFactory, 'buby/context_menu_factory'
   autoload :Cookie, 'buby/cookie'
@@ -108,7 +105,7 @@ class Buby
 
   # @deprecated moving to proper version module
   VERSION = Buby::Version::STRING
-  
+
   # latest tested version of burp
   COMPAT_VERSION = '1.5.14'
 
@@ -143,7 +140,7 @@ class Buby
 
   # Returns the internal reference to the IBupExtenderCallbacks instance.
   # This reference gets set from Java through the evt_register_callbacks
-  # method. It is exposed to allow you to access the IBurpExtenderCallbacks 
+  # method. It is exposed to allow you to access the IBurpExtenderCallbacks
   # instance directly if you so choose.
   def burp_callbacks; @burp_callbacks; end
 
@@ -376,9 +373,10 @@ class Buby
   end
 
 
-  # Returns a Java array of IHttpRequestResponse objects pulled directly from 
+  # Returns a Java array of IHttpRequestResponse objects pulled directly from
   # the Burp proxy history.
   # @todo Bring IHttpRequestResponse helper up to date
+  # @return [HttpRequestResponseList]
   def getProxyHistory
     HttpRequestResponseList.new(_check_and_callback(:getProxyHistory))
   end
@@ -413,7 +411,9 @@ class Buby
   #
   # IMPORTANT: This method is only available with Burp 1.2.09 and higher.
   #
-  # * filename = path and filename of the file to restore from
+  # @param [String, java.io.File] filename path and filename of the file to
+  #   restore from
+  # @return [void]
   def restoreState(filename)
     _check_and_callback(:restoreState, Java::JavaIo::File.new(filename))
   end
@@ -424,25 +424,25 @@ class Buby
   #
   # IMPORTANT: This method is only available with Burp 1.2.09 and higher.
   #
-  # * filename = path and filename of the file to save to
+  # @param [String, java.io.File] filename path and filename of the file to
+  #   save to
+  # @return [void]
   def saveState(filename)
     _check_and_callback(:saveState, Java::JavaIo::File.new(filename))
   end
   alias save_state saveState
 
 
-  # Parses a raw HTTP request message and returns an associative array 
-  # containing parameters as they are structured in the 'Parameters' tab in the 
+  # Parses a raw HTTP request message and returns an associative array
+  # containing parameters as they are structured in the 'Parameters' tab in the
   # Burp request UI.
-  #
-  # IMPORTANT: This method is only available with Burp 1.2.09+ and deprecated in 1.5.01
   #
   # This method parses the specified request and returns details of each
   # request parameter.
   #
-  # @param request The request to be parsed.
-  # @return An array of:
-  #   <code>String[] { name, value, type }</code> containing details of the
+  # @note This method is only available with Burp 1.2.09+ and is deprecated in 1.5.01+
+  # @param [Array<btye>, String] request The request to be parsed.
+  # @return [Array<Array<String{ name, value, type }>>] details of the
   #   parameters contained within the request.
   # @deprecated Use +IExtensionHelpers.analyzeRequest()+ instead.
   #
@@ -455,19 +455,17 @@ class Buby
 
 
   # Parses a raw HTTP message (request or response ) and returns an associative
-  # array containing the headers as they are structured in the 'Headers' tab 
+  # array containing the headers as they are structured in the 'Headers' tab
   # in the Burp request/response viewer UI.
-  #
-  # IMPORTANT: This method is only available with Burp 1.2.09+ and is deprecated in 1.5.01
   #
   # This method parses the specified request and returns details of each HTTP
   # header.
   #
-  # @param message The request to be parsed.
-  # @return An array of HTTP headers.
-  # @deprecated Use
-  # <code>IExtensionHelpers.analyzeRequest()</code> or
-  # <code>IExtensionHelpers.analyzeResponse()</code> instead.
+  # @note This method is only available with Burp 1.2.09+ and is deprecated in 1.5.01+
+  # @param [Array<byte>, String] message The request to be parsed.
+  # @return [Array<Array<String>>] An array of HTTP headers.
+  # @deprecated Use +IExtensionHelpers.analyzeRequest+ or
+  #   +IExtensionHelpers.analyzeResponse()+ instead.
   #
   def getHeaders(message)
     message = message.to_java_bytes if message.is_a? String
@@ -478,8 +476,10 @@ class Buby
 
   # Shuts down Burp programatically. If the method returns the user cancelled
   # the shutdown prompt.
+  # @param [Boolean] prompt_user Display a dialog to confirm shutdown
+  # @return [void]
   def exitSuite(prompt_user=false)
-    _check_and_callback(:exitSuite, prompt_user ? true : false)
+    _check_and_callback(:exitSuite, prompt_user)
   end
   alias exit_suite exitSuite
   alias close exitSuite
@@ -492,8 +492,7 @@ class Buby
   # @param menuItemHandler The handler to be invoked when the user clicks on
   # the menu item.
   # @deprecated Use {#registerContextMenuFactory} instead.
-  #
-  # This method is only available with Burp 1.3.07+ and is deprecated in 1.5.01.
+  # @note This method is only available with Burp 1.3.07+ and is deprecated in 1.5.01.
   #
   def registerMenuItem(menuItemCaption, menuItemHandler = nil, &block)
     ret = if block_given?
@@ -511,8 +510,9 @@ class Buby
   # This method can be used to add an item to Burp's site map with the
   # specified request/response details. This will overwrite the details
   # of any existing matching item in the site map.
-  # 
-  # @param item Details of the item to be added to the site map
+  #
+  # @param [IHttpRequestResponse] item Details of the item to be added to the
+  #   site map
   #
   # This method is only available with Burp 1.3.09+
   def addToSiteMap(item)
@@ -523,8 +523,8 @@ class Buby
   # This method causes Burp to save all of its current configuration as a
   # Map of name/value Strings.
   #
-  # @return A Map of name/value Strings reflecting Burp's current
-  # configuration.
+  # @return [java.util.Map] A Map of name/value Strings reflecting Burp's
+  #   current configuration.
   #
   # This method is only available with Burp 1.3.09+
   def saveConfig
@@ -537,14 +537,15 @@ class Buby
   # name/value Strings provided. Any settings not specified in the Map will
   # be restored to their default values. To selectively update only some
   # settings and leave the rest unchanged, you should first call
-  # <code>saveConfig</code> to obtain Burp's current configuration, modify
-  # the relevant items in the Map, and then call <code>loadConfig</code>
-  # with the same Map.
+  # +saveConfig+ to obtain Burp's current configuration, modify the relevant
+  # items in the Map, and then call +loadConfig+ with the same Map.
   #
-  # @param config A map of name/value Strings to use as Burp's new
-  # configuration.
+  # @param [Hash, java.util.Map] config A map of name/value Strings to use as
+  #   Burp's new configuration.
+  # @return [void]
   #
   # This method is only available with Burp 1.3.09+
+  # @todo updateConfig
   def loadConfig(config)
     _check_and_callback(:loadConfig, config)
   end
@@ -554,10 +555,11 @@ class Buby
   ## 1.4 methods ##
 
   # This method sets the interception mode for Burp Proxy.
-  # 
-  # @param enabled Indicates whether interception of proxy messages should 
-  # be enabled.
-  # 
+  #
+  # @param [Boolean] enabled Indicates whether interception of proxy messages
+  #   should be enabled.
+  # @return [void]
+  #
   def setProxyInterceptionEnabled(enabled)
     _check_and_callback(:setProxyInterceptionEnabled, enabled)
   end
@@ -565,8 +567,7 @@ class Buby
   alias proxy_interception= setProxyInterceptionEnabled
 
   # This method can be used to determine the version of the loaded burp at runtime.
-  # This is included in the Javadoc for the extension interfaces but not the supplied interface files.
-  # @return String array containing the product name, major version, and minor version.
+  # @return [Array<String>] the product name, major version, and minor version.
   def getBurpVersion
     begin
       _check_and_callback(:getBurpVersion)
@@ -966,9 +967,9 @@ class Buby
   alias cookie_jar_contents getCookieJarContents
 
   # This method is used to update the contents of Burp's session handling
-  # cookie jar. Extensions that provide an
-  # <code>ISessionHandlingAction</code> can query and update the cookie jar
-  # in order to handle unusual session handling mechanisms.
+  # cookie jar. Extensions that provide an +ISessionHandlingAction+ can query
+  #  and update the cookie jar in order to handle unusual session handling
+  #  mechanisms.
   #
   # @param [ICookie] cookie An object containing details of the cookie to be
   #   updated. If the cookie jar already contains a cookie that matches the
@@ -987,9 +988,11 @@ class Buby
   # This method is used to create a temporary file on disk containing the
   # provided data. Extensions can use temporary files for long-term storage
   # of runtime data, avoiding the need to retain that data in memory.
-  # Not strictly needed in JRuby (use Tempfile class in stdlib instead) but might see use.
+  # Not strictly needed in JRuby (use Tempfile class in stdlib instead) but
+  # might see use.
   #
-  # @param [String, Array<byte>] buffer The data to be saved to a temporary file.
+  # @param [String, Array<byte>] buffer The data to be saved to a temporary
+  #   file.
   # @return [ITempFile] A reference to the temp file.
   #
   def saveToTempFile(buffer)
@@ -1070,9 +1073,9 @@ class Buby
   ### Event Handlers ###
   # @todo move basic event handler logic to extender side
 
-  # This method is called by the BurpExtender java implementation upon 
+  # This method is called by the BurpExtender java implementation upon
   # initialization of the BurpExtender instance for Burp. The args parameter
-  # is passed with a instance of the newly initialized BurpExtender instance 
+  # is passed with a instance of the newly initialized BurpExtender instance
   # so that implementations can access and extend its public interfaces.
   #
   # The return value is ignored.
@@ -1095,9 +1098,9 @@ class Buby
   end
 
   # This method is called by the BurpExtender implementation Burp startup.
-  # The args parameter contains main()'s argv command-line arguments array. 
+  # The args parameter contains main()'s argv command-line arguments array.
   #
-  # Note: This maps to the 'setCommandLineArgs' method in the java 
+  # Note: This maps to the 'setCommandLineArgs' method in the java
   # implementation of BurpExtender.
   #
   # The return value is ignored.
@@ -1174,11 +1177,12 @@ class Buby
   # ruby. Otherwise there's flakiness when converting certain binary non-ascii
   # sequences. As long as we do it here, it should be fine.
   #
-  # Note: This method maps to the 'processProxyMessage' method in the java 
+  # Note: This method maps to the 'processProxyMessage' method in the java
   # implementation of BurpExtender.
   #
   # This method just handles the conversion to and from evt_proxy_message
-  # which expects a message string 
+  # which expects a message string
+  # @deprecated
   def evt_proxy_message_raw msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action
     pp [:evt_proxy_message_raw_hit, msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action ] if $DEBUG
 
@@ -1191,25 +1195,25 @@ class Buby
 
   # This method is called by BurpExtender while proxying HTTP messages and
   # before passing them through the Burp proxy. Implementations can use this
-  # method to implement arbitrary processing upon HTTP requests and responses 
+  # method to implement arbitrary processing upon HTTP requests and responses
   # such as interception, logging, modification, and so on.
   #
   # The 'is_req' parameter indicates whether it is a response or request.
   #
-  # Note: This method maps to the 'processProxyMessage' method in the java 
+  # Note: This method maps to the 'processProxyMessage' method in the java
   # implementation of BurpExtender.
-  # 
+  #
   # See also, evt_proxy_message_raw which is actually called before this
   # in the BurpExtender processProxyMessage handler.
   #
-  # Below are the parameters descriptions based on the IBurpExtender 
-  # javadoc. Where applicable, decriptions have been modified for 
+  # Below are the parameters descriptions based on the IBurpExtender
+  # javadoc. Where applicable, decriptions have been modified for
   # local parameter naming and other ruby-specific details added.
   #
   # * msg_ref:
-  #   An identifier which is unique to a single request/response pair. This 
-  #   can be used to correlate details of requests and responses and perform 
-  #   processing on the response message accordingly. This number also 
+  #   An identifier which is unique to a single request/response pair. This
+  #   can be used to correlate details of requests and responses and perform
+  #   processing on the response message accordingly. This number also
   #   corresponds to the Burp UI's proxy "history" # column.
   #
   # * is_req: (true/false)
@@ -1231,28 +1235,28 @@ class Buby
   #   The requested URL. Set in both the request and response.
   #
   # * resourceType:
-  #   The filetype of the requested resource, or nil if the resource has no 
+  #   The filetype of the requested resource, or nil if the resource has no
   #   filetype.
   #
   # * status:
-  #   The HTTP status code returned by the server. This value is nil for 
+  #   The HTTP status code returned by the server. This value is nil for
   #   request messages.
   #
   # * req_content_type:
-  #   The content-type string returned by the server. This value is nil for 
+  #   The content-type string returned by the server. This value is nil for
   #   request messages.
   #
   # * message:
-  #   The full HTTP message.  
-  #   **Ruby note: 
-  #     For convenience, the message is received and returned as a ruby 
-  #     String object. Internally within Burp it is handled as a java byte[] 
+  #   The full HTTP message.
+  #   **Ruby note:
+  #     For convenience, the message is received and returned as a ruby
+  #     String object. Internally within Burp it is handled as a java byte[]
   #     array. See also the notes about the return object below.
   #
   # * action:
-  #   An array containing a single integer, allowing the implementation to 
-  #   communicate back to Burp Proxy a non-default interception action for 
-  #   the message. The default value is ACTION_FOLLOW_RULES (or 0). 
+  #   An array containing a single integer, allowing the implementation to
+  #   communicate back to Burp Proxy a non-default interception action for
+  #   the message. The default value is ACTION_FOLLOW_RULES (or 0).
   #   Possible values include:
   #     ACTION_FOLLOW_RULES = 0
   #     ACTION_DO_INTERCEPT = 1
@@ -1264,25 +1268,25 @@ class Buby
   #
   # Return Value:
   #   Implementations should return either (a) the same object received
-  #   in the message paramater, or (b) a different object containing a 
-  #   modified message. 
+  #   in the message paramater, or (b) a different object containing a
+  #   modified message.
   #
   # **IMPORTANT RUBY NOTE:
   # Always be sure to return a new object if making modifications to messages.
   #
-  # Explanation: 
-  # The (a) and (b) convention above is followed rather literally during type 
+  # Explanation:
+  # The (a) and (b) convention above is followed rather literally during type
   # conversion on the return value back into the java BurpExtender.
   #
-  # When determining whether a change has been made in the message or not, 
+  # When determining whether a change has been made in the message or not,
   # the decision is made based on whether the object returned is the same
-  # as the object submitted in the call to evt_proxy_message. 
+  # as the object submitted in the call to evt_proxy_message.
   #
   #
-  # So, for example, using in-place modification of the message using range 
-  # substring assignments or destructive method variations like String.sub!() 
-  # and String.gsub! alone won't work because the same object gets returned 
-  # to BurpExtender. 
+  # So, for example, using in-place modification of the message using range
+  # substring assignments or destructive method variations like String.sub!()
+  # and String.gsub! alone won't work because the same object gets returned
+  # to BurpExtender.
   #
   # In short, this means that if you want modifications to be made, be sure
   # to return a different String than the one you got in your handler.
@@ -1313,19 +1317,19 @@ class Buby
   #   {Buby::ProxyListener}
   def evt_proxy_message msg_ref, is_req, rhost, rport, is_https, http_meth, url, resourceType, status, req_content_type, message, action
     pp([ (is_req)? :got_proxy_request : :got_proxy_response,
-         [:msg_ref, msg_ref], 
-         [:is_req, is_req], 
-         [:rhost, rhost], 
-         [:rport, rport], 
-         [:is_https, is_https], 
-         [:http_meth, http_meth], 
-         [:url, url], 
-         [:resourceType, resourceType], 
-         [:status, status], 
-         [:req_content_type, req_content_type], 
-         [:message, message], 
+         [:msg_ref, msg_ref],
+         [:is_req, is_req],
+         [:rhost, rhost],
+         [:rport, rport],
+         [:is_https, is_https],
+         [:http_meth, http_meth],
+         [:url, url],
+         [:resourceType, resourceType],
+         [:status, status],
+         [:req_content_type, req_content_type],
+         [:message, message],
          [:action, action[0]] ]) if $DEBUG
-    
+
     return message
   end
 
@@ -1345,22 +1349,22 @@ class Buby
     Buby::Implants::InterceptedProxyMessage.implant message
   end
 
-  # This method is invoked whenever any of Burp's tools makes an HTTP request 
-  # or receives a response. This is effectively a generalised version of the 
-  # pre-existing evt_proxy_message method, and can be used to intercept and 
+  # This method is invoked whenever any of Burp's tools makes an HTTP request
+  # or receives a response. This is effectively a generalised version of the
+  # pre-existing evt_proxy_message method, and can be used to intercept and
   # modify the HTTP traffic of all Burp tools.
   #
-  # IMPORTANT: This event handler is only used in Burp version 1.2.09 and 
+  # IMPORTANT: This event handler is only used in Burp version 1.2.09 and
   # higher.
-  # 
+  #
   # Note: this method maps to the processHttpMessage BurpExtender Java method.
   #
   # This method should be overridden if you wish to implement functionality
   # relating to generalized requests and responses from any BurpSuite tool.
   #
   # You may want to use evt_proxy_message if you only intend to work on
-  # proxied messages. Note, however, the IHttpRequestResponse Java object is 
-  # not used in evt_proxy_message and gives evt_http_message a somewhat 
+  # proxied messages. Note, however, the IHttpRequestResponse Java object is
+  # not used in evt_proxy_message and gives evt_http_message a somewhat
   # nicer interface to work with.
   #
   # Parameters:
@@ -1400,11 +1404,11 @@ class Buby
     pp([:got_process_http_message, toolFlag, messageIsRequest, messageInfo]) if $DEBUG
   end
 
-  # This method is invoked whenever Burp Scanner discovers a new, unique 
-  # issue, and can be used to perform customised reporting or logging of 
+  # This method is invoked whenever Burp Scanner discovers a new, unique
+  # issue, and can be used to perform customised reporting or logging of
   # detected issues.
   #
-  # IMPORTANT: This event handler is only used in Burp version 1.2.09 and 
+  # IMPORTANT: This event handler is only used in Burp version 1.2.09 and
   # higher.
   #
   # Note: this method maps to the BurpExtender Java method.
@@ -1440,14 +1444,14 @@ class Buby
   # application. Implementations can use this method to perform cleanup
   # tasks such as closing files or databases before exit.
   # @deprecated
-  def evt_application_closing 
+  def evt_application_closing
     pp([:got_app_close]) if $DEBUG
   end
 
   # This method is called by BurpExtender right before closing the
   # application. Implementations can use this method to perform cleanup
   # tasks such as closing files or databases before exit.
-  def application_closing 
+  def application_closing
     pp([:got_app_close]) if $DEBUG
   end
 
@@ -1481,7 +1485,8 @@ class Buby
   # options, the default settings that appear in the reporting UI wizard are
   # used.
   #
-  # @param [String] format The format to be used in the report. Accepted values are HTML and XML.
+  # @param [String] format The format to be used in the report. Accepted values
+  #   are HTML and XML.
   # @param [Array<IScanIssue>] issues The Scanner issues to be reported.
   # @param [String, java.io.File] file The file to which the report will be saved.
   # @return [void]
@@ -1494,9 +1499,9 @@ class Buby
 
   ### Sugar/Convenience methods
 
-  # This is a convenience wrapper which can load a given burp state file and 
-  # lets its caller to perform actions inside of a block on the site map 
-  # contained in the loaded session. 
+  # This is a convenience wrapper which can load a given burp state file and
+  # lets its caller to perform actions inside of a block on the site map
+  # contained in the loaded session.
   #
   # If a statefile argument isn't specified current burp session state is used.
   #
@@ -1507,9 +1512,9 @@ class Buby
     end
   end
 
-  # This is a convenience wrapper which can load a given burp state file and 
-  # lets its caller to perform actions inside of a block on the proxy history 
-  # contained in the loaded session. 
+  # This is a convenience wrapper which can load a given burp state file and
+  # lets its caller to perform actions inside of a block on the proxy history
+  # contained in the loaded session.
   #
   # If a statefile argument isn't specified current burp session state is used.
   #
@@ -1521,10 +1526,10 @@ class Buby
   end
 
   # This is a convenience wrapper which loads a given burp statefile and lets
-  # its caller perform actions via burp while its loaded on it inside of a 
+  # its caller perform actions via burp while its loaded on it inside of a
   # block. The old state is restored after the block completes.
   #
-  # It can safely be run with a nil statefile argument in which the 
+  # It can safely be run with a nil statefile argument in which the
   # current burp session state is used.
   def with_statefile(statefile=nil)
     if statefile
@@ -1547,7 +1552,7 @@ class Buby
     end
   end
 
-  # Searches the proxy history for the url's matched by the specified 
+  # Searches the proxy history for the url's matched by the specified
   # regular expression (returns them all if urlrx is nil).
   #
   # A statefile to search in can optionally be specified or the existing
@@ -1574,13 +1579,13 @@ class Buby
   #               and harvest from.
   #
   # Takes an optional block as additional 'select' criteria for cookies.
-  # The block return value of true/false will determine whether a cookie 
+  # The block return value of true/false will determine whether a cookie
   # string is selected.
   def harvest_cookies_from_history(cookie=nil, urlrx=nil, statefile=nil)
     ret = []
     search_proxy_history(statefile, urlrx) do |hrr|
       if (resp = hrr.response)
-        ret += helpers.analyzeResponse(resp).getCookies.select do |c| 
+        ret += helpers.analyzeResponse(resp).getCookies.select do |c|
           (cookie.nil? or c.match(cookie)) && (not block_given? or yield(c))
         end
       end
@@ -1626,7 +1631,7 @@ class Buby
     self.start(extender, h_class, init_args, args)
   end
 
-  # Attempts to load burp with require and confirm it provides the required 
+  # Attempts to load burp with require and confirm it provides the required
   # class in the Java namespace.
   #
   # Returns: true/false depending on whether the required jar provides us
