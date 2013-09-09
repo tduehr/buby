@@ -156,10 +156,12 @@ class Buby
   # proceed with the scan.
   #
   # @overload doActiveScan(host, port, useHttps, request, insertionPointOffsets = nil)
-  #   @param [String] host The hostname of the remote HTTP server.
+  #   @param [String, java.net.URL, URI] host The hostname of the remote HTTP
+  #     server.
   #   @param [Fixnum] port The port of the remote HTTP server.
   #   @param [Boolean] useHttps Flags whether the protocol is HTTPS or HTTP.
-  #   @param [String, Array<byte>] request The full HTTP request.
+  #   @param [String, Array<byte>, IHttpRequestResponse] request The full HTTP
+  #     request.
   #   @param [Array<Array<Fixnum>>] insertionPointOffsets A list of index pairs
   #     representing the positions of the insertion points that should be
   #     scanned. Each item in the list must be an +int\[2]+ array containing the
@@ -167,6 +169,15 @@ class Buby
   # @overload doActiveScan(request, insertionPointOffsets = nil)
   #   @param [IHttpRequestResponse] request Request object containing details
   #     about the request to scan.
+  #   @param [Array<Array<Fixnum>>] insertionPointOffsets A list of index pairs
+  #     representing the positions of the insertion points that should be
+  #     scanned. Each item in the list must be an +int\[2]+ array containing the
+  #     start and end offsets for the insertion point.
+  # @overload doActiveScan(service, request, insertionPointOffsets = nil)
+  #   @param [IHttpService] service Object describing host, port and protocol
+  #     for scan.
+  #   @param [IHttpRequestResponse, String, Array<byte>] request Request object
+  #     containing details about the request to scan.
   #   @param [Array<Array<Fixnum>>] insertionPointOffsets A list of index pairs
   #     representing the positions of the insertion points that should be
   #     scanned. Each item in the list must be an +int\[2]+ array containing the
@@ -180,143 +191,377 @@ class Buby
   # @return [IScanQueueItem] The resulting scan queue item.
   #
   def doActiveScan(*args)
-    host, port, https, req, ip_off = args
-    case args.size
-    when 1,2
-      req = args.first
-      ip_off = args[1]
-      if req.kind_of? Java::Burp::IHttpRequestResponse
-        serv = req.getHttpService
-        https = serv.getProtocol == "https"
+    raise ArgumentError, "wrong number of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless (1..5).include?(args.size)
+    host, port, https, req, ip_off = *args
+    if args.size < 4
+      case args.first
+      when Java::Burp::IHttpRequestResponse
+        raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless args.size < 3
+        req, ip_off = *args
+        host = req.host
+        port = req.port
+        https = req.protocol
+      when Java::Burp::IHttpService
+        raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless args.size
+        serv, req, ip_off = *args
+        https = serv.getProtocol
         host = serv.getHost
         port = serv.getPort
         req = req.request
       else
         url = (req.kind_of?(URI) || req.kind_of?(Java::JavaNet::URL)) ? req : Java::JavaNet::URL.new(req.to_s)
-        req = getHelpers.buildHttpRequest req
+        req = helpers.buildHttpRequest req
         host = url.host
         port = url.port
-        if url.scheme.downcase == "https"
-          https = true
-          port = 443 if port == -1
-        else
-          https = false
-          port = 80 if port == -1
-        end
+        https = url.scheme
       end
-    when 4,5
-      host, port, https, req, ip_off = args
-    else
-      raise ArgumentError
     end
+
+    https = case https.to_s.downcase
+    when 'https'
+      true
+    when 'http'
+      false
+    else
+      !!https
+    end
+
+    port ||= https ? 443 : 80
+    port = https ? 443 : 80 if port < 0
+    host = host.host if host.respond_to? :host
+
+    req = req.request if req.respond_to? :request
     req = req.to_java_bytes if req.respond_to? :to_java_bytes
     scanq = if getBurpVersion
-      _check_cb.doActiveScan(host, port, https, req, ip_off)
+      _check_and_callback :doActiveScan, host, port, https, req, ip_off
     else
-      _check_cb.doActiveScan(host, port, https, req)
+      _check_and_callback :doActiveScan, host, port, https, req
     end
     Buby::Implants::ScanQueueItem.implant scanq
   end
   alias do_active_scan doActiveScan
   alias active_scan doActiveScan
 
-  # Send an HTTP request and response to the Burp Scanner tool to perform a 
+  # Send an HTTP request and response to the Burp Scanner tool to perform a
   # passive vulnerability scan.
-  #  * host = The hostname of the remote HTTP server.
-  #  * port = The port of the remote HTTP server.
-  #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req  = The full HTTP request. (String or Java bytes[])
-  #  * rsp  = The full HTTP response. (String or Java bytes[])
-  def doPassiveScan(host, port, https, req, rsp)
-    req = req.to_java_bytes if req.is_a? String
-    rsp = rsp.to_java_bytes if rsp.is_a? String
-    _check_cb.doPassiveScan(host, port, https, req, rsp)
+  # @overload doPassiveScan(host, port, useHttps, request, response)
+  #   @param [String, java.net.URL, URI] host The hostname of the remote HTTP
+  #     server.
+  #   @param [Fixnum] port The port of the remote HTTP server.
+  #   @param [Boolean] useHttps Flags whether the protocol is HTTPS or HTTP.
+  #   @param [String, Array<byte>, IHttpRequestResponse] request The full HTTP request.
+  #   @param [String, Array<byte>, IHttpRequestResponse] response The full HTTP response.
+  # @overload doPassiveScan(host, port, useHttps, request_response)
+  #   @param [String, java.net.URL, URI] host The hostname of the remote HTTP
+  #     server.
+  #   @param [Fixnum] port The port of the remote HTTP server.
+  #   @param [Boolean] useHttps Flags whether the protocol is HTTPS or HTTP.
+  #   @param [String, Array<byte>, IHttpRequestResponse] request The full HTTP request and response.
+  # @overload doPassiveScan(service, request, response)
+  #   @param [IHttpService] service Object describing host, port and protocol
+  #     for scan.
+  #   @param [IHttpRequestResponse, String, Array<byte>] request Request object
+  #     containing details about the request to scan.
+  #   @param [IHttpRequestResponse, String, Array<byte>] request Request object
+  #     containing details about the response to scan.
+  # @overload doPassiveScan(service, request_response)
+  #   @param [IHttpService] service Object describing host, port and protocol
+  #     for scan.
+  #   @param [IHttpRequestResponse, String, Array<byte>] request Request object
+  #     containing details about the request to scan.
+  # @return [IScanQueueItem] The resulting scan queue item.
+  # @overload doPassiveScan(request)
+  #   @param [IHttpRequestResponse] request Request object containing details
+  #     about the request to scan.
+  #
+  def doPassiveScan(*args)
+    raise ArgumentError, "wrong number of arguments calling '#{__callee__}' (#{args.size} for 1..4)" unless (1..4).include?(args.size)
+    host, port, https, req, resp = *args
+    case args.size
+    when 1
+      req = args.first
+      host = req.getHost
+      port = req.getPort
+      https = req.getProtocol
+      resp = req.getResponse
+    when 2, 3
+      serv, req = *args
+      host = serv.getHost
+      port = serv.getPort
+      https = req.getProtocol
+      resp = (resp && resp.getResponse) || req.getResponse
+    when 4
+      resp = req.response
+    else
+      # nop
+    end
+
+    port ||= https ? 443 : 80
+    port = https ? 443 : 80 if port < 0
+    host = host.host if host.respond_to? :host
+
+    req = req.request if req.respond_to? :request
+    req = req.to_java_bytes if req.respond_to? :to_java_bytes
+
+    resp = resp.request if resp.respond_to? :request
+    resp = resp.to_java_bytes if resp.respond_to? :to_java_bytes
+
+    Buby::Implants::ScanQueueItem.implant(_check_and_callback(:doPassiveScan, host, port, https, req, rsp))
   end
   alias do_passive_scan doPassiveScan
   alias passive_scan doPassiveScan
 
   # Exclude the specified URL from the Suite-wide scope.
-  #  * url = The URL to exclude from the Suite-wide scope.
+  # @overload excludeFromScope(url)
+  #   @param [java.net.URL, URI, String] url The URL to exclude from the
+  #     Suite-wide scope.
+  # @overload excludeFromScope(req)
+  #   @param [IHttpRequestResponse] req The request to exclude from the
+  #     Suite-wide scope.
+  # @overload excludeFromScope(req_info)
+  #   @param [IHttpRequestInfo] req_info The request information to exclude from
+  #     the Suite-wide scope.
+  # @overload excludeFromScope(serv, req)
+  #   @param [IHttpService] serv The HTTP service to exclude from the Suite-wide
+  #     scope.
+  #   @param [Array<byte>, String] req The request to exclude
+  #
+  # @return [void]
   def excludeFromScope(url)
-    url = Java::JavaNet::URL.new(url) if url.is_a? String
-    _check_cb.excludeFromScope(url)
+    url, req = args
+    case args.size
+    when 1
+      case url
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpequestInfo
+        url = url.getUrl
+      else
+        url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
+      end
+    when 2
+      url = getHelpers.__analyzeRequest(url, req).getUrl
+    else
+      raise ArgumentError, "wrong number of arguments calling '#{__callee__}' (#{args.size} for 1,2)"
+    end
+    _check_and_callback :excludeFromScope, url
   end
   alias exclude_from_scope excludeFromScope
   alias exclude_scope excludeFromScope
 
   # Include the specified URL in the Suite-wide scope.
-  #  * url = The URL to exclude in the Suite-wide scope.
+  # @overload includeInScope(url)
+  #   @param [java.net.URL, URI, String] url The URL to include in the
+  #     Suite-wide scope.
+  # @overload includeInScope(req)
+  #   @param [IHttpRequestResponse] req The request to include in the Suite-wide
+  #     scope.
+  # @overload includeInScope(req_info)
+  #   @param [IHttpRequestInfo] req_info The request information to include in
+  #     the Suite-wide scope.
+  # @overload includeInScope(serv, req)
+  #   @param [IHttpService] serv The HTTP service to include in the Suite-wide
+  #     scope.
+  #   @param [Array<byte>, String] req The request to include
+  #
+  # @return [void]
   def includeInScope(url)
-    url = Java::JavaNet::URL.new(url) if url.is_a? String
-    _check_cb.includeInScope(url)
+    url, req = args
+    case args.size
+    when 1
+      case url
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpequestInfo
+        url = url.getUrl
+      else
+        url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
+      end
+    when 2
+      url = getHelpers.__analyzeRequest(url, req).getUrl
+    else
+      raise ArgumentError, "wrong number of arguments calling '#{__callee__}' (#{args.size} for 1,2)"
+    end
+    _check_and_callback :includeInScope, url
   end
-  alias include_in_scope includeInScope 
-  alias include_scope includeInScope 
+  alias include_in_scope includeInScope
+  alias include_scope includeInScope
 
   # Query whether a specified URL is within the current Suite-wide scope.
-  #  * url = The URL to query
+  # @overload isInScope(url)
+  #   @param [java.net.URL, URI, String] url The URL to query
+  # @overload isInScope(req)
+  #   @param [IHttpRequestResponse] req The request to query
+  # @overload isInScope(req_info)
+  #   @param [IHttpRequestInfo] req_info The request info to query
+  # @overload isInScope(serv, req)
+  #   @param [IHttpService] serv The HTTP service to query
+  #   @param [Array<byte>, String] req The request to query
   #
-  # Returns: true / false
-  def isInScope(url)
-    url = Java::JavaNet::URL.new(url) if url.is_a? String
-    _check_cb.isInScope(url)
+  # @return [Boolean]
+  def isInScope(*args)
+    url, req = args
+    case args.size
+    when 1
+      case url
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpequestInfo
+        url = url.getUrl
+      else
+        url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
+      end
+    when 2
+      url = getHelpers.__analyzeRequest(url, req).getUrl
+    else
+      raise ArgumentError, "wrong number of arguments calling '#{__callee__}' (#{args.size} for 1,2)"
+    end
+    _check_and_callback :isInScope, url
   end
   alias is_in_scope isInScope
   alias in_scope? isInScope
 
   # Display a message in the Burp Suite alerts tab.
-  #  * msg =  The alert message to display.
+  # @param [#to_s] msg The alert message to display.
+  # @return [void]
   def issueAlert(msg)
-    _check_cb.issueAlert(msg.to_s)
+    _check_and_callback :issueAlert, msg.to_s
   end
   alias issue_alert issueAlert
   alias alert issueAlert
 
   # Issue an arbitrary HTTP request and retrieve its response
-  #  * host  = The hostname of the remote HTTP server.
-  #  * port  = The port of the remote HTTP server.
-  #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req   = The full HTTP request. (String or Java bytes[])
-  #
-  # also may be called with new IHttpService as an argument
-  #  * service = IHttpService object with host, port, etc.
-  #  * request = request string
-  # @return The full response retrieved from the remote server.
+  # @overload makeHttpRequest(host, port, https, request)
+  #   @param [String, java.net.URL, URI] host The hostname of the remote HTTP
+  #     server.
+  #   @param [Fixnum] port The port of the remote HTTP server.
+  #   @param [Boolean] useHttps Flags whether the protocol is HTTPS or HTTP.
+  #   @param [String, Array<byte>, IHttpRequestResponse] request The full HTTP
+  #     request.
+  # @overload makeHttpRequest(request)
+  #   @param [IHttpRequestResponse] request The full HTTP request
+  # @overload makeHttpRequest(url)
+  #   @param [String, URI, java.net.URL] url The url to make a GET request to.
+  #     The request is built with {IExtensionHelpers.buildHttpRequest}
+  # @overload makeHttpRequest(service, request)
+  #   @param [IHttpService] service Object with host, port, etc.
+  #   @param [String, Array<byte>, IHttpRequestResponse] request The full HTTP
+  #     request.
+  # @return [String] The full response retrieved from the remote server.
   #
   def makeHttpRequest(*args)
-    ret = case args.size
+    raise ArgumentError, "wrong number of arguments calling '#{__callee__}' (#{args.size} for 1,2,4)" unless [1,2,4].include?(args.size)
+    host, port, https, req, serv = args
+
+    case args.size
+    when 1
+      case host
+      when Java::Burp::IHttpRequestResponse
+        req = host
+        serv = req.getHttpService
+      else
+        host = Java::JavaNet::URL.new url.to_s unless url.kind_of?(Java::JavaNet::URL)
+        port = host.port
+        https = host.scheme
+        req = getHelpers.__buildHttpRequest host
+      end
     when 2
-      service, req = args
-      req = req.to_java_bytes if req.is_a? String
-      _check_and_callback(:makeHttpRequst, service, req)
+      serv, req = args
     when 4
-      host, port, https, req = args
-      req = req.to_java_bytes if req.is_a? String
-      _check_cb.makeHttpRequest(host, port, https, req)
+      # nop
     else
       raise ArgumentError
     end
+
+    req = req.request if req.respond_to? :request
+    req = req.to_java_bytes if req.respond_to? :to_java_bytes
+
+    ret = if serv
+      _check_and_callback(:makeHttpRequst, serv, req)
+    else
+      https = case https.to_s.downcase
+      when 'https'
+        true
+      when 'http'
+        false
+      else
+        !!https
+      end
+
+      port ||= https ? 443 : 80
+      port = https ? 443 : 80 if port < 0
+      host = host.host if host.respond_to? :host
+
+      _check_and_callback(:makeHttpRequst, host, port, https, req)
+    end
+
     String.from_java_bytes(ret)
   end
   alias make_http_request makeHttpRequest
   alias make_request makeHttpRequest
 
   # Send an HTTP request to the Burp Intruder tool
-  #  * host  = The hostname of the remote HTTP server.
-  #  * port  = The port of the remote HTTP server.
-  #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req   = The full HTTP request.  (String or Java bytes[])
-  #  * ip_off = A list of index pairs representing the
-  #  * positions of the insertion points that should be scanned. Each item in
-  #  * the list must be an int[2] array containing the start and end offsets
-  #  * for the insertion point. *1.4.04+* only
-  #  * 
-  def sendToIntruder(host, port, https, req, ip_off)
-    req = req.to_java_bytes if req.is_a? String
-    if self.getBurpVersion.to_a[1..-1].join(".") < "1.4.04"
-      _check_cb.sendToIntruder(host, port, https, req)
+  #
+  # @overload sendToIntruder(host, port, https, req, ip_off=nil)
+  #   @param [String] host The hostname of the remote HTTP server.
+  #   @param [Fixnum] port The port of the remote HTTP server.
+  #   @param [Boolean, #to_s] https Flags whether the protocol is HTTPS or HTTP.
+  #   @param [String, Array<byte>, IHttpRequestResponse] req The full HTTP
+  #     request.
+  #   @param [Array<Array<Fixnum>>] ip_off A list of index pairs representing
+  #     the positions of the insertion points that should be scanned. Each item
+  #     in the list must be an +int[2]+ array containing the start and end
+  #     offsets for the insertion point.
+  # @overload sendToIntruder(request, ip_off=nil)
+  #   @param [IHttpRequestResponse] request The complete request to send to
+  #     Intruder.
+  #   @param [Array<Array<Fixnum>>] ip_off A list of index pairs representing
+  #     the positions of the insertion points that should be scanned. Each item
+  #     in the list must be an +int[2]+ array containing the start and end
+  #     offsets for the insertion point.
+  # @overload sendToIntruder(service, request, ip_off=nil)
+  #   @param [IHttpService] service The HTTP service description for the request
+  #   @param [IHttpRequestResponse, String, Array<byte>] request The complete
+  #     request to send to Intruder. If +String+ or +Array<byte>+ the request
+  #     will first be analyzed with #analyzeRequest to obtain the required
+  #     information
+  #   @param [Array<Array<Fixnum>>] ip_off A list of index pairs representing
+  #     the positions of the insertion points that should be scanned. Each item
+  #     in the list must be an +int[2]+ array containing the start and end
+  #     offsets for the insertion point.
+  #
+  # @return [void]
+  def sendToIntruder(*args)
+    host, port, https, req, ip_off = nil
+    case args.first
+    when String
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless [4,5].include?(args.size)
+      host, port, https, req, ip_off = *args
+    when Java::Burp::IHttpRequestResponse
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless [1,2].include?(args.size)
+      req, ip_off = *args
+      port  = req.port
+      https = req.protocol
+      host  = req.host
+    when Java::Burp::IHttpService
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless [2,3].include?(args.size)
+      serv, req, ip_off = *args
+      port  = serv.port
+      https = serv.protocol
+      host  = serv.host
     else
-      _check_cb.sendToIntruder(host, port, https, req, ip_off)
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)"
+    end
+
+    https = case https.to_s.downcase
+    when 'https'
+      true
+    when 'http'
+      false
+    else
+      !!https
+    end
+
+    req = req.request if req.respond_to?(:request)
+    req = req.to_java_bytes if req.respond_to?(:to_java_bytes)
+    if self.getBurpVersion.to_a[1..-1].join(".") < "1.4.04"
+      _check_and_callback :sendToIntruder, host, port, https, req
+    else
+      _check_and_callback :sendToIntruder, host, port, https, req, ip_off
     end
   end
   alias send_to_intruder sendToIntruder
@@ -326,34 +571,90 @@ class Buby
   #
   # @overload sendToComparer(data)
   #   @param [Array<Byte>, String] data The data to be sent to Comparer.
-  # @overload sendToComparer(data)
-  #   @param [IHttpRequestResponse] data Request to be sent to Comparer.
+  # @overload sendToComparer(data, use_req=nil)
+  #   @param [IHttpRequestResponse] data Request/Response to be sent to Comparer.
+  #   @param [Boolean] use_req Use request instead of response
   #
-  def sendToComparer(data)
-    data = data.request if request.kind_of? Java::Burp::IHttpRequestResponse
-    data = data.to_java_bytes if request.respond_to? :to_java_bytes
+  def sendToComparer(data, use_req=nil)
+    if data.kind_of? Java::Burp::IHttpRequestResponse
+      data = use_req ? data.request : data.response
+    end
+    data = data.to_java_bytes if data.respond_to? :to_java_bytes
     _check_and_callback(:sendToComparer, data)
   end
   alias send_to_comparer sendToComparer
+  alias comparer sendToComparer
 
   # Send an HTTP request to the Burp Repeater tool.
-  #  * host  = The hostname of the remote HTTP server.
-  #  * port  = The port of the remote HTTP server.
-  #  * https = Flags whether the protocol is HTTPS or HTTP.
-  #  * req   = The full HTTP request. (String or Java bytes[])
-  #  * tab   = The tab caption displayed in Repeater. (default: auto-generated)
-  def sendToRepeater(host, port, https, req, tab=nil)
-    req = req.to_java_bytes if req.is_a? String
-    _check_cb.sendToRepeater(host, port, https, req, tab)
+  #
+  # @overload sendToRepeater(host, port, https, req, tab=nil)
+  #   @param [String] host The hostname of the remote HTTP server.
+  #   @param [Fixnum] port The port of the remote HTTP server.
+  #   @param [Boolean, #to_s] https Flags whether the protocol is HTTPS or HTTP.
+  #   @param [String, Array<byte>, IHttpRequestResponse] req The full HTTP
+  #     request. (String or Java +byte[]+)
+  #   @param [String] tab The tab caption displayed in Repeater. (default:
+  #     auto-generated)
+  # @overload sendToRepeater(service, request, tab=nil)
+  #   @param [IHttpService] service The HTTP service description for the request
+  #   @param [IHttpRequestResponse, String, Array<byte>] request The complete
+  #     request to send to Intruder. If +String+ or +Array<byte>+ the request
+  #     will first be analyzed with #analyzeRequest to obtain the required
+  #     information
+  #   @param [String] tab The tab caption displayed in Repeater. (default:
+  #     auto-generated)
+  # @overload sendToRepeater(request, tab=nil)
+  #   @param [IHttpRequestResponse] request The request to be sent to Repeater
+  #     containing all the required information.
+  #   @param [String] tab The tab caption displayed in Repeater. (default:
+  #     auto-generated)
+  # @return [void]
+  def sendToRepeater(*args)
+    host, port, https, req, tab = nil
+    case args.first
+    when String
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless [4,5].include?(args.size)
+      host, port, https, req, tab = *args
+    when Java::Burp::IHttpRequestResponse
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless [1,2].include?(args.size)
+      req, tab = *args
+      port  = req.port
+      https = req.protocol
+      host  = req.host
+    when Java::Burp::IHttpService
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)" unless [2,3].include?(args.size)
+      serv, req, tab = *args
+      port  = serv.port
+      https = serv.protocol
+      host  = serv.host
+    else
+      raise ArgumentError, "wrong number/type of arguments calling '#{__callee__}' (#{args.size} for 1..5)"
+    end
+
+    https = case https.to_s.downcase
+    when 'https'
+      true
+    when 'http'
+      false
+    else
+      !!https
+    end
+
+    req = req.request if req.kind_of?(Java::Burp::IHttpRequestResponse)
+    req = req.to_java_bytes if req.respond_to?(:to_java_bytes)
+    _check_and_callback :sendToRepeater, host, port, https, req, tab
   end
   alias send_to_repeater sendToRepeater
   alias repeater sendToRepeater
 
   # Send a seed URL to the Burp Spider tool.
-  #  * url = The new seed URL to begin spidering from.
+  #  @param [String, URI, java.net.URL, IHttpRequestResponse] url The new seed URL to begin
+  #    spidering from.
+  #  @return [void]
   def sendToSpider(url)
-    url = Java::JavaNet::URL.new(url) if url.is_a? String
-    _check_cb.sendToSpider(url)
+    url = url.url if url.respond_to? :url
+    url = Java::JavaNet::URL.new(url.to_s) unless url.kind_of?(Java::JavaNet::URL)
+    _check_and_callback :sendToSpider, url
   end
   alias send_to_spider sendToSpider
   alias spider sendToSpider
@@ -365,11 +666,11 @@ class Buby
   # * meth = string or symbol name of method
   # * args = variable length array of arguments to pass to meth
   def _check_and_callback(meth, *args, &block)
-    cb = _check_cb
-    unless cb.respond_to?(meth)
+    begin
+      _check_cb.__send__ meth, *args, &block
+    rescue NoMethodError
       raise "#{meth} is not available in your version of Burp"
     end
-    cb.__send__ meth, *args, &block
   end
 
 
@@ -384,23 +685,26 @@ class Buby
   alias get_proxy_history getProxyHistory
 
 
-  # Returns a Java array of IHttpRequestResponse objects pulled directly from 
-  # the Burp site map for all urls matching the specified literal prefix. 
+  # Returns a Java array of IHttpRequestResponse objects pulled directly from
+  # the Burp site map for all urls matching the specified literal prefix.
   # The prefix can be nil to return all objects.
   # @todo Bring IHttpRequestResponse helper up to date
+  # @param [String, java.net.URL, URI, nil] urlprefix
+  # @return [HttpRequestResponseList]
   def getSiteMap(urlprefix=nil)
-    HttpRequestResponseList.new(_check_and_callback(:getSiteMap, urlprefix))
+    HttpRequestResponseList.new(_check_and_callback(:getSiteMap, urlprefix && urlprefix.to_s))
   end
   alias site_map getSiteMap
   alias get_site_map getSiteMap
 
 
-  # This method returns all of the current scan issues for URLs matching the 
+  # This method returns all of the current scan issues for URLs matching the
   # specified literal prefix. The prefix can be nil to match all issues.
   #
-  # IMPORTANT: This method is only available with Burp 1.2.15 and higher.
+  # @param [String, java.net.URL, URI, nil] urlprefix
+  # @return [ScanIssuesList]
   def getScanIssues(urlprefix=nil)
-    ScanIssuesList.new( _check_and_callback(:getScanIssues, urlprefix) )
+    ScanIssuesList.new( _check_and_callback(:getScanIssues, urlprefix && urlprefix.to_s) )
   end
   alias scan_issues getScanIssues
   alias get_scan_issues getScanIssues
@@ -1047,11 +1351,12 @@ class Buby
   # This method is used to obtain the descriptive name for the Burp tool
   # identified by the tool flag provided.
   #
-  # @param [Fixnum] toolFlag A flag identifying a Burp tool (+TOOL_PROXY+, +TOOL_SCANNER+, etc.). Tool flags are defined within this interface.
+  # @param [Fixnum] toolFlag A flag identifying a Burp tool (+TOOL_PROXY+,
+  #   +TOOL_SCANNER+, etc.). Tool flags are defined within this interface.
   # @return [String] The descriptive name for the specified tool.
   #
   def getToolName(toolFlag)
-    _check_and_callback(:getToolName, toolFlag)
+    @tool_names[toolFlag] ||= _check_and_callback(:getToolName, toolFlag)
   end
   alias get_tool_name getToolName
 
@@ -1094,6 +1399,7 @@ class Buby
   # @return [void]
   def extender_initialize ext
     @burp_extender = ext
+    @tool_names = {}
     pp([:got_extender, ext]) if $DEBUG
   end
 
