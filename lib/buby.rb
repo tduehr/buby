@@ -107,7 +107,7 @@ class Buby
   VERSION = Buby::Version::STRING
 
   # latest tested version of burp
-  COMPAT_VERSION = '1.5.14'
+  COMPAT_VERSION = '1.5.17'
 
   # :stopdoc:
   # @deprecated to be removed next version
@@ -933,6 +933,29 @@ class Buby
   alias stderr getStderr
   alias get_stderr getStderr
 
+
+  # This method prints a line of output to the current extension's standard
+  # output stream.
+  #
+  # @param output The message to print.
+  # @return [void]
+  #
+  def printOutput(output)
+    _check_and_callback(:printOutput, output)
+  end
+  alias print_output printOutput
+
+  # This method prints a line of output to the current extension's standard
+  # error stream.
+  #
+  # @param error The message to print.
+  # @return [void]
+  #
+  def printError(error)
+    _check_and_callback(:printError, error)
+  end
+  alias print_error printError
+
   # This method is used to register a listener which will be notified of
   # changes to the extension's state. <b>Note:</b> Any extensions that start
   # background threads or open system resources (such as files or database
@@ -955,6 +978,31 @@ class Buby
   end
   alias register_extension_state_listener registerExtensionStateListener
 
+
+  # This method is used to retrieve the extension state listeners that are
+  # registered by the extension.
+  #
+  # @return [Array<IExtensionStateListener>] A list of extension state listeners
+  #   that are currently registered by this extension.
+  #
+  def getExtensionStateListeners
+    _check_and_callback(:getExtensionStateListeners)
+  end
+  alias get_extension_state_listeners getExtensionStateListeners
+  alias extension_state_listeners getExtensionStateListeners
+
+
+  # This method is used to remove an extension state listener that has been
+  # registered by the extension.
+  #
+  # @param listener The extension state listener to be removed.
+  # @return [void]
+  #
+  def removeExtensionStateListener(listener)
+    _check_and_callback(:removeExtensionStateListener, listener)
+  end
+  alias remove_extension_state_listener removeExtensionStateListener
+
   # This method is used to register a listener which will be notified of
   # requests and responses made by any Burp tool. Extensions can perform
   # custom analysis or modification of these messages by registering an HTTP
@@ -974,6 +1022,29 @@ class Buby
     end
   end
   alias register_http_listener registerHttpListener
+
+  # This method is used to retrieve the HTTP listeners that are registered by
+  # the extension.
+  #
+  # @return [Array<IHttpListener>] A list of HTTP listeners that are currently
+  #   registered by this extension.
+  #
+  def getHttpListeners
+    _check_and_callback(:getHttpListeners)
+  end
+  alias get_http_listeners getHttpListeners
+  alias http_listeners getHttpListeners
+
+  # This method is used to remove an HTTP listener that has been registered
+  # by the extension.
+  #
+  # @param listener The HTTP listener to be removed.
+  # @return [void]
+  #
+  def removeHttpListener(listener)
+    _check_and_callback(:removeHttpListener, listener)
+  end
+  alias remove_http_listener removeHttpListener
 
   # This method is used to register a listener which will be notified of
   # requests and responses being processed by the Proxy tool. Extensions can
@@ -995,6 +1066,29 @@ class Buby
   end
   alias register_proxy_listener registerProxyListener
 
+  # This method is used to retrieve the Proxy listeners that are registered
+  # by the extension.
+  #
+  # @return [Array<IProxyListener>] A list of Proxy listeners that are currently
+  #   registered by this extension.
+  #
+  def getProxyListeners
+    _check_and_callback(:getProxyListeners)
+  end
+  alias get_proxy_listeners getProxyListeners
+  alias proxy_listeners getProxyListeners
+
+  # This method is used to remove a Proxy listener that has been registered
+  # by the extension.
+  #
+  # @param [IProxyListener] listener The Proxy listener to be removed.
+  # @return [void]
+  #
+  def removeProxyListener(listener)
+    _check_and_callback(:removeProxyListener, listener)
+  end
+  alias remove_proxy_listener removeProxyListener
+
   # This method is used to register a listener which will be notified of new
   # issues that are reported by the Scanner tool. Extensions can perform
   # custom analysis or logging of Scanner issues by registering a Scanner
@@ -1015,6 +1109,29 @@ class Buby
   end
   alias register_scanner_listener registerScannerListener
 
+  # This method is used to retrieve the Scanner listeners that are registered
+  # by the extension.
+  #
+  # @return [Array<IScannerListener>] A list of Scanner listeners that are
+  #   currently registered by this extension.
+  #
+  def getScannerListeners
+    _check_and_callback(:getScannerListeners)
+  end
+  alias get_scanner_listeners getScannerListeners
+
+
+  # This method is used to remove a Scanner listener that has been registered
+  # by the extension.
+  #
+  # @param listener The Scanner listener to be removed.
+  # @return void
+  #
+  def removeScannerListener(listener)
+    _check_and_callback(:removeScannerListener, listener)
+  end
+  alias remove_scanner_listener removeScannerListener
+
   # This method is used to register a listener which will be notified of
   # changes to Burp's suite-wide target scope.
   #
@@ -1031,6 +1148,30 @@ class Buby
       _check_and_callback(:registerScopeChangeListener, listener)
     end
   end
+
+  # This method is used to retrieve the scope change listeners that are
+  # registered by the extension.
+  #
+  # @return [Array<IScopeChangeListener>] A list of scope change listeners that
+  #   are currently registered by this extension.
+  #
+  def getScopeChangeListeners
+    _check_and_callback(:getScopeChangeListeners)
+  end
+  alias get_scope_change_listeners getScopeChangeListeners
+  alias scope_change_listeners getScopeChangeListeners
+
+  # This method is used to remove a scope change listener that has been
+  # registered by the extension.
+  #
+  # @param [IScopeChangeListener] listener The scope change listener to be
+  #   removed.
+  # @return [void]
+  #
+  def removeScopeChangeListener(listener)
+    _check_and_callback(:removeScopeChangeListener, listener)
+  end
+  alias remove_scope_change_listener removeScopeChangeListener
 
   # This method is used to register a factory for custom context menu items.
   # When the user invokes a context menu anywhere within Burp, the factory
@@ -1055,6 +1196,29 @@ class Buby
     end
   end
   alias register_context_menu_factory registerContextMenuFactory
+
+  # This method is used to retrieve the context menu factories that are
+  # registered by the extension.
+  #
+  # @return [Array<IContextMenuFactory>] A list of context menu factories that
+  #   are currently registered by this extension.
+  #
+  def getContextMenuFactories
+    _check_and_callback(:getContextMenuFactories)
+  end
+  alias get_context_menu_factories getContextMenuFactories
+  alias context_menu_factories getContextMenuFactories
+
+  # This method is used to remove a context menu factory that has been
+  # registered by the extension.
+  #
+  # @param [IContextMenuFactory] factory The context menu factory to be removed.
+  # @return [void]
+  #
+  def removeContextMenuFactory(factory)
+    _check_and_callback(:removeContextMenuFactory, factory)
+  end
+  alias remove_context_menu_factory removeContextMenuFactory
 
   # This method is used to register a factory for custom message editor tabs.
   # For each message editor that already exists, or is subsequently created,
@@ -1081,6 +1245,30 @@ class Buby
   end
   alias register_message_editor_tab_factory registerMessageEditorTabFactory
 
+  # This method is used to retrieve the message editor tab factories that are
+  # registered by the extension.
+  #
+  # @return [Array<IMessageEditorTabFactory>] A list of message editor tab
+  #   factories that are currently registered by this extension.
+  #
+  def getMessageEditorTabFactories
+    _check_and_callback(:getMessageEditorTabFactories)
+  end
+  alias get_message_editor_tab_factories getMessageEditorTabFactories
+  alias message_editor_tab_factories getMessageEditorTabFactories
+
+  # This method is used to remove a message editor tab factory that has been
+  # registered by the extension.
+  #
+  # @param [IMessageEditorTabFactory] factory The message editor tab factory to
+  #   be removed.
+  # @return [void]
+  #
+  def removeMessageEditorTabFactory(factory)
+    _check_and_callback(:removeMessageEditorTabFactory, factory)
+  end
+  alias remove_message_editor_tab_factory removeMessageEditorTabFactory
+
   # This method is used to register a provider of Scanner insertion points.
   # For each base request that is actively scanned, Burp will ask the
   # provider to provide any custom scanner insertion points that are
@@ -1102,6 +1290,29 @@ class Buby
   end
   alias register_scanner_insertion_point_provider registerScannerInsertionPointProvider
 
+  # This method is used to retrieve the Scanner insertion point providers
+  # that are registered by the extension.
+  #
+  # @return [Array<IScannerInsertionPointProvider>] A list of Scanner insertion
+  #   point providers that are currently registered by this extension.
+  #
+  def getScannerInsertionPointProviders
+    _check_and_callback(:getScannerInsertionPointProviders)
+  end
+  alias get_scanner_insertion_point_providers getScannerInsertionPointProviders
+  alias scanner_insertion_point_providers getScannerInsertionPointProviders
+
+  # This method is used to remove a Scanner insertion point provider that has
+  # been registered by the extension.
+  #
+  # @param [IScannerInsertionPointProvider] provider The Scanner insertion point provider to be removed.
+  # @return [void]
+  #
+  def removeScannerInsertionPointProvider(provider)
+    _check_and_callback(:removeScannerInsertionPointProvider, provider)
+  end
+  alias remove_scanner_insertion_point_provider removeScannerInsertionPointProvider
+
   # This method is used to register a custom Scanner check. When performing
   # scanning, Burp will ask the check to perform active or passive scanning
   # on the base request, and report any Scanner issues that are identified.
@@ -1116,6 +1327,29 @@ class Buby
     end
   end
   alias register_scanner_check registerScannerCheck
+
+  # This method is used to retrieve the Scanner checks that are registered by
+  # the extension.
+  #
+  # @return [Array<IScannerCheck>] A list of Scanner checks that are currently
+  #   registered by this extension.
+  #
+  def getScannerChecks
+    _check_and_callback(:getScannerChecks)
+  end
+  alias get_scanner_checks getScannerChecks
+  alias scanner_checks getScannerChecks
+
+  # This method is used to remove a Scanner check that has been registered by
+  # the extension.
+  #
+  # @param [IScannerCheck] check The Scanner check to be removed.
+  # @return [void]
+  #
+  def removeScannerCheck(check)
+    _check_and_callback(:removeScannerCheck, check)
+  end
+  alias remove_scanner_check removeScannerCheck
 
   # This method is used to register a factory for Intruder payloads. Each
   # registered factory will be available within the Intruder UI for the user
@@ -1137,6 +1371,29 @@ class Buby
   end
   alias register_intruder_payload_generator_factory registerIntruderPayloadGeneratorFactory
 
+  # This method is used to retrieve the Intruder payload generator factories
+  # that are registered by the extension.
+  #
+  # @return [Array<IIntruderPayloadGeneratorFactory>] A list of Intruder payload
+  #   generator factories that are currently registered by this extension.
+  #
+  def getIntruderPayloadGeneratorFactories
+    _check_and_callback(:getIntruderPayloadGeneratorFactories)
+  end
+  alias get_intruder_payload_generator_factories getIntruderPayloadGeneratorFactories
+  alias intruder_payload_generator_factories getIntruderPayloadGeneratorFactories
+
+  # This method is used to remove an Intruder payload generator factory that
+  # has been registered by the extension.
+  #
+  # @param [IIntruderPayloadGeneratorFactory] factory The Intruder payload
+  #   generator factory to be removed.
+  #
+  def removeIntruderPayloadGeneratorFactory(factory)
+    _check_and_callback(:removeIntruderPayloadGeneratorFactory, factory)
+  end
+  alias remove_intruder_payload_generator_factory removeIntruderPayloadGeneratorFactory
+
   # This method is used to register a custom Intruder payload processor. Each
   # registered processor will be available within the Intruder UI for the
   # user to select as the action for a payload processing rule.
@@ -1154,6 +1411,30 @@ class Buby
   end
   alias register_intruder_payload_processor registerIntruderPayloadProcessor
 
+  # This method is used to retrieve the Intruder payload processors that are
+  # registered by the extension.
+  #
+  # @return [Array<IIntruderPayloadProcessor>] A list of Intruder payload
+  #   processors that are currently registered by this extension.
+  #
+  def getIntruderPayloadProcessors
+    _check_and_callback(:getIntruderPayloadProcessors)
+  end
+  alias get_intruder_payload_processors getIntruderPayloadProcessors
+  alias intruder_payload_processors getIntruderPayloadProcessors
+
+  # This method is used to remove an Intruder payload processor that has been
+  # registered by the extension.
+  #
+  # @param [IIntruderPayloadProcessor] processor The Intruder payload processor
+  #   to be removed.
+  # @return [void]
+  #
+  def removeIntruderPayloadProcessor(processor)
+    _check_and_callback(:removeIntruderPayloadProcessor, processor)
+  end
+  alias remove_intruder_payload_processor removeIntruderPayloadProcessor
+
   # This method is used to register a custom session handling action. Each
   # registered action will be available within the session handling rule UI
   # for the user to select as a rule action. Users can choose to invoke an
@@ -1170,6 +1451,29 @@ class Buby
     end
   end
   alias register_session_handling_action registerSessionHandlingAction
+
+  # This method is used to retrieve the session handling actions that are
+  # registered by the extension.
+  #
+  # @return [Array<ISessionHandlingAction>] A list of session handling actions
+  #   that are currently registered by this extension.
+  #
+  def getSessionHandlingActions
+    _check_and_callback(:getSessionHandlingActions)
+  end
+  alias get_session_handling_actions getSessionHandlingActions
+  alias session_handling_actions getSessionHandlingActions
+
+  # This method is used to remove a session handling action that has been
+  # registered by the extension.
+  #
+  # @param action The extension session handling action to be removed.
+  # @return [void]
+  #
+  def removeSessionHandlingAction(action)
+    _check_and_callback(:removeSessionHandlingAction, action)
+  end
+  alias remove_session_handling_action removeSessionHandlingAction
 
   # This method is used to add a custom tab to the main Burp Suite window.
   #
