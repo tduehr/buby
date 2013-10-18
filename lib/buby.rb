@@ -436,7 +436,7 @@ class Buby
   #   @param [IHttpRequestResponse] request The full HTTP request
   # @overload makeHttpRequest(url)
   #   @param [String, URI, java.net.URL] url The url to make a GET request to.
-  #     The request is built with {IExtensionHelpers.buildHttpRequest}
+  #     The request is built with {ExtensionHelpers#buildHttpRequest}
   # @overload makeHttpRequest(service, request)
   #   @param [IHttpService] service Object with host, port, etc.
   #   @param [String, Array<byte>, IHttpRequestResponse] request The full HTTP
@@ -1555,7 +1555,7 @@ class Buby
   #
   # @return [ITextEditor] A new text editor the extension can use in its own UI.
   #
-  def createTextEditor()
+  def createTextEditor
     _check_and_callback(:createTextEditor)
   end
   alias create_text_editor createTextEditor
@@ -1576,8 +1576,8 @@ class Buby
 
   # This method is used to update the contents of Burp's session handling
   # cookie jar. Extensions that provide an +ISessionHandlingAction+ can query
-  #  and update the cookie jar in order to handle unusual session handling
-  #  mechanisms.
+  # and update the cookie jar in order to handle unusual session handling
+  # mechanisms.
   #
   # @param [ICookie] cookie An object containing details of the cookie to be
   #   updated. If the cookie jar already contains a cookie that matches the

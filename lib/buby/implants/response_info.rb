@@ -1,8 +1,8 @@
 class Buby
   module Implants
     # This interface is used to retrieve key details about an HTTP response.
-    # Extensions can obtain an +IResponseInfo+ object for a given response by calling
-    # <code>IExtensionHelpers.analyzeResponse()</code>.
+    # Extensions can obtain an +IResponseInfo+ object for a given response by
+    # calling {ExtensionHelpers#analyzeResponse}.
     #
     module ResponseInfo
       # This method is used to obtain details of the HTTP cookies set in the

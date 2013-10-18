@@ -1,5 +1,6 @@
 
 class Buby
+  # @deprecated
   class BubyArrayWrapper
     include Enumerable
 

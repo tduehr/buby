@@ -31,9 +31,10 @@ class Buby
       #   @param [IHttpService] http_service HTTP service description
       #   @param [String, Array<byte>] request The request to be analyzed
       # @overload analyzeRequest(request)
-      #   Analyze a +String+ or +byte[]+ request. To obtain the full URL, use one
-      # of the other overloaded {#analyzeRequest} methods.
+      #   Analyze a +String+ or +byte[]+ request. To obtain the full URL, use
+      #     one of the other overloaded {#analyzeRequest} methods.
       #   @param [String, Array<byte>] request The request to be analyzed
+      #
       # @return [IRequestInfo] object (wrapped with Ruby goodness)
       #   that can be queried to obtain details about the request.
       #
@@ -64,19 +65,20 @@ class Buby
       end
 
       # This method can be used to retrieve details of a specified parameter
-      # within an HTTP request. <b>Note:</b> Use {#analyzeRequest} to obtain
-      # details of all parameters within the request.
+      # within an HTTP request. Use {#analyzeRequest} to obtain details of all
+      # parameters within the request.
       #
-      # @param [String, Array<byte>] request The request to be inspected for the
-      #   specified parameter.
-      # @param [String] parameter_name The name of the parameter to retrieve.
-      # @return [IParameter] object that can be queried to obtain details
+      # @param [IHttpRequestResponse, String, Array<byte>] request The request
+      #   to be inspected for the specified parameter.
+      # @param [#to_s] parameter_name The name of the parameter to retrieve.
+      # @return [IParameter, nil] object that can be queried to obtain details
       #   about the parameter, or +nil+ if the parameter was not found.
       #
       def getRequestParameter(request, parameter_name)
         pp [:got_get_request_parameter, parameter_name, request] if $DEBUG
+        request = request.request if request.kind_of?(Java::Burp::IHttpRequestResponse)
         request = request.to_java_bytes if request.respond_to? :to_java_bytes
-        Buby::Implants::Parameter.implant(__getRequestParameter(request, parameter_name))
+        Buby::Implants::Parameter.implant(__getRequestParameter(request, parameter_name.to_s))
       end
 
       # This method searches a piece of data for the first occurrence of a
@@ -84,7 +86,8 @@ class Buby
       # to the way the native Java method +String.indexOf()+ works on
       # String-based data.
       #
-      # @note This method is only wrapped for testing purposes. There are better ways to do this in the JRuby runtime.
+      # @note This method is only wrapped for testing purposes. There are better
+      #   ways to do this in the JRuby runtime.
       #
       # @param [String, Array<byte>] data The data to be searched.
       # @param [String, Array<byte>] pattern The pattern to be searched for.
@@ -108,11 +111,13 @@ class Buby
       # message body. If applicable, the Content-Length header will be added or
       # updated, based on the length of the body.
       #
-      # @param [Array<String>] headers A list of headers to include in the message.
-      # @param [String, Array<byte>] body The body of the message, or +nil+ if the message has an empty body.
+      # @param [Array<String>] headers A list of headers to include in the
+      #   message.
+      # @param [String, Array<byte>] body The body of the message, or +nil+ if
+      #   the message has an empty body.
       # @return [String] The resulting full HTTP message.
       #
-      def buildHttpMessage(headers, body)
+      def buildHttpMessage(headers, body = nil)
         pp [:got_build_http_message, headers, body] if $DEBUG
         body = body.to_java_bytes if body.respond_to?(:to_java_bytes)
         String.from_java_bytes(__buildHttpMessage(headers, body))
@@ -122,7 +127,8 @@ class Buby
       # in the request are determined by the Request headers settings as
       # configured in Burp Spider's options.
       #
-      # @param [URL, #to_s] url The URL to which the request should be made.
+      # @param [java.net.URL, URI, #to_s] url The URL to which the request
+      #   should be built.
       # @return [String] A request to the specified URL.
       #
       def buildHttpRequest(url)

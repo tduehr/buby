@@ -4,7 +4,7 @@ class Buby
   module Implants
     # This interface is used to retrieve key details about an HTTP request.
     # Extensions can obtain an +IRequestInfo+ object for a given request by
-    # calling {Buby#analyzeRequest}.
+    # calling {ExtensionHelpers#analyzeRequest}.
     #
     module RequestInfo
 

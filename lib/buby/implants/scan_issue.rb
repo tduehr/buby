@@ -1,6 +1,7 @@
 require 'uri'
 
 class Buby
+  # @deprecated
   class ScanIssuesList < BubyArrayWrapper
     def initialize(obj)
       ScanIssueHelper.implant(obj[0]) if obj.size > 0 
