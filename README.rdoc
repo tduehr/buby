@@ -49,6 +49,8 @@ In 2.0 bin/buby to use a bash script as the primary starting point for the curre
 
 ... And one more thing. The next version of buby will require JRuby 1.7.0+. It won't use 1.9 syntax for a little while. So, extensions that require 1.8 will still work for now. Just don't forget to add the `--1.8` switch to JRuby when starting buby.
 
+Now that MRI 2.0 is out and 2.1 is around the corner, 1.9 mode support is semi-deprecated pending 2.0/2.1 support in jruby.
+
 == REQUIREMENTS:
 
 * JRuby - http://jruby.org
