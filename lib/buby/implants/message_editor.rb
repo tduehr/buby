@@ -8,12 +8,15 @@ class Buby
     module MessageEditor
       # This method is used to display an HTTP message in the editor.
       #
-      # @param [Array<byte>, String] message The HTTP message to be displayed.
+      # @param [Array<byte>, String, IHttpRequestResponse] message The HTTP message to be displayed.
       # @param [Boolean] isRequest Flags whether the message is an HTTP request
       #   or response.
       # @return [void]
       #
-      def setMessage(message, isRequest)
+      def setMessage(message, isRequest = true)
+        if message.kind_of? Java::Burp::IHttpRequestResponse
+          message = isRequest ? message.request : message.response
+        end
         message = message.to_java_bytes if message.respond_to? :to_java_bytes
         message = message.to_java :byte if message.kind_of? Array
         __setMessage(message, isRequest)

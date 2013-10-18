@@ -226,17 +226,42 @@ class Buby
       # details provided.
       #
       # @overload buildHttpService(host, port, protocol)
-      #   @param [String] host The HTTP service host.
+      #   @param [Java::JavaNet::URL, URI,String] host The HTTP service host.
       #   @param [Fixnum] port The HTTP service port.
       #   @param [String] protocol The HTTP service protocol.
       # @overload buildHttpService(host, port, use_https)
-      #   @param [String] host The HTTP service host.
+      #   @param [Java::JavaNet::URL, URI,String] host The HTTP service host.
       #   @param [Fixnum] port The HTTP service port.
       #   @param [Boolean] use_https Flags whether the HTTP service protocol is HTTPS or HTTP.
+      # @overload buildHttpService(url)
+      #   @param [Java::JavaNet::URL, URI, String] url URL specifying host, port
+      #     and protocol. Will automatically set port to 80/443 if http(s) url
+      #     is passed. Defaults to 80 for other URL schemes.
       # @return [IHttpService] object based on the details provided.
       #
-      def buildHttpService(host, port = 80, protocol = false)
-        pp [:got_buildHttpService, host, port, protocol] if $DEBUG
+      def buildHttpService(host, *args)
+        pp [:got_buildHttpService, host, *args] if $DEBUG
+        port, protocol = *args
+        case host
+        when URI, Java::JavaNet::URL
+          port ||= host.port
+          protocol ||= host.protocol
+          host = host.host
+        else
+          thost = host.kind_of?(String) ? Java::JavaNet::URL.new(host) : host
+          port ||= thost.port
+          protocol ||= thost.protocol
+        end
+        port ||= case protocol
+        when TrueClass, /^https$/i
+          443
+        else
+          80
+        end
+
+        port = https ? 443 : 80 if port < 0
+        host = host.host if host.respond_to? :host
+
         __buildHttpService(host, port, protocol)
       end
 

@@ -16,7 +16,10 @@ class Buby
         __getParameters.tap{|parm| Buby::Implants::Parameter.implant parm.first}
       end
 
-      
+      def uri
+        URI.parse self.url.to_s
+      end
+
       # Install ourselves into the current +IRequestInfo+ java class
       # @param [IRequestInfo] info
       #
