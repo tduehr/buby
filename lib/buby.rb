@@ -2109,6 +2109,21 @@ class Buby
 
   ### Sugar/Convenience methods
 
+  # so things will just work for most new interface changes.
+  def method_missing(meth, *args, &block)
+    if _check_cb.respond_to?(meth)
+      warn 'this method may not be implemented fully, punting'
+      self.class.class_exec do |meth|
+        define_method(meth) do |*argv, &blck|
+          _check_and_callback(meth, *argv, &blck)
+        end
+      end
+      __send__ meth, *args, &block
+    else
+      super
+    end
+  end
+
   # This is a convenience wrapper which can load a given burp state file and
   # lets its caller to perform actions inside of a block on the site map
   # contained in the loaded session.
