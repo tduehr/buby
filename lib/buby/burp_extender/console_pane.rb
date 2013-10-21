@@ -1,6 +1,7 @@
 class BurpExtender
   # @api private
   class ConsolePane < Java::JavaxSwing::JScrollPane
+    HEADER = " Welcome to the Burp JRuby IRB Console [#{JRUBY_VERSION} (#{RUBY_VERSION})]\n\n"
     attr_accessor :text, :tar
     def initialize
       super
@@ -11,7 +12,13 @@ class BurpExtender
       @text.background  = Java::JavaAwt::Color.new(0xf2f2f2)
       @text.foreground  = Java::JavaAwt::Color.new(0xa40000)
       self.viewport_view = @text
-      @tar = Java::OrgJrubyDemo::TextAreaReadline.new(@text, " Welcome to the Burp JRuby IRB Console [#{JRUBY_VERSION} (#{RUBY_VERSION})]\n\n")
+      @tar = begin
+        Java::OrgJrubyDemo::TextAreaReadline.new(@text, HEADER)
+      rescue NameError
+        require 'readline'
+        Java::OrgJrubyDemoReadline::TextAreaReadline.new(text, HEADER)
+      end
+        
       JRuby.objectspace = true # useful for code completion
       @tar.hook_into_runtime_with_streams(JRuby.runtime)
     end
