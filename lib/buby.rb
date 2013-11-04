@@ -327,12 +327,12 @@ class Buby
   #   @param [Array<byte>, String] req The request to exclude
   #
   # @return [void]
-  def excludeFromScope(url)
+  def excludeFromScope(*args)
     url, req = args
     case args.size
     when 1
       case url
-      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpequestInfo
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpRequestInfo
         url = url.getUrl
       else
         url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
@@ -368,7 +368,7 @@ class Buby
     case args.size
     when 1
       case url
-      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpequestInfo
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpRequestInfo
         url = url.getUrl
       else
         url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
@@ -400,7 +400,7 @@ class Buby
     case args.size
     when 1
       case url
-      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpequestInfo
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpRequestInfo
         url = url.getUrl
       else
         url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
