@@ -213,7 +213,7 @@ class Buby
         req = helpers.buildHttpRequest req
         host = url.host
         port = url.port
-        https = url.scheme
+        https = url.respond_to? :scheme ? url.scheme : url.protocol
       end
     end
 
@@ -363,7 +363,7 @@ class Buby
   #   @param [Array<byte>, String] req The request to include
   #
   # @return [void]
-  def includeInScope(url)
+  def includeInScope(*args)
     url, req = args
     case args.size
     when 1
@@ -454,10 +454,24 @@ class Buby
         req = host
         serv = req.getHttpService
       else
-        host = Java::JavaNet::URL.new url.to_s unless url.kind_of?(Java::JavaNet::URL)
+        host = Java::JavaNet::URL.new host.to_s unless host.kind_of?(Java::JavaNet::URL)
         port = host.port
-        https = host.scheme
+        https = host.protocol
         req = getHelpers.__buildHttpRequest host
+        https = case https.to_s.downcase
+        when 'https'
+          true
+        when 'http'
+          false
+        else
+          !!https
+        end
+
+        port ||= https ? 443 : 80
+        port = https ? 443 : 80 if port < 0
+
+        host = host.host if host.respond_to? :host
+        serv = getHelpers.buildHttpService(host, port, https)
       end
     when 2
       serv, req = args
@@ -471,25 +485,10 @@ class Buby
     req = req.to_java_bytes if req.respond_to? :to_java_bytes
 
     ret = if serv
-      _check_and_callback(:makeHttpRequst, serv, req)
+      _check_and_callback(:makeHttpRequest, serv, req)
     else
-      https = case https.to_s.downcase
-      when 'https'
-        true
-      when 'http'
-        false
-      else
-        !!https
-      end
-
-      port ||= https ? 443 : 80
-      port = https ? 443 : 80 if port < 0
-      host = host.host if host.respond_to? :host
-
-      _check_and_callback(:makeHttpRequst, host, port, https, req)
+      String.from_java_bytes _check_and_callback(:makeHttpRequest, host, port, https, req)
     end
-
-    String.from_java_bytes(ret)
   end
   alias make_http_request makeHttpRequest
   alias make_request makeHttpRequest
