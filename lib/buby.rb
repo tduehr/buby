@@ -319,7 +319,7 @@ class Buby
   #   @param [IHttpRequestResponse] req The request to exclude from the
   #     Suite-wide scope.
   # @overload excludeFromScope(req_info)
-  #   @param [IHttpRequestInfo] req_info The request information to exclude from
+  #   @param [IRequestInfo] req_info The request information to exclude from
   #     the Suite-wide scope.
   # @overload excludeFromScope(serv, req)
   #   @param [IHttpService] serv The HTTP service to exclude from the Suite-wide
@@ -332,7 +332,7 @@ class Buby
     case args.size
     when 1
       case url
-      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpRequestInfo
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IRequestInfo
         url = url.getUrl
       else
         url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
@@ -355,7 +355,7 @@ class Buby
   #   @param [IHttpRequestResponse] req The request to include in the Suite-wide
   #     scope.
   # @overload includeInScope(req_info)
-  #   @param [IHttpRequestInfo] req_info The request information to include in
+  #   @param [IRequestInfo] req_info The request information to include in
   #     the Suite-wide scope.
   # @overload includeInScope(serv, req)
   #   @param [IHttpService] serv The HTTP service to include in the Suite-wide
@@ -368,7 +368,7 @@ class Buby
     case args.size
     when 1
       case url
-      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpRequestInfo
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IRequestInfo
         url = url.getUrl
       else
         url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
@@ -389,7 +389,7 @@ class Buby
   # @overload isInScope(req)
   #   @param [IHttpRequestResponse] req The request to query
   # @overload isInScope(req_info)
-  #   @param [IHttpRequestInfo] req_info The request info to query
+  #   @param [IRequestInfo] req_info The request info to query
   # @overload isInScope(serv, req)
   #   @param [IHttpService] serv The HTTP service to query
   #   @param [Array<byte>, String] req The request to query
@@ -400,7 +400,7 @@ class Buby
     case args.size
     when 1
       case url
-      when Java::Burp::IHttpRequestResponse,  Java::Burp::IHttpRequestInfo
+      when Java::Burp::IHttpRequestResponse,  Java::Burp::IRequestInfo
         url = url.getUrl
       else
         url = Java::JavaNet::URL.new(url.to_s) unless url.is_a? Java::JavaNet::URL
