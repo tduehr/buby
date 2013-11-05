@@ -306,7 +306,7 @@ class Buby
     resp = resp.request if resp.respond_to? :request
     resp = resp.to_java_bytes if resp.respond_to? :to_java_bytes
 
-    Buby::Implants::ScanQueueItem.implant(_check_and_callback(:doPassiveScan, host, port, https, req, rsp))
+    Buby::Implants::ScanQueueItem.implant(_check_and_callback(:doPassiveScan, host, port, https, req, resp))
   end
   alias do_passive_scan doPassiveScan
   alias passive_scan doPassiveScan
