@@ -296,6 +296,15 @@ class Buby
       # nop
     end
 
+    https = case https.to_s.downcase
+    when 'https'
+      true
+    when 'http'
+      false
+    else
+      !!https
+    end
+
     port ||= https ? 443 : 80
     port = https ? 443 : 80 if port < 0
     host = host.host if host.respond_to? :host
@@ -303,7 +312,7 @@ class Buby
     req = req.request if req.respond_to? :request
     req = req.to_java_bytes if req.respond_to? :to_java_bytes
 
-    resp = resp.request if resp.respond_to? :request
+    resp = resp.response if resp.respond_to? :response
     resp = resp.to_java_bytes if resp.respond_to? :to_java_bytes
 
     Buby::Implants::ScanQueueItem.implant(_check_and_callback(:doPassiveScan, host, port, https, req, resp))
