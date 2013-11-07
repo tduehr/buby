@@ -43,6 +43,7 @@ class Buby
     #
     # @abstract Call super to get +baseValue+ as a +String+. Implementation's
     #   responsibility to return byte array.
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
     def getNextPayload(baseValue)
       ret = baseValue
       baseValue = String.from_java_bytes(baseValue) if baseValue

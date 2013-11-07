@@ -27,6 +27,7 @@ class Buby
     #   message.
     #
     # @abstract
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
     def getRequest; raise NotImplementedError; end
 
     # This method is used to retrieve the HTTP response associated with the
@@ -36,6 +37,7 @@ class Buby
     #   message.
     #
     # @abstract
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
     def getResponse; raise NotImplementedError; end
   end
 end

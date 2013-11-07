@@ -25,6 +25,7 @@ class Buby
     #   attack.
     #
     # @abstract
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
     def createNewInstance(attack)
       Buby::Implants::IntruderAttack.implant(attack)
     end

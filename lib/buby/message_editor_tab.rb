@@ -7,9 +7,10 @@ class Buby
   # @todo voodoo method wrapping
   class MessageEditorTab
     include Java::Burp::IMessageEditorTab
-    include Java::Burp::IMessageEditorTabFactory
+    extend Java::Burp::IMessageEditorTabFactory
     
-    attr_accessor :controller, :editable
+    attr_accessor :controller, :editable, :message, :ui_component
+    
     # (see Buby::MessageEditorTabFactory#createNewInstance)
     def initialize controller, editable
       @controller = controller
@@ -39,7 +40,7 @@ class Buby
     # @return The component that should be used as the contents of the custom
     #   tab when it is displayed.
     #
-    def getUiComponent; raise NotImplementedError; end
+    def getUiComponent; @ui_component end
 
     # The hosting editor will invoke this method before it displays a new HTTP
     # message, so that the custom tab can indicate whether it should be
@@ -53,9 +54,15 @@ class Buby
     #   the editor. Otherwise, the tab will be hidden while this message is
     #   displayed.
     #
-    def isEnabled(content, isRequest)
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
+    def isEnabled(content, isRequest = true)
       content = String.from_java_bytes content
       raise NotImplementedError
+    end
+
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
+    def enabled?(content, is_request = true)
+      isEnabled(content, is_request)
     end
 
     # The hosting editor will invoke this method to display a new message or
@@ -69,13 +76,15 @@ class Buby
     # @param [Boolean] isRequest Indicates whether the message is a request or
     #   a response.
     #
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
     def setMessage(content, isRequest); raise NotImplementedError; end
 
     # This method returns the currently displayed message.
     #
     # @return [Array<byte>] The currently displayed message.
     #
-    def getMessage; raise NotImplementedError; end
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
+    def getMessage; @message.to_java_bytes end
 
     # This method is used to determine whether the currently displayed message
     # has been modified by the user. The hosting editor will always call
@@ -85,7 +94,7 @@ class Buby
     # @return [Boolean] The method should return +true+ if the user has
     #   modified the current message since it was first displayed.
     #
-    def isModified; raise NotImplementedError; end
+    def isModified; false end
 
     # This method is used to retrieve the data that is currently selected by
     # the user.

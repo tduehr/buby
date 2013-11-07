@@ -293,7 +293,7 @@ class Buby
       # @todo Switch IHttpRequestResponse to new Buby::Implants functionality (2.0)
       def makeScannerInsertionPoint(insertion_point_name, base_request, from, to)
         pp [:got_makeScannerInsertionPoint, insertion_point_name, base_request, from, to] if $DEBUG
-        base_request = base_request.request if base_request.kind_of? Java::Burp::IHttpRequestResponse
+        base_request = base_request.request if base_request.respond_to? :request
         base_request = base_request.to_java_bytes if base_request.respond_to? :to_java_bytes
         Buby::Implants::ScannerInsertionPoint.implant(__makeScannerInsertionPoint(insertion_point_name, base_request, from, to))
       end

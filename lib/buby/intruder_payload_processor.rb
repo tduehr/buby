@@ -28,6 +28,7 @@ class Buby
     #   indicate that the current payload should be skipped, and the attack
     #   will move directly to the next payload.
     #
+    # @deprecated This will become a raw version/proxied version pair like {ContextMenuFactory#createMenuItems} in 2.0.
     def processPayload(currentPayload, originalPayload, baseValue)
       currentPayload = String.from_java_bytes currentPayload
       originalPayload = String.from_java_bytes originalPayload

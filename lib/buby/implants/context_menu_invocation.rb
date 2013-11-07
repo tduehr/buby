@@ -8,38 +8,53 @@ class Buby
     # This module is used to extend the JRuby proxy class returned by Burp.
     #
     module ContextMenuInvocation
+
       # Context menu is being invoked in a request editor.
-      CONTEXT_MESSAGE_EDITOR_REQUEST = 0;
+      CONTEXT_MESSAGE_EDITOR_REQUEST = 0
 
       # Context menu is being invoked in a response editor.
-      CONTEXT_MESSAGE_EDITOR_RESPONSE = 1;
+      CONTEXT_MESSAGE_EDITOR_RESPONSE = 1
 
       # Context menu is being invoked in a non-editable request viewer.
-      CONTEXT_MESSAGE_VIEWER_REQUEST = 2;
+      CONTEXT_MESSAGE_VIEWER_REQUEST = 2
 
       # Context menu is being invoked in a non-editable response viewer.
-      CONTEXT_MESSAGE_VIEWER_RESPONSE = 3;
+      CONTEXT_MESSAGE_VIEWER_RESPONSE = 3
 
       # Context menu is being invoked in the Target site map tree.
-      CONTEXT_TARGET_SITE_MAP_TREE = 4;
+      CONTEXT_TARGET_SITE_MAP_TREE = 4
 
       # Context menu is being invoked in the Target site map table.
-      CONTEXT_TARGET_SITE_MAP_TABLE = 5;
+      CONTEXT_TARGET_SITE_MAP_TABLE = 5
 
       # Context menu is being invoked in the Proxy history.
-      CONTEXT_PROXY_HISTORY = 6;
+      CONTEXT_PROXY_HISTORY = 6
 
       # Context menu is being invoked in the Scanner results.
-      CONTEXT_SCANNER_RESULTS = 7;
+      CONTEXT_SCANNER_RESULTS = 7
 
       # Context menu is being invoked in the Intruder payload positions editor.
-      CONTEXT_INTRUDER_PAYLOAD_POSITIONS = 8;
+      CONTEXT_INTRUDER_PAYLOAD_POSITIONS = 8
 
       # Context menu is being invoked in an Intruder attack results.
-      CONTEXT_INTRUDER_ATTACK_RESULTS = 9;
+      CONTEXT_INTRUDER_ATTACK_RESULTS = 9
 
       # Context menu is being invoked in a search results window.
-      CONTEXT_SEARCH_RESULTS = 10;
+      CONTEXT_SEARCH_RESULTS = 10
+
+      CONTEXTS = {
+        CONTEXT_MESSAGE_EDITOR_REQUEST             => "message_editor_request",
+        CONTEXT_MESSAGE_EDITOR_RESPONSE    => "message_editor_response",
+        CONTEXT_MESSAGE_VIEWER_REQUEST     => "message_viewer_request",
+        CONTEXT_MESSAGE_VIEWER_RESPONSE    => "message_viewer_response",
+        CONTEXT_TARGET_SITE_MAP_TREE       => "target_site_map_tree",
+        CONTEXT_TARGET_SITE_MAP_TABLE      => "target_site_map_table",
+        CONTEXT_PROXY_HISTORY              => "proxy_history",
+        CONTEXT_SCANNER_RESULTS            => "scanner_results",
+        CONTEXT_INTRUDER_PAYLOAD_POSITIONS => "intruder_payload_positions",
+        CONTEXT_INTRUDER_ATTACK_RESULTS    => "intruder_attack_results",
+        CONTEXT_SEARCH_RESULTS             => "search_results"
+      }
 
       # This method can be used to retrieve details of the HTTP requests /
       # responses that were shown or selected by the user when the context menu
@@ -77,6 +92,19 @@ class Buby
       def getSelectedIssues
         pp [:got_get_selected_issues] if $DEBUG
         ScanIssuesList.new(__getSelectedIssues)
+      end
+
+      # Get the name of the tool invoking a context menu
+      # @return [String] Tool name
+      def tool_name
+        $burp.getToolName getToolFlag
+      end
+
+      # This method can be used to retrieve the context within which the menu
+      # was invoked.
+      # @return [String] Context name
+      def context_name
+        CONTEXTS[getInvocationContext]
       end
 
       # Install ourselves into the current +IContextMenuInvocation+ java class
