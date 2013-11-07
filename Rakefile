@@ -15,6 +15,7 @@ begin
     gem.homepage = "http://tduehr.github.com/buby"
     gem.authors = ["Eric Monti, tduehr"]
     gem.platform = "java"
+    gem.license = "MIT"
     gem.files.include "**/buby.jar"
     gem.files.include "**/burp_interfaces.jar"
     gem.test_files = ["test/buby_test.rb"]
