@@ -6,7 +6,6 @@ pkg
 *.gem
 *.class
 *.jar
-tmp
 doc
 .yardoc
 notes.txt
