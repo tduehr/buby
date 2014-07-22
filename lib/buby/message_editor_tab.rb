@@ -9,16 +9,19 @@ class Buby
     include Java::Burp::IMessageEditorTab
     extend Java::Burp::IMessageEditorTabFactory
     
-    attr_accessor :controller, :editable, :message, :ui_component
+    attr_accessor :controller, :editable, :message, :text_editor
     
     # (see Buby::MessageEditorTabFactory#createNewInstance)
     def initialize controller, editable
       @controller = controller
       @editable = editable
+      @text_editor = $burp.create_text_editor
+      @text_editor.editable = @editable
     end
 
     # (see Buby::MessageEditorTabFactory#createNewInstance)
     def self.createNewInstance controller, editable
+      Buby::Implants::MessageEditorController.implant controller
       self.new controller, editable
     end
 
@@ -40,7 +43,7 @@ class Buby
     # @return The component that should be used as the contents of the custom
     #   tab when it is displayed.
     #
-    def getUiComponent; @ui_component end
+    def getUiComponent; @text_editor.getComponent end
 
     # The hosting editor will invoke this method before it displays a new HTTP
     # message, so that the custom tab can indicate whether it should be
@@ -94,7 +97,7 @@ class Buby
     # @return [Boolean] The method should return +true+ if the user has
     #   modified the current message since it was first displayed.
     #
-    def isModified; false end
+    def isModified; @text_editor.text_modified?; end
 
     # This method is used to retrieve the data that is currently selected by
     # the user.
@@ -102,6 +105,6 @@ class Buby
     # @return [Array<byte>] The data that is currently selected by the user.
     #   This may be +nil+ if no selection is currently made.
     #
-    def getSelectedData; raise NotImplementedError; end
+    def getSelectedData; @text_editor.selected_text; end
   end
 end

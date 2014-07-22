@@ -20,6 +20,8 @@ class Buby
     #   to be processed. Extensions can call the setter methods on this object
     #   to update the current message and so modify Burp's behavior.
     #
+    # @return void
+    #
     # @todo move HttpRequestResponse to new implant scheme
     def processHttpMessage(toolFlag, messageIsRequest, messageInfo)
       pp [:got_processHttpMessage, toolFlag, messageIsRequest, messageInfo] if $DEBUG

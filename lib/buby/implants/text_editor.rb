@@ -12,7 +12,7 @@ class Buby
       # @return [void]
       #
       def setText(txt)
-        __setText(txt.to_java_bytes)
+        __setText(txt.respond_to?(:to_java_bytes) ? txt.to_java_bytes : txt)
       end
 
       # This method is used to retrieve the currently displayed text.

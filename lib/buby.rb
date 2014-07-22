@@ -1564,7 +1564,7 @@ class Buby
   # @return [ITextEditor] A new text editor the extension can use in its own UI.
   #
   def createTextEditor
-    _check_and_callback(:createTextEditor)
+    Buby::Implants::TextEditor.implant _check_and_callback(:createTextEditor)
   end
   alias create_text_editor createTextEditor
 

@@ -103,6 +103,7 @@ EOS
     end
     jeweler.repo.add 'lib/buby/version.rb'
     jeweler.repo.commit "fixup! Version bump to #{version_string}"
+    system 'git', 'rebase', '-i', 'HEAD~1'
     puts "Buby::Version updated to #{version_string}"
   end
 
