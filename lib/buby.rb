@@ -450,7 +450,7 @@ class Buby
   #   @param [IHttpService] service Object with host, port, etc.
   #   @param [String, Array<byte>, IHttpRequestResponse] request The full HTTP
   #     request.
-  # @return [String] The full response retrieved from the remote server.
+  # @return [IHttpRequestResponse] The full response retrieved from the remote server.
   #
   def makeHttpRequest(*args)
     raise ArgumentError, "wrong number of arguments calling '#{__callee__}' (#{args.size} for 1,2,4)" unless [1,2,4].include?(args.size)
