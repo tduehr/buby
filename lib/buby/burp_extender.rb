@@ -79,7 +79,6 @@ class BurpExtender
     @on_quit = sys_properties.getProperty("burp.buby.on_quit", nil) || @callbacks.loadExtensionSetting('on_quit') || 'unload'
 
     $DEBUG = @debug unless @debug && @debug.match(/\Afalse\Z/i)
-    @callbacks.setProxyInterceptionEnabled false unless @intercept &&  @intercept.match(/\A(?:false|f|n|no|off)\Z/i)
 
     $burp = @@handler
 
@@ -153,18 +152,6 @@ class BurpExtender
       @callbacks.saveExtensionSetting('debug', enabl ? 'true' : nil)
       $DEBUG = enabl ? 1 : nil
     end
-
-    interc = BurpExtender::JCheckBoxMenuItem.new self, "Disable intercept on start"  do |event|
-      enabl = event.source.state
-      if enabl
-        @intercept = nil
-        @callbacks.saveExtensionSetting('intercept', nil)
-      else
-        @intercept = true
-        @callbacks.saveExtensionSetting('intercept', 'true')
-      end
-    end
-    pref_menu.add interc
 
     dbg.state = !!$DEBUG
     pref_menu.add dbg
