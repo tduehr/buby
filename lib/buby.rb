@@ -2115,6 +2115,30 @@ class Buby
   end
   alias generate_scan_report generateScanReport
 
+  # This method retrieves the absolute path name of the file from which the
+  # current extension was loaded.
+  #
+  # @return [String] The absolute path name of the file from which the current
+  #   extension was loaded.
+  #
+  def getExtensionFilename
+    _check_and_callback(:getExtensionFilename)
+  end
+  alias get_extension_filename getExtensionFilename
+  alias extension_filename getExtensionFilename
+
+  # This method determines whether the current extension was loaded as a
+  # BApp (a Burp App from the BApp Store).
+  #
+  # @return [boolean] Returns true if the current extension was loaded as a BApp.
+  #
+  def isExtensionBapp
+    _check_and_callback(:isExtensionBapp)
+  end
+  alias is_extension_bapp isExtensionBapp
+  alias extension_bapp? isExtensionBapp
+  alias bapp? isExtensionBapp
+
   ### Sugar/Convenience methods
 
   # so things will JustWork(tm) for most new interface additions.
