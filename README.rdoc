@@ -2,6 +2,10 @@
   by Eric Monti, Timur Duehr
   http://tduehr.github.com/buby
 
+== NOTE:
+
+This documentation is for the old gem version of Buby. It does not apply for current versions of BurpSuite. For Burp version 1.5.01 and higher use the BApp version of Buby. This documentation will be updated at the next release.
+
 == DESCRIPTION:
 
 Buby is a mashup of JRuby with the popular commercial web security testing tool Burp Suite from PortSwigger.  Burp is driven from and tied to JRuby with a Java extension using the BurpExtender API or a JRuby BurpExtender implementation using the new embedded JRuby support.  This extension aims to add Ruby scriptability to Burp Suite with an interface comparable to the Burp's pure Java extension interface. This extension works best with Burp Suite Professional. The Free version may also be used but does not contain many of the features that make Burp Suite and Buby shine.
